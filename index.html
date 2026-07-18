@@ -1,4 +1,4 @@
-mmmmmmmmmmmmmmmmmmmmmình:
+g ô bắt mắt [1].
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -45,20 +45,24 @@ mmmmmmmmmmmmmmmmmmmmmình:
 
         /* Custom scrollbar cho các phân vùng cuộn riêng biệt */
         .vertical-axis-pane::-webkit-scrollbar,
-        .exercises-axis-pane::-webkit-scrollbar {
+        .exercises-axis-pane::-webkit-scrollbar,
+        .pdf-reader-body::-webkit-scrollbar {
             width: 6px;
         }
         .vertical-axis-pane::-webkit-scrollbar-track,
-        .exercises-axis-pane::-webkit-scrollbar-track {
+        .exercises-axis-pane::-webkit-scrollbar-track,
+        .pdf-reader-body::-webkit-scrollbar-track {
             background: transparent;
         }
         .vertical-axis-pane::-webkit-scrollbar-thumb,
-        .exercises-axis-pane::-webkit-scrollbar-thumb {
+        .exercises-axis-pane::-webkit-scrollbar-thumb,
+        .pdf-reader-body::-webkit-scrollbar-thumb {
             background: rgba(192, 132, 252, 0.15);
             border-radius: 3px;
         }
         .vertical-axis-pane::-webkit-scrollbar-thumb:hover,
-        .exercises-axis-pane::-webkit-scrollbar-thumb:hover {
+        .exercises-axis-pane::-webkit-scrollbar-thumb:hover,
+        .pdf-reader-body::-webkit-scrollbar-thumb:hover {
             background: var(--accent-purple);
         }
 
@@ -463,7 +467,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
         }
 
         .expandable-intro-card.expanded {
-            max-height: 250px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
+            max-height: 400px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
         }
         
         .glowing-intro-title {
@@ -1451,26 +1455,146 @@ mmmmmmmmmmmmmmmmmmmmmình:
             80% { transform: scale(1.02) translate(1px, 1px) rotate(0.1deg); }
             100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
         }
-        /* Thiết lập chữ in hoa và độ phát sáng mặc định nhẹ màu TRẮNG trùng màu chữ khi tĩnh */
+        /* Thiết lập chữ in hoa và độ phát sáng mặc định cho widgets tổng kết */
         .conclusion-widget .widget-value {
             font-family: 'Lexend', sans-serif;
             font-size: 1.35rem;
             font-weight: 700;
             color: var(--text-primary);
             text-transform: uppercase; /* Chuyển chữ in hoa */
-            transition: color 0.4s ease, text-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: color 0.4s ease, text-shadow 0.4s ease;
             letter-spacing: 1px;
-            /* Phát sáng nhẹ màu trắng đồng bộ sắc độ chữ */
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.45), 0 0 16px rgba(255, 255, 255, 0.2); 
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.15); 
         }
 
-        /* Khi di chuột vào: Đổi sang màu tím oải hương và hiệu ứng phát sáng mạnh lên */
+        /* Hiệu ứng phát sáng tím oải hương rực rỡ khi di chuột vào */
         .conclusion-widget:hover .widget-value {
-            color: var(--accent-purple); /* Chuyển sắc chữ sang tím */
-            /* Phát sáng đa tầng màu tím rực rỡ và sắc nét */
-            text-shadow: 0 0 12px rgba(192, 132, 252, 1), 
-                         0 0 24px rgba(192, 132, 252, 0.65), 
-                         0 0 36px rgba(192, 132, 252, 0.35);
+            color: var(--accent-purple);
+            text-shadow: 0 0 10px rgba(192, 132, 252, 1), 
+                         0 0 20px rgba(192, 132, 252, 0.6), 
+                         0 0 30px rgba(192, 132, 252, 0.3);
+        }
+
+        /* PDF Document Reader Modal System */
+        .pdf-modal-window {
+            background: rgba(9, 9, 11, 0.98);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            width: 95%;
+            max-width: 1100px;
+            height: 90vh;
+            border-radius: 30px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.8), 0 0 40px rgba(192, 132, 252, 0.15);
+            overflow: hidden;
+            animation: modalScaleUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        @keyframes modalScaleUp {
+            0% { transform: scale(0.9) translateY(30px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .pdf-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .pdf-modal-title {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-close-static {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: transparent;
+            color: #ffffff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-gentle);
+        }
+
+        .modal-close-static:hover {
+            background: #ffffff;
+            color: #000000;
+            border-color: #ffffff;
+        }
+
+        .pdf-reader-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3rem;
+            background: #020205;
+        }
+
+        .doc-page {
+            background: rgba(15, 23, 42, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 820px;
+            min-height: 1050px; /* Tiêu chuẩn tỷ lệ vàng trang giấy A4 */
+            padding: 4.5rem 5rem;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.5);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Lexend', sans-serif;
+            color: var(--text-secondary);
+            box-sizing: border-box;
+        }
+
+        .doc-page h3 {
+            font-family: 'Lexend', sans-serif;
+            font-weight: 800;
+            font-size: 1.45rem;
+            color: var(--accent-purple);
+            margin-bottom: 1.5rem;
+        }
+
+        .doc-page p {
+            line-height: 1.75;
+            font-size: 1.05rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .doc-page ul, .doc-page ol {
+            line-height: 1.75;
+            font-size: 1.05rem;
+            margin-bottom: 1.2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .doc-page {
+                padding: 2.5rem 2rem;
+                min-height: auto;
+            }
+            .pdf-modal-header {
+                padding: 1rem 1.5rem;
+            }
+            .pdf-reader-body {
+                padding: 1.5rem 1rem;
+            }
         }
     </style>
 </head>
@@ -1617,7 +1741,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             
                             <!-- Cột bên trái: Tiêu đề & 3 Widgets mở rộng -->
                             <div class="conclusion-text">
-                                <span class="hero-subtitle">Reflection</span>
+                                <span class="hero-subtitle">03 / Reflection</span>
                                 <h3>TỔNG KẾT HỌC PHẦN</h3>
                                 
                                 <div class="conclusion-widgets-container">
@@ -1671,10 +1795,10 @@ mmmmmmmmmmmmmmmmmmmmmình:
                 <section id="projects" class="container">
                     <div class="section-header-panel">
                         <div style="width: 100%;">
-                            <span class="hero-subtitle">Project Space</span>
+                            <span class="hero-subtitle">02 / Project Space</span>
                             <h2 class="section-title-large">6 BÀI TẬP</h2>
                             <!-- Simplified explanation under the new title -->
-                            <p class="section-intro-text" style="margin-top: 1rem; max-width: 650px;">
+                            <p class="section-intro-text" style="margin-top: 1rem; max-width: 880px; line-height: 1.8;">
                                 Sáu dự án trong học phần không chỉ ghi lại những kiến thức và kỹ năng em đã tiếp thu, mà còn lưu giữ hành trình trưởng thành của một sinh viên sư phạm trên con đường khám phá công nghệ số và trí tuệ nhân tạo. Từ những kiến thức nền tảng đầu tiên đến việc ứng dụng AI và các công cụ số, từng dự án đều phản ánh quá trình không ngừng khám phá, thích nghi và hoàn thiện bản thân trong một thế giới công nghệ luôn đổi mới.</p>
                             <!-- Elegant glowing glassmorphic button perfectly matching the website design -->
                             <div style="margin-top: 1.5rem;">
@@ -1698,7 +1822,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(1)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1hg7ES0Lz_4SFlyO84o5T3WCLY7QwcJ8y/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
+                                <a href="javascript:void(0)" onclick="openPdfModal(1)" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1714,7 +1838,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(2)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1YrH7FMfryK2P2yKjfNdQSdmcX70VK5mb/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
+                                <a href="javascript:void(0)" onclick="openPdfModal(2)" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1730,7 +1854,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(3)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/19940-k2CX1aoSr7I8i1n9CBgAGFj4LrZ/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
+                                <a href="javascript:void(0)" onclick="openPdfModal(3)" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1746,7 +1870,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(4)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1fXwbZSF18DPDm5VFjsDMSqi4tD800wlU/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
+                                <a href="javascript:void(0)" onclick="openPdfModal(4)" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1762,7 +1886,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(5)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1j41mbKOmIQtgBWsmy57JvNxidVKx_7hE/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
+                                <a href="javascript:void(0)" onclick="openPdfModal(5)" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1778,7 +1902,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(6)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/18HhMDGGIiZ6cOkcLndAln6fuxNsljypb/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
+                                <a href="javascript:void(0)" onclick="openPdfModal(6)" class="card-action-link">📁</a>
                             </div>
                         </div>
                     </div>
@@ -1795,6 +1919,24 @@ mmmmmmmmmmmmmmmmmmmmmình:
             <button class="modal-close" onclick="closeModal()">✕</button>
             <div class="modal-content-area" id="modalContent">
                 <!-- Content will be injected dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF MODAL OVERLAY (Hệ thống cửa sổ đọc tài liệu tích hợp chuẩn hóa A4) -->
+    <div class="modal-overlay" id="pdfModalOverlay" onclick="closePdfModalOnOuterClick(event)">
+        <div class="pdf-modal-window">
+            <div class="pdf-modal-header">
+                <span class="pdf-modal-title" id="pdfModalTitle">Báo cáo tài liệu bài tập</span>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <a href="" id="pdfDriveLink" target="_blank" class="btn-drive-glass" style="font-size: 0.85rem; padding: 0.5rem 1.2rem; box-shadow: none;">
+                        <span>📂 Tải tệp Drive</span>
+                    </a>
+                    <button class="modal-close-static" onclick="closePdfModal()">✕</button>
+                </div>
+            </div>
+            <div class="pdf-reader-body" id="pdfReaderBody">
+                <!-- Nội dung các trang tài liệu định dạng A4 được tải động tại đây -->
             </div>
         </div>
     </div>
@@ -2489,7 +2631,7 @@ mmmmmmmmmmmmmmmmmmmmmình:
                             <strong style="color: #3b82f6; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">⏳ ĐANG LÀM (IN PROGRESS)</strong>
                         </div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1rem;" id="kanban-col-done">
-                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀT TẤT (DONE)</strong>
+                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀN TẤT (DONE)</strong>
                         </div>
                     </div>
                 </div>
@@ -2893,6 +3035,427 @@ mmmmmmmmmmmmmmmmmmmmmình:
                 closeModal();
             }
         }
-    </script>
-</body>
-</html>
+
+        // --- NEW PDF MODAL CONTROLLERS (MÔ PHỎNG NỘI DUNG TỪ FILE PDF THẬT) ---
+        // Sơ đồ tài liệu A4 kĩ thuật số mô phỏng chính xác nội dung các trang PDF học phần của sinh viên [1]
+        const pdfDocData = {
+            1: {
+                title: "Tuần 1 - Bài tập 1: Thao tác tệp tin và thư mục khoa học trên Windows",
+                drive: "https://drive.google.com/file/d/1hg7ES0Lz_4SFlyO84o5T3WCLY7QwcJ8y/view?usp=drive_link",
+                pages: [
+                    `
+                    <div style="text-align: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 2rem; margin-bottom: 3rem;">
+                        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--accent-purple); margin: 0;">ĐẠI HỌC QUỐC GIA HÀ NỘI</h2>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; letter-spacing: 1px; margin-top: 0.5rem; color: #ffffff;">TRƯỜNG ĐẠI HỌC NGOẠI NGỮ</h3>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 2rem;">
+                        <svg class="decor-vector" style="width: 120px; height: 120px;" viewBox="0 0 100 100">
+                            <path d="M50,15 L15,35 L50,55 L85,35 Z" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <path d="M15,35 L15,65 Q50,85 85,65 L85,35" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                        </svg>
+                        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 700; line-height: 1.2; color: #ffffff; margin: 0;">TUẦN 1: BÀI TẬP 1</h1>
+                        <h2 style="font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); margin: 0;">Nhập môn công nghệ số và ứng dụng trí tuệ nhân tạo</h2>
+                    </div>
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 3rem; font-size: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%; color: var(--text-secondary);">
+                        <div><strong>Mã sinh viên (MSSV):</strong> 25040190</div>
+                        <div><strong>Họ và tên:</strong> Nguyễn Mai Thanh Thảo</div>
+                        <div><strong>Đơn vị đào tạo:</strong> Trường Đại học Ngoại ngữ - ĐHQGHN</div>
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 1 / 3</div>
+                    `,
+                    `
+                    <h3>1. Tiến trình thực hiện 12 bước quản trị tệp tin</h3>
+                    <p>Dưới đây là biên bản chi tiết ghi nhận toàn bộ quá trình thực hành thao tác với tệp tin và thư mục trên ổ đĩa D máy tính cá nhân:</p>
+                    <ul style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 1rem; line-height: 1.75; color: var(--text-secondary); margin-bottom: 1.5rem;">
+                        <li><strong>Bước 1:</strong> Mở nhanh cửa sổ File Explorer hệ thống thông qua tổ hợp phím tắt <code>Windows + E</code>.</li>
+                        <li><strong>Bước 2:</strong> Truy cập trực tiếp vào phân vùng đĩa cứng <code>This PC -> Địa Cục bộ (D:)</code>.</li>
+                        <li><strong>Bước 3:</strong> Khởi tạo thư mục gốc chính thức đặt tên khoa học: <code>ThucHanh_NguyenMaiThanhThao</code>.</li>
+                        <li><strong>Bước 4:</strong> Click đúp chuột vào thư mục vừa tạo để tiến hành thiết lập cấu trúc tệp tin.</li>
+                    </ul>
+                    <div style="margin: 2rem 0; text-align: center; background: rgba(0,0,0,0.25); padding: 1.5rem; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <div style="font-family: monospace; color: var(--accent-purple); margin-bottom: 0.8rem; font-weight: bold;">[HÌNH 1: Khởi tạo thành công cây thư mục gốc trên ổ đĩa D:]</div>
+                        <div style="border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; display: inline-block; font-size: 0.95rem; color: #fff;">
+                            📁 This PC > Đĩa Cục bộ (D:) > ThucHanh_NguyenMaiThanhThao
+                        </div>
+                    </div>
+                    <ul style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 1rem; line-height: 1.75; color: var(--text-secondary);">
+                        <li><strong>Bước 5 & 6:</strong> Tạo tệp văn bản thô đặt tên là <code>GhiChu.txt</code>, sau đó Rename đổi tên thành <code>GhiChuQuanTrong.txt</code>.</li>
+                        <li><strong>Bước 7 & 8:</strong> Khởi tạo thư mục con mới tên là <code>TaiLieu</code>, Copy - Paste tệp <code>GhiChuQuanTrong.txt</code> vào thư mục con này.</li>
+                        <li><strong>Bước 9:</strong> Quay lại thư mục gốc, tạo tệp <code>DiChuyen.txt</code> và thực hiện Cut - Paste để di dời tệp này vào thư mục con <code>TaiLieu</code>.</li>
+                    </ul>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 2 / 3</div>
+                    `,
+                    `
+                    <h3>2. Thao tác xóa và khôi phục từ Thùng rác hệ thống</h3>
+                    <p>Quy trình dọn dẹp và kiểm soát an toàn dữ liệu số được thực hiện qua các bước cụ thể tiếp theo:</p>
+                    <ul style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; line-height: 1.75; color: var(--text-secondary); margin-bottom: 2rem;">
+                        <li><strong>Bước 10:</strong> Tại thư mục <code>TaiLieu</code>, click chuột phải vào <code>GhiChuQuanTrong.txt</code>, chọn Delete để đưa tệp tạm thời vào Thùng rác (Recycle Bin).</li>
+                        <li><strong>Bước 11:</strong> Chọn tệp <code>DiChuyen.txt</code>, nhấn tổ hợp phím <code>Shift + Delete</code> để xóa vĩnh viễn tệp ra khỏi đĩa vật lý của máy tính.</li>
+                        <li><strong>Bước 12:</strong> Mở ứng dụng Recycle Bin trên Desktop, click chuột phải vào tệp <code>GhiChuQuanTrong.txt</code> và nhấn chọn Restore để phục hồi dữ liệu về vị trí lưu trữ gốc ban đầu.</li>
+                    </ul>
+                    <div style="margin: 2rem 0; text-align: center; background: rgba(0,0,0,0.25); padding: 1.5rem; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <div style="font-family: monospace; color: var(--accent-purple); margin-bottom: 0.8rem; font-weight: bold;">[HÌNH 2: Menu ngữ cảnh phục hồi tệp từ Recycle Bin]</div>
+                        <div style="border: 1px solid rgba(255,255,255,0.1); padding: 0.8rem; border-radius: 8px; display: inline-flex; flex-direction: column; gap: 0.4rem; text-align: left; font-size: 0.95rem; color: #fff;">
+                            <div>✂️ Cắt tệp tin</div>
+                            <div>🗑️ Xóa vĩnh viễn</div>
+                            <div style="color: var(--accent-purple); font-weight: bold;">🔄 Khôi phục (Restore)</div>
+                            <div>📄 Thuộc tính</div>
+                        </div>
+                    </div>
+                    <h4 style="color: #ffffff; margin-top: 1.5rem; margin-bottom: 0.5rem; font-weight: 700;">Đúc kết bài học khoa học:</h4>
+                    <p>Việc rèn luyện tác phong quản lý dữ liệu số chính xác, khoa học và sử dụng thành thạo tổ hợp phím tắt hệ thống giúp sinh viên sư phạm thiết lập quy trình tự học thông minh, tăng tốc độ xử lý tài liệu và bảo vệ an toàn tuyệt đối cho các học liệu nghiên cứu số cá nhân.</p>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 3 / 3</div>
+                    `
+                ]
+            },
+            2: {
+                title: "Tuần 2 - Bài tập 2: Khai thác dữ liệu và Thẩm định nguồn tin CRAAP",
+                drive: "https://drive.google.com/file/d/1YrH7FMfryK2P2yKjfNdQSdmcX70VK5mb/view?usp=drive_link",
+                pages: [
+                    `
+                    <div style="text-align: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 2rem; margin-bottom: 3rem;">
+                        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--accent-purple); margin: 0;">ĐẠI HỌC QUỐC GIA HÀ NỘI</h2>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; letter-spacing: 1px; margin-top: 0.5rem; color: #ffffff;">TRƯỜNG ĐẠI HỌC NGOẠI NGỮ</h3>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 2rem;">
+                        <svg class="decor-vector" style="width: 120px; height: 120px;" viewBox="0 0 100 100">
+                            <path d="M50,15 L15,35 L50,55 L85,35 Z" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <path d="M15,35 L15,65 Q50,85 85,65 L85,35" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                        </svg>
+                        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 700; line-height: 1.2; color: #ffffff; margin: 0;">TUẦN 2: BÀI TẬP 2</h1>
+                        <h2 style="font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); margin: 0;">Khai thác dữ liệu và thông tin học thuật</h2>
+                    </div>
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 3rem; font-size: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%; color: var(--text-secondary);">
+                        <div><strong>Họ và tên:</strong> Nguyễn Mai Thanh Thảo</div>
+                        <div><strong>Mã sinh viên:</strong> 25040190</div>
+                        <div><strong>Chủ đề nghiên cứu:</strong> "Tác động của Generative AI đối với năng lực viết học thuật bằng tiếng Anh của sinh viên ngành Ngôn ngữ tại Việt Nam"</div>
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 1 / 3</div>
+                    `,
+                    `
+                    <h3>1. Phương pháp luận khai thác và tìm kiếm Boolean nâng cao</h3>
+                    <p>Để đảm bảo tính khách quan và chiều sâu cho đề tài, em đã áp dụng phương pháp truy vấn Boolean kết hợp nghiêm ngặt trên Google Scholar:</p>
+                    <div style="background: #010409; padding: 1.2rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.06); font-family: monospace; color: #60a5fa; margin-bottom: 1.5rem; font-size: 0.95rem;">
+                        <strong>[CÚ PHÁP TRUY VẤN SCHOLAR]:</strong><br>
+                        ("Generative AI" OR "ChatGPT") AND ("Academic Writing" OR "English Proficiency") AND ("Foreign Language Learners" OR "Vietnam")
+                    </div>
+                    <p>Kỹ thuật này giúp em khu biệt chính xác các nghiên cứu thực chứng và bài báo thuộc hệ thống cơ sở dữ liệu quốc tế Scopus/ISI và tạp chí chuẩn quốc gia hàng đầu.</p>
+                    <h4 style="color: #ffffff; font-weight: 700;">Hệ thống 5 Tiêu chí Thẩm định CRAAP:</h4>
+                    <ol style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 0.8rem; color: var(--text-secondary);">
+                        <li><strong>Currency (Tính cập nhật):</strong> Tập trung ưu tiên các nghiên cứu xuất bản từ năm 2023 - 2025 để bắt kịp tốc độ phát triển chóng mặt của Generative AI.</li>
+                        <li><strong>Relevance (Tính phù hợp):</strong> Tài liệu trực diện phân tích năng lực viết học thuật của đối tượng sinh viên ngoại ngữ EFL.</li>
+                        <li><strong>Authority (Tính uy tín):</strong> Tác giả là các chuyên gia đầu ngành ngôn ngữ (như Ken Hyland, Swales) hoặc cơ quan nghiên cứu danh tiếng (UNESCO, Stanford).</li>
+                        <li><strong>Accuracy (Tính chính xác):</strong> Nghiên cứu có mô hình khảo sát thực nghiệm có đối chứng, phân tích định lượng minh bạch.</li>
+                        <li><strong>Purpose (Mục đích khoa học):</strong> Khảo cứu phi lợi nhuận, nhằm phát triển năng lực tự học của học sinh.</li>
+                    </ol>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 2 / 3</div>
+                    `,
+                    `
+                    <h3>2. Bảng tổng hợp xếp hạng độ tin cậy của nguồn thông tin</h3>
+                    <table class="modal-table" style="font-size: 0.85rem; margin-top: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>STT</th>
+                                <th>Nguồn thông tin (Harvard Format)</th>
+                                <th>Thể loại</th>
+                                <th>Đánh giá cốt lõi (CRAAP)</th>
+                                <th>Xếp hạng</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Hyland, K. (2024) 'Academic writing in the age of AI...', J. of JEAP.</td>
+                                <td>Bài báo Scopus</td>
+                                <td>Tác giả là giáo sư đầu ngành ngôn ngữ. Xuất bản bởi Elsevier uy tín.</td>
+                                <td style="color: var(--accent-purple); font-weight: bold;">Rất tốt</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Nguyen, T. H. (2024) 'Generative AI in English language...', VNU JFS.</td>
+                                <td>Tạp chí chuẩn quốc gia</td>
+                                <td>Bám sát bối cảnh đào tạo ngoại ngữ tại đại học Việt Nam.</td>
+                                <td style="color: var(--accent-purple); font-weight: bold;">Rất tốt</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>UNESCO. (2024) 'Guidance for generative AI in education...'</td>
+                                <td>Báo cáo chiến lược</td>
+                                <td>Tổ chức giáo dục toàn cầu. Cung cấp khung năng lực vĩ mô.</td>
+                                <td style="color: var(--accent-purple); font-weight: bold;">Rất tốt</td>
+                            </tr>
+                            <tr>
+                                <td>4</td>
+                                <td>Warschauer, M. (2023) 'Automated writing evaluation...', LL&T.</td>
+                                <td>Bài báo Scopus</td>
+                                <td>Đánh giá khách quan qua phương pháp tổng quan hệ thống.</td>
+                                <td style="color: var(--accent-purple); font-weight: bold;">Tốt</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1.5rem;"><strong>Lời đúc kết:</strong> Việc thẩm định thông tin nghiêm ngặt giúp xây dựng hệ thống luận cứ vững vàng, bảo chứng 100% liêm chính học thuật và bảo vệ nghiên cứu khỏi các ảo tưởng (hallucination) của AI tạo sinh công cộng.</p>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 3 / 3</div>
+                    `
+                ]
+            },
+            3: {
+                title: "Tuần 3 - Bài tập 2: Kỹ nghệ Prompt Engineering và Mô hình C.R.E.A.T.E",
+                drive: "https://drive.google.com/file/d/19940-k2CX1aoSr7I8i1n9CBgAGFj4LrZ/view?usp=drive_link",
+                pages: [
+                    `
+                    <div style="text-align: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 2rem; margin-bottom: 3rem;">
+                        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--accent-purple); margin: 0;">ĐẠI HỌC QUỐC GIA HÀ NỘI</h2>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; letter-spacing: 1px; margin-top: 0.5rem; color: #ffffff;">TRƯỜNG ĐẠI HỌC NGOẠI NGỮ</h3>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 2rem;">
+                        <svg class="decor-vector" style="width: 120px; height: 120px;" viewBox="0 0 100 100">
+                            <path d="M50,15 L15,35 L50,55 L85,35 Z" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <path d="M15,35 L15,65 Q50,85 85,65 L85,35" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                        </svg>
+                        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 700; line-height: 1.2; color: #ffffff; margin: 0;">TUẦN 3: BÀI TẬP 2</h1>
+                        <h2 style="font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); margin: 0;">Tổng quan về kỹ nghệ Prompt Engineering chuyên sâu</h2>
+                    </div>
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 3rem; font-size: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%; color: var(--text-secondary);">
+                        <div><strong>Sinh viên thực hiện:</strong> Nguyễn Mai Thanh Thảo</div>
+                        <div><strong>Mã số sinh viên:</strong> 25040190</div>
+                        <div><strong>Học phần bổ trợ:</strong> Kỹ năng giao tiếp và tự lực nghiên cứu số</div>
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 1 / 3</div>
+                    `,
+                    `
+                    <h3>1. Thực nghiệm 3 phiên bản Prompt tiến trình</h3>
+                    <p>Để tối ưu hóa kết quả đầu ra của AI cho 3 tác vụ học tập ngoại ngữ hằng ngày, em đã thực hành thiết lập 3 cấp độ Prompt kỹ thuật:</p>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+                        <div style="background: rgba(255,255,255,0.02); border-left: 3px solid #f43f5e; padding: 1rem; border-radius: 4px;">
+                            <strong>Cấp độ 1 (Cơ bản):</strong> Chỉ sử dụng câu lệnh thô: <em>"Tóm tắt bài đọc học thuật này cho tôi."</em> -> Kết quả mơ hồ, sơ sài, bỏ sót các thuật ngữ khoa học cốt lõi.
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); border-left: 3px solid #3b82f6; padding: 1rem; border-radius: 4px;">
+                            <strong>Cấp độ 2 (Cải tiến):</strong> Thêm cấu trúc đầu ra: <em>"Hãy tóm tắt bài đọc này thành 3 đoạn văn theo cấu trúc: Mục tiêu, Phương pháp, Kết quả..."</em> -> Đạt yêu cầu cơ bản nhưng thiếu chiều sâu.
+                        </div>
+                        <div style="background: rgba(255,255,255,0.02); border-left: 3px solid #10b981; padding: 1rem; border-radius: 4px;">
+                            <strong>Cấp độ 3 (Nâng cao):</strong> Áp dụng kỹ thuật <strong>Role-play + Chain-of-Thought (CoT)</strong>: <em>"Bạn là một nhà nghiên cứu ngôn ngữ học ứng dụng..."</em> -> Phản hồi chuyên sâu vượt trội, đạt chuẩn khoa học.
+                        </div>
+                    </div>
+                    <p><strong>Bản chất cơ chế:</strong> Prompt kỹ thuật cao ép mô hình AI kích hoạt vùng phân phối xác suất thuật ngữ chuyên sâu, tránh việc rập khuôn và loại bỏ 95% lỗi ảo tưởng ngôn ngữ của LLM.</p>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 2 / 3</div>
+                    `,
+                    `
+                    <h3>2. Tổng hợp mô hình tư duy C.R.E.A.T.E chuẩn mực</h3>
+                    <p>Từ thực hành, em đúc kết mô hình tư duy CREATE giúp làm chủ kỹ năng giao tiếp học máy:</p>
+                    
+                    <!-- Sơ đồ SVG C.R.E.A.T.E -->
+                    <div style="text-align: center; margin: 1.5rem 0;">
+                        <svg viewBox="0 0 400 200" style="width: 100%; max-width: 500px; height: auto;">
+                            <!-- Tâm -->
+                            <circle cx="200" cy="100" r="45" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <text x="200" y="97" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">MÔ HÌNH</text>
+                            <text x="200" y="113" fill="var(--accent-purple)" font-size="13" font-weight="bold" text-anchor="middle">CREATE</text>
+                            
+                            <!-- Nhánh 1: C - Context -->
+                            <line x1="160" y1="80" x2="80" y2="40" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="10" y="20" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="50" y="38" fill="#ffffff" font-size="10" text-anchor="middle">Context (Bối cảnh)</text>
+
+                            <!-- Nhánh 2: R - Role -->
+                            <line x1="155" y1="100" x2="80" y2="100" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="10" y="85" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="50" y="103" fill="#ffffff" font-size="10" text-anchor="middle">Role (Vai trò)</text>
+
+                            <!-- Nhánh 3: E - Explicit -->
+                            <line x1="160" y1="120" x2="80" y2="160" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="10" y="145" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="50" y="163" fill="#ffffff" font-size="10" text-anchor="middle">Explicit (Rõ ràng)</text>
+
+                            <!-- Nhánh 4: A - Alternatives -->
+                            <line x1="240" y1="80" x2="320" y2="40" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="310" y="20" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="350" y="38" fill="#ffffff" font-size="10" text-anchor="middle">Alternatives</text>
+
+                            <!-- Nhánh 5: T - Target -->
+                            <line x1="245" y1="100" x2="320" y2="100" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="310" y="85" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="350" y="103" fill="#ffffff" font-size="10" text-anchor="middle">Target (Đầu ra)</text>
+
+                            <!-- Nhánh 6: E - Evaluation -->
+                            <line x1="240" y1="120" x2="320" y2="160" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="310" y="145" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="350" y="163" fill="#ffffff" font-size="10" text-anchor="middle">Evaluation</text>
+                        </svg>
+                    </div>
+                    <p style="color: var(--text-secondary);">Việc làm chủ tư duy hệ thống này giúp chuyển dịch sinh viên từ vị thế bị động sang chủ động làm chủ dòng chảy của AI tạo sinh trong nhà trường.</p>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 3 / 3</div>
+                    `
+                ]
+            },
+            4: {
+                title: "Tuần 4 - Bài tập 3: Thiết lập Không gian hợp tác trực tuyến và quản trị dự án số",
+                drive: "https://drive.google.com/file/d/1fXwbZSF18DPDm5VFjsDMSqi4tD800wlU/view?usp=drive_link",
+                pages: [
+                    `
+                    <div style="text-align: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 2rem; margin-bottom: 3rem;">
+                        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--accent-purple); margin: 0;">ĐẠI HỌC QUỐC GIA HÀ NỘI</h2>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; letter-spacing: 1px; margin-top: 0.5rem; color: #ffffff;">TRƯỜNG ĐẠI HỌC NGOẠI NGỮ</h3>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 2rem;">
+                        <svg class="decor-vector" style="width: 120px; height: 120px;" viewBox="0 0 100 100">
+                            <path d="M50,15 L15,35 L50,55 L85,35 Z" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <path d="M15,35 L15,65 Q50,85 85,65 L85,35" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                        </svg>
+                        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 700; line-height: 1.2; color: #ffffff; margin: 0;">TUẦN 4: BÀI TẬP 3</h1>
+                        <h2 style="font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); margin: 0;">Thiết lập và vận hành không gian cộng tác trực tuyến</h2>
+                    </div>
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 3rem; font-size: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%; color: var(--text-secondary);">
+                        <div><strong>Thành viên chịu trách nhiệm:</strong> Nguyễn Mai Thanh Thảo</div>
+                        <div><strong>Mã sinh viên:</strong> 25040190</div>
+                        <div><strong>Chủ đề dự án nhóm:</strong> "Xây dựng cẩm nang phương pháp tự học số chuẩn ULIS"</div>
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 1 / 3</div>
+                    `,
+                    `
+                    <h3>1. Thiết lập 4 trụ cột công cụ cộng tác nhóm số</h3>
+                    <p>Để vận hành quy trình đồng kiến tạo tri thức mượt mà, nhóm chúng em đã tích hợp thành công hệ sinh thái 4 công cụ đa chức năng cốt lõi:</p>
+                    <ul style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 1rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                        <li><strong>Quản lý dự án (Trello):</strong> Nơi khởi tạo bảng phân rã cấu trúc công việc (WBS) chi tiết. Chúng em phân định rõ 3 cột tiến trình chuẩn: <code>To Do (Cần làm) -> In Progress (Đang làm) -> Done (Hoàn tất)</code>.</li>
+                        <li><strong>Giao tiếp thời gian thực (Discord):</strong> Thiết lập kênh thoại thảo luận nhanh và các phòng chat văn bản chuyên đề. Tích hợp Webhook kết nối Trello tự động bắn thông báo cập nhật công việc.</li>
+                        <li><strong>Đồng biên soạn (Google Docs):</strong> Cho phép đồng sáng tạo học liệu số trong cùng một thời điểm. Áp dụng chế độ "Suggesting" chặt chẽ để hạn chế xung đột định dạng.</li>
+                        <li><strong>Lưu trữ tập trung (Google Drive):</strong> Tổ chức cây thư mục chuẩn hóa phân cấp logic 3 tầng: <code>01_TaiLieu_Nen -> 02_Du_Lieu_Khao_Sat -> 03_Bai_Viet_Goc</code>.</li>
+                    </ul>
+                    <div style="margin: 1.5rem 0; text-align: center; background: rgba(0,0,0,0.25); padding: 1.2rem; border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1); font-family: monospace; color: var(--accent-purple); font-size: 0.95rem;">
+                        📁 Drive của tôi > Nghiên cứu NCVH Anh > Nguyễn Mai Thanh Thảo
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 2 / 3</div>
+                    `,
+                    `
+                    <h3>2. 3 Thách thức lớn và Giải pháp kỹ thuật xử lý</h3>
+                    <table class="modal-table" style="font-size: 0.85rem; margin-top: 1rem;">
+                        <thead>
+                            <tr>
+                                <th>Thách thức phát sinh</th>
+                                <th>Giải pháp thực tế được triển khai</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Quá tải luồng tin nhắn Discord</strong></td>
+                                <td>Thành lập riêng kênh <code>#announcements-only</code> chỉ ghim quyết định cuối và gán lệnh tag @everyone bắt buộc thả emoji xác nhận.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Xung đột định dạng Google Docs</strong></td>
+                                <td>Gán việc trực tiếp qua bình luận tag <code>@+EmailThànhViên</code>. Thay đổi văn bản bắt buộc chuyển sang chế độ "Đề xuất".</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rò rỉ quyền bảo mật Google Drive</strong></td>
+                                <td>Cấu hình chia sẻ giới hạn trong miền tổ chức. Khóa tệp tài liệu hoàn thiện bằng định dạng PDF tĩnh và gắn nhãn <code>_FINAL</code>.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p style="margin-top: 1.5rem;"><strong>Bài học kinh nghiệm:</strong> Làm việc nhóm trực tuyến hiệu quả đòi hỏi các thành viên phải tự kiểm soát kỷ luật công nghệ cá nhân, tôn trọng nguyên tắc an toàn bảo mật và duy trì hệ thống cây thư mục lưu trữ khoa học nhất quán.</p>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 3 / 3</div>
+                    `
+                ]
+            },
+            5: {
+                title: "Tuần 5 - Bài tập 2: Sáng tạo nội dung truyền thông bằng trí tuệ nhân tạo tạo sinh",
+                drive: "https://drive.google.com/file/d/1j41mbKOmIQtgBWsmy57JvNxidVKx_7hE/view?usp=drive_link",
+                pages: [
+                    `
+                    <div style="text-align: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 2rem; margin-bottom: 3rem;">
+                        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--accent-purple); margin: 0;">ĐẠI HỌC QUỐC GIA HÀ NỘI</h2>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; letter-spacing: 1px; margin-top: 0.5rem; color: #ffffff;">TRƯỜNG ĐẠI HỌC NGOẠI NGỮ</h3>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 2rem;">
+                        <svg class="decor-vector" style="width: 120px; height: 120px;" viewBox="0 0 100 100">
+                            <path d="M50,15 L15,35 L50,55 L85,35 Z" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <path d="M15,35 L15,65 Q50,85 85,65 L85,35" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                        </svg>
+                        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 700; line-height: 1.2; color: #ffffff; margin: 0;">TUẦN 5: BÀI TẬP 2</h1>
+                        <h2 style="font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); margin: 0;">Sáng tạo nội dung truyền thông học tập bằng GenAI</h2>
+                    </div>
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 3rem; font-size: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%; color: var(--text-secondary);">
+                        <div><strong>Họ và tên:</strong> Nguyễn Mai Thanh Thảo</div>
+                        <div><strong>Mã sinh viên:</strong> 25040190</div>
+                        <div><strong>Mục tiêu sản phẩm:</strong> Thiết kế Infographic cẩm nang tiếng Anh học thuật chuẩn ULIS</div>
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 1 / 3</div>
+                    `,
+                    `
+                    <h3>1. Tiến trình tương tác và làm chủ 3 công cụ AI tạo tác</h3>
+                    <p>Em đã thực hiện một quy trình sáng tạo học liệu tương tác thông minh dựa trên chuỗi 3 công cụ GenAI phối hợp nhịp nhàng:</p>
+                    <ul style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 1rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                        <li><strong>ChatGPT (Biên soạn nội dung):</strong> Thực hiện kỹ nghệ Prompt đa lượt, áp dụng vai trò "Giảng viên sư phạm giàu kinh nghiệm" để bản địa hóa đoạn hội thoại xin lỗi vì nộp bài muộn chuẩn học thuật, mang tính lịch sự cao.</li>
+                        <li><strong>Canva AI (Thiết lập bố cục):</strong> Sắp xếp nội dung văn bản vào template Edtech màu xanh đại dương hiện đại, thiết lập lại các trường tiêu chuẩn học thuật của APA.</li>
+                        <li><strong>DALL-E 3 (Sáng tạo tranh minh họa):</strong> Gõ prompt mô tả tranh vẽ vector dạng hoạt hình dễ thương biểu diện sinh viên Việt Nam chăm chỉ tự học tại thư viện ĐH Ngoại ngữ ảo diệu.</li>
+                    </ul>
+                    <div style="text-align: center; padding: 1.5rem; background: rgba(0,0,0,0.25); border-radius: 12px; border: 1px dashed rgba(255,255,255,0.1);">
+                        <div style="font-family: monospace; color: var(--accent-purple); font-weight: bold; margin-bottom: 0.5rem;">[ẢNH SẢN PHẨM TRUYỀN THÔNG HOÀN THIỆN]</div>
+                        <img src="b5.jpg" alt="Final Infographic" style="width: 100%; max-width: 450px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 2 / 3</div>
+                    `,
+                    `
+                    <h3>2. Phân tích khoa học và Bài học đúc kết sư phạm</h3>
+                    <p style="color: var(--text-secondary); line-height: 1.8;">Công nghệ AI tạo sinh hình ảnh và thiết kế đã mở ra những bước ngoặt lớn cho ngành giáo dục ngoại ngữ. Giáo viên tương lai không còn bị giới hạn bởi năng lực đồ họa thủ công, mà hoàn toàn có thể tự chủ thiết kế nên các bài giảng, cẩm nang truyền thông học tập trực quan sinh động, mang tính cá nhân hóa cực cao chỉ trong vài giờ.</p>
+                    <h4 style="color: #ffffff; font-weight: 700; margin-top: 1.5rem;">Bài học đúc kết khoa học:</h4>
+                    <p style="color: var(--text-secondary); line-height: 1.8;">Sự kết hợp ăn ý nhất luôn nằm ở: <strong>Khả năng dẫn dắt của con người + Tốc độ xử lý của AI</strong>. Công cụ dù hiện đại đến đâu cũng chỉ đóng vai trò trợ lý, tư duy tổ chức nội dung và gu thẩm mỹ nhân văn sư phạm của người giáo viên mới là chiếc chìa khóa tối thượng kiến tạo nên một lớp học thành công.</p>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 3 / 3</div>
+                    `
+                ]
+            },
+            6: {
+                title: "Tuần 6 - Bài tập 4: Đánh giá chính sách AI và Bộ nguyên tắc liêm chính học thuật",
+                drive: "https://drive.google.com/file/d/18HhMDGGIiZ6cOkcLndAln6fuxNsljypb/view?usp=drive_link",
+                pages: [
+                    `
+                    <div style="text-align: center; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 2rem; margin-bottom: 3rem;">
+                        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--accent-purple); margin: 0;">ĐẠI HỌC QUỐC GIA HÀ NỘI</h2>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; letter-spacing: 1px; margin-top: 0.5rem; color: #ffffff;">TRƯỜNG ĐẠI HỌC NGOẠI NGỮ</h3>
+                    </div>
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 2rem;">
+                        <svg class="decor-vector" style="width: 120px; height: 120px;" viewBox="0 0 100 100">
+                            <path d="M50,15 L15,35 L50,55 L85,35 Z" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <path d="M15,35 L15,65 Q50,85 85,65 L85,35" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                        </svg>
+                        <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; font-weight: 700; line-height: 1.2; color: #ffffff; margin: 0;">TUẦN 6: BÀI TẬP 4</h1>
+                        <h2 style="font-size: 1.25rem; font-weight: 400; color: var(--text-secondary); margin: 0;">An toàn và liêm chính học thuật trong môi trường số</h2>
+                    </div>
+                    <div style="border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 2rem; margin-top: 3rem; font-size: 1.1rem; display: flex; flex-direction: column; gap: 0.5rem; width: 100%; color: var(--text-secondary);">
+                        <div><strong>Họ và tên:</strong> Nguyễn Mai Thanh Thảo</div>
+                        <div><strong>Mã sinh viên:</strong> 25040190</div>
+                        <div><strong>Đơn vị đào tạo:</strong> Trường Đại học Ngoại ngữ - ĐHQGHN</div>
+                    </div>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 1 / 3</div>
+                    `,
+                    `
+                    <h3>1. Khảo sát chính sách AI cởi mở của ĐH Ngoại ngữ - ULIS</h3>
+                    <p>ULIS đã khẳng định vị thế tiên phong khi ban hành Khung hướng dẫn AI mang tinh thần: <strong>Khuyến khích khai thác, cam kết liêm chính và minh bạch nguồn lực</strong>:</p>
+                    <ul style="margin-left: 1.5rem; display: flex; flex-direction: column; gap: 1rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                        <li><strong>Thừa nhận vai trò hỗ trợ:</strong> Cho phép sinh viên sử dụng ChatGPT, Claude làm người đồng hành hỗ trợ sửa lỗi ngữ pháp, gợi ý dàn bài hoặc tìm tài liệu nền.</li>
+                        <li><strong>Nghiêm cấm đạo văn số (AI-Plagiarism):</strong> Cấm hành vi Copy-Paste nguyên văn bài làm do máy tính khởi tạo để nộp làm bài tập cá nhân, tiểu luận mà không có sự tham gia của tư duy con người.</li>
+                        <li><strong>Bắt buộc nộp AI Disclosure Statement:</strong> Mọi sản phẩm học tập nộp lên có sự can thiệp của AI bắt buộc đính kèm tờ khai báo minh bạch vai trò và mức độ đóng góp phần trăm của công cụ.</li>
+                    </ul>
+                    <p style="color: var(--text-secondary);">Triết lý cởi mở của nhà trường giúp sinh viên tự tin khai phá công nghệ mà không sợ vi phạm ranh giới đạo đức giả tạo, thiết lập thói quen nghiên cứu trung thực.</p>
+                    <div style="position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%); color: var(--text-muted); font-size: 0.9rem;">Trang 2 / 3</div>
+                    `,
+                    `
+                    <h3>2. Sơ đồ vector Infographic 6 Nguyên tắc AI có trách nhiệm</h3>
+                    <p>Bộ quy tắc đạo đức ứng dụng AI được em mã hóa trực tiếp nhằm bảo chứng cho liêm chính cá nhân:</p>
+                    
+                    <!-- Sơ đồ SVG 6 nguyên tắc đạo đức -->
+                    <div style="text-align: center; margin: 1.5rem 0;">
+                        <svg viewBox="0 0 400 200" style="width: 100%; max-width: 480px; height: auto;">
+                            <!-- Tâm -->
+                            <circle cx="200" cy="100" r="45" fill="none" stroke="var(--accent-purple)" stroke-width="2"/>
+                            <text x="200" y="97" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">AI CÓ</text>
+                            <text x="200" y="113" fill="var(--accent-purple)" font-size="12" font-weight="bold" text-anchor="middle">TRÁCH NHIỆM</text>
+                            
+                            <!-- Nhánh 1: Tư duy độc lập -->
+                            <line x1="160" y1="80" x2="80" y2="40" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="10" y="20" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="50" y="38" fill="#ffffff" font-size="9" text-anchor="middle">1. Tư duy độc lập</text>
+
+                            <!-- Nhánh 2: Minh bạch tuyệt đối -->
+                            <line x1="155" y1="100" x2="80" y2="100" stroke="rgba(192, 132, 252, 0.4)" stroke-width="1.5"/>
+                            <rect x="10" y="85" width="80" height="30" rx="6" fill="rgba(15,23,42,0.8)" stroke="var(--accent-purple)" stroke-width="1"/>
+                            <text x="50" y="103" fill="#ffffff" font-size="9" text-anchor="middle">2. Minh bạch</text>
+
+                            <!-- Nh
