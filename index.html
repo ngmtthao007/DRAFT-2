@@ -434,107 +434,79 @@
             margin-bottom: 1.5rem;
         }
 
-        /* Thiết kế lật thẻ 3D cho Định hướng & Mục tiêu */
-        .flip-card-container {
-            perspective: 1000px;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin-bottom: 1.5rem;
-            max-width: 520px;
-            width: 100%;
-            height: 180px; /* Khung cao cố định ngăn giật hình */
-            cursor: pointer;
-        }
-        
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: left;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-        }
-        
-        /* Hiệu ứng xoay khi thẻ được kích hoạt class flipped */
-        .flip-card-container.flipped .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 1.4rem 1.8rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+        /* Thiết kế lật thẻ 3D cho Định hướng & Mục tiêu -> Chuyển sang Expandable Card khi Click */
+        .expandable-intro-card {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(24px);
+            border-radius: 20px;
+            padding: 1.4rem 1.8rem;
+            margin-bottom: 1.5rem;
+            max-width: 520px;
+            width: 100%;
+            cursor: pointer;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            /* Chuyển tiếp mượt mà cho chiều cao mở rộng và góc xoay lật 3D */
+            transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+                        transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            max-height: 72px; /* Chiều cao thu gọn chứa vừa văn bản tiêu đề */
         }
-        
-        .flip-card-front {
-            z-index: 2;
-            transform: rotateY(0deg);
-        }
-        
-        .flip-card-front .intro-box-title {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--accent-purple);
-            text-shadow: 0 0 10px rgba(192, 132, 252, 0.3);
-            margin: 0;
-        }
-        
-        .flip-hint-badge {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-top: 1rem;
-            display: inline-block;
-            border: 1px dashed rgba(255, 255, 255, 0.15);
-            padding: 0.4rem 0.8rem;
-            border-radius: 50px;
-            width: max-content;
-            transition: var(--transition-gentle);
-        }
-        
-        .flip-card-container:hover .flip-hint-badge {
+
+        .expandable-intro-card:hover {
             border-color: var(--accent-purple);
-            color: var(--accent-purple);
-            text-shadow: 0 0 8px rgba(192, 132, 252, 0.4);
+            box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25);
+        }
+
+        .expandable-intro-card.expanded {
+            max-height: 250px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
         }
         
-        .flip-card-back {
-            transform: rotateY(180deg);
-            justify-content: flex-start;
-            overflow-y: auto;
-        }
-        
-        .flip-card-back::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .flip-card-back::-webkit-scrollbar-thumb {
-            background: rgba(192, 132, 252, 0.2);
-            border-radius: 2px;
-        }
-        
-        .flip-card-back .intro-box-title {
-            font-size: 0.83rem;
-            font-weight: 700;
+        .glowing-intro-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.15rem;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: var(--accent-purple);
-            margin-bottom: 0.4rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(192, 132, 252, 0.8), 0 0 20px rgba(192, 132, 252, 0.4);
+            transition: text-shadow 0.3s ease;
+        }
+
+        /* Biểu tượng mũi tên mở rộng lật ngược */
+        .glowing-intro-title::after {
+            content: '▼';
+            font-size: 0.8rem;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--accent-purple);
+        }
+
+        .expandable-intro-card.expanded .glowing-intro-title::after {
+            transform: rotate(-180deg);
         }
         
-        .flip-card-back p {
+        .expandable-intro-card:hover .glowing-intro-title {
+            text-shadow: 0 0 15px rgba(192, 132, 252, 1), 0 0 30px rgba(192, 132, 252, 0.6);
+        }
+        
+        .intro-content-expand {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .expandable-intro-card.expanded .intro-content-expand {
+            opacity: 1;
+        }
+        
+        .intro-content-expand p {
             color: var(--text-primary);
             font-size: 1.05rem;
             line-height: 1.7;
@@ -586,7 +558,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center; /* Đưa các thẻ về tâm */
-            gap: 2rem; /* Khoảng cách đồng bộ mượt mà */
+            gap: 1.5rem; /* Đồng bộ khoảng cách dọc */
             transform: translateY(-40px); /* Nâng toàn bộ cụm ô thông tin lên cao hơn để cân đối */
         }
 
@@ -623,6 +595,17 @@
                         border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
                         box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
                         opacity 0.45s ease;
+        }
+
+        /* Thiết kế nổi bật đặc biệt cho Đơn vị đào tạo */
+        .widget-card.highlight-card {
+            padding: 1.8rem 2.2rem;
+            border-color: rgba(192, 132, 252, 0.3);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.5), 0 0 25px rgba(192, 132, 252, 0.15);
+        }
+        .widget-card.highlight-card .widget-value {
+            font-size: 1.55rem;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.6), 0 0 30px rgba(192, 132, 252, 0.4);
         }
 
         /* Đồng bộ hiệu ứng vệt sáng tự động quét qua mỗi 9 giây cho các widget giới thiệu */
@@ -675,11 +658,11 @@
             align-self: center;
         }
 
-        /* 3 Columns Grid of Profile Cards (Sắp xếp 3 cột cân bằng sau khi bỏ Họ và tên) */
-        .widgets-grid-2x2 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem; /* Tăng khoảng cách giữa 3 ô giúp bố cục to ra */
+        /* widgets-vertical-stack: Xếp dọc 3 widget giới thiệu còn lại */
+        .widgets-vertical-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
             width: 100%;
         }
 
@@ -808,7 +791,7 @@
             );
             transform: skewX(-25deg) translateZ(0);
             pointer-events: none;
-            animation: shineSweep 6s infinite cubic-bezier(0.25, 1, 0.5, 1);
+            animation: shineSweep 9s infinite cubic-bezier(0.25, 1, 0.5, 1);
             z-index: 5;
         }
 
@@ -1166,10 +1149,10 @@
             font-size: 2.8rem; /* Điều chỉnh lại kích thước cho cân đối với phông Lexend */
             font-weight: 800; /* Thiết lập Lexend Extra Bold cực kỳ sắc nét */
             color: var(--text-primary);
-            margin-bottom: 1rem; /* Giảm margin bottom xuống 1rem mang tổng kết lại gần hơn */
+            margin-bottom: 0.5rem; /* Thu nhỏ khoảng cách lề dưới */
             letter-spacing: 0.5px;
-            /* Tạo hiệu ứng phát sáng trắng - tím oải hương nhẹ nhàng xung quanh chữ */
-            text-shadow: 0 0 12px rgba(255, 255, 255, 0.25), 0 0 25px rgba(192, 132, 252, 0.15);
+            /* Tạo hiệu ứng phát sáng mạnh mẽ màu trắng và oải hương */
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.7), 0 0 30px rgba(192, 132, 252, 0.4);
         }
 
         .conclusion-stats {
@@ -1545,19 +1528,11 @@
                         <span class="hero-subtitle">ULIS_DHQGHN</span>
                         <h1 class="hero-name">Nguyễn Mai<br>Thanh Thảo</h1>
                         
-                        <!-- Giới thiệu mục tiêu Sư phạm của giáo viên tương lai (Dạng lật thẻ 3D) -->
-                        <div class="intro-glass-box flip-card-container" onclick="toggleFlipCard(this)">
-                            <div class="flip-card-inner">
-                                <!-- Mặt trước (Front) -->
-                                <div class="flip-card-front">
-                                    <span class="intro-box-title">Định hướng & Mục tiêu</span>
-                                    <div class="flip-hint-badge">Nhấp để xem chi tiết ➔</div>
-                                </div>
-                                <!-- Mặt sau (Back) -->
-                                <div class="flip-card-back">
-                                    <span class="intro-box-title">Định hướng & Mục tiêu</span>
-                                    <p>Mục tiêu của em là nghiên cứu ứng dụng Generative AI và các nền tảng EdTech hiện đại nhằm tối ưu hóa phương pháp giảng dạy tiếng Anh, cá nhân hóa lộ trình học tập và phát triển học liệu số tương tác cao cho học sinh.</p>
-                                </div>
+                        <!-- Giới thiệu mục tiêu Sư phạm của giáo viên tương lai (Dạng lật thẻ 3D) -> Chuyển sang Expandable Card khi Click -->
+                        <div class="intro-glass-box expandable-intro-card" onclick="toggleExpandIntro(this)">
+                            <span class="intro-box-title glowing-intro-title">Định hướng & Mục tiêu</span>
+                            <div class="intro-content-expand">
+                                <p>Mục tiêu của em là nghiên cứu ứng dụng Generative AI và các nền tảng EdTech hiện đại nhằm tối ưu hóa phương pháp giảng dạy tiếng Anh, cá nhân hóa lộ trình học tập và phát triển học liệu số tương tác cao cho học sinh.</p>
                             </div>
                         </div>
 
@@ -1575,14 +1550,14 @@
                             <!-- Interactive Profile Widgets Overlay -->
                             <div class="profile-widgets-overlay">
                                 
-                                <!-- 1. Profile (Top wide capsule) -->
-                                <div class="widget-card wide-card">
+                                <!-- 1. Profile (Top wide capsule) - Đơn vị đào tạo (To hơn, nổi bật hơn) -->
+                                <div class="widget-card wide-card highlight-card">
                                     <span class="widget-label">Đơn vị đào tạo</span>
                                     <span class="widget-value">Trường Đại học Ngoại ngữ - ĐHQGHN</span>
                                 </div>
 
-                                <!-- 3 Columns Grid of Profile Cards (Sắp xếp 3 cột hoàn hảo) -->
-                                <div class="widgets-grid-2x2">
+                                <!-- 3 Columns Grid of Profile Cards (Sắp xếp 3 cột hoàn hảo theo chiều dọc) -->
+                                <div class="widgets-vertical-stack">
                                     <div class="widget-card">
                                         <span class="widget-label">Mã sinh viên</span>
                                         <span class="widget-value">25040190</span>
@@ -1638,7 +1613,7 @@
                                         <span class="widget-label">💡 Đúc kết sư phạm</span>
                                         <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
                                         <div class="widget-content-expand">
-                                            <p>Học phần đã giúp em nhận ra rằng công nghệ chỉ thực sự phát huy giá trị khi được dẫn dắt bởi tư duy của con người và được sử dụng với trách nhiệm.AI hay các công cụ EdTech có thể hỗ trợ việc dạy và học hiệu quả hơn, nhưng không thể thay thế sự sáng tạo, khả năng thấu hiểu và tinh thần nhân văn trong giáo dục. Qua từng bài học và dự án, em không chỉ rèn luyện kỹ năng số mà còn hình thành tư duy làm việc khoa học, chủ động và sẵn sàng ứng dụng công nghệ để tạo nên những trải nghiệm học tập tích cực cho học sinh trong tương lai.</p>
+                                            <p>Học phần đã giúp em nhận ra rằng công nghệ chỉ thực sự phát huy giá trị khi được dẫn dắt bởi tư duy của con người và được sử dụng với trách nhiệm. AI hay các công cụ EdTech có thể hỗ trợ việc dạy và học hiệu quả hơn, nhưng không thể thay thế sự sáng tạo, khả năng thấu hiểu và tinh thần nhân văn trong giáo dục. Qua từng bài học và dự án, em không chỉ rèn luyện kỹ năng số mà còn hình thành tư duy làm việc khoa học, chủ động và sẵn sàng ứng dụng công nghệ để tạo nên những trải nghiệm học tập tích cực cho học sinh trong tương lai.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1693,7 +1668,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(1)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1hg7ES0Lz_4SFlyO84o5T3WCLY7QwcJ8y/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1hg7ES0Lz_4SFlyO84o5T3WCLY7QwcJ8y/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1709,7 +1684,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(2)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1YrH7FMfryK2P2yKjfNdQSdmcX70VK5mb/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1YrH7FMfryK2P2yKjfNdQSdmcX70VK5mb/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1725,7 +1700,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(3)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/19940-k2CX1aoSr7I8i1n9CBgAGFj4LrZ/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/19940-k2CX1aoSr7I8i1n9CBgAGFj4LrZ/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1741,7 +1716,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(4)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1fXwbZSF18DPDm5VFjsDMSqi4tD800wlU/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1fXwbZSF18DPDm5VFjsDMSqi4tD800wlU/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1757,7 +1732,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(5)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1j41mbKOmIQtgBWsmy57JvNxidVKx_7hE/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1j41mbKOmIQtgBWsmy57JvNxidVKx_7hE/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1773,7 +1748,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(6)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/18HhMDGGIiZ6cOkcLndAln6fuxNsljypb/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/18HhMDGGIiZ6cOkcLndAln6fuxNsljypb/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
                     </div>
@@ -2015,14 +1990,14 @@
             });
             
             card.addEventListener('mouseleave', () => {
-                // Khôi phục mượt mà trạng thái cân bằng ban đầu (không scale cứng để nhường cho Sibling hover CSS kiểm soát)
-                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                // Khôi phục mượt mà trạng thái cân bằng ban đầu (Xóa styles inline để nhường cho Sibling hover CSS kiểm soát mượt mà) [1]
+                card.style.transform = '';
                 card.style.boxShadow = '';
                 
                 // Đưa các lớp nội dung parallax về trung tâm
                 const parallaxElements = card.querySelectorAll('.card-num, .reflection-icon, .card-status, .widget-label, .card-title, .widget-value, .card-desc, .widget-content-expand, .card-btn-group');
                 parallaxElements.forEach(el => {
-                    el.style.transform = 'translate3d(0, 0, 0)';
+                    el.style.transform = '';
                 });
             });
         });
@@ -2045,13 +2020,13 @@
             btn.addEventListener('mouseleave', () => {
                 // Đàn hồi lò xo mềm nảy về vị trí cũ một cách mượt mà [1]
                 btn.style.transition = 'transform 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-                btn.style.transform = 'translate3d(0, 0, 0)';
+                btn.style.transform = '';
             });
         });
 
-        // Khởi tạo trạng thái lật cho thẻ Định hướng & Mục tiêu
-        function toggleFlipCard(card) {
-            card.classList.toggle('flipped');
+        // Khởi tạo trạng thái thu gọn/mở rộng cho thẻ Định hướng & Mục tiêu [1]
+        function toggleExpandIntro(card) {
+            card.classList.toggle('expanded');
         }
 
         // Scroll helpers inside the panes
@@ -2433,7 +2408,7 @@
                 <p><strong>Mục tiêu:</strong> Ứng dụng kỹ nghệ viết Prompt (Prompt Engineering) chuyên sâu để tối ưu chất lượng phản hồi từ ChatGPT phục vụ 3 tác vụ tự học ngoại ngữ và ngôn ngữ học.</p>
                 
                 <h4>Sơ Đồ Minh Họa Tương Tác: Trình Mô Phỏng Viết Prompt Đa Cấp</h4>
-                <p>Chọn tác vụ học thuật bên dưới và bấm nút chuyển đổi để so sánh sự khát biệt của AI trước và sau khi viết prompt kỹ thuật:</p>
+                <p>Chọn tác vụ học thuật bên dưới và bấm nút chuyển đổi để so sánh sự khác biệt của AI trước và sau khi viết prompt kỹ thuật:</p>
                 <div class="interactive-widget-box" style="background: rgba(15,23,42,0.8); display: flex; flex-direction: column; gap: 1rem;">
                     <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
                         <button class="widget-btn active" id="p-task-1" onclick="selectPromptTask(1)">Tác vụ 1: Tóm tắt bài đọc</button>
