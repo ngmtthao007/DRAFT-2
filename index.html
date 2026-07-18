@@ -610,14 +610,6 @@
             opacity: 1;
         }
 
-        /* Định nghĩa hiệu ứng rung lắc Jiggle nhẹ nhàng */
-        @keyframes elegantJiggle {
-            0% { transform: scale(1.01) translate(0, 0) rotate(0deg); }
-            20% { transform: scale(1.01) translate(-1px, 1px) rotate(-0.3deg); }
-            40% { transform: scale(1.01) translate(1px, -1px) rotate(0.3deg); }
-            60% { transform: scale(1.01) translate(-1px, -1px) rotate(-0.15deg); }
-            80% { transform: scale(1.01) translate(1px, 1px) rotate(0.15deg); }
-            100% { transform: scale(1.01) translate(0, 0) rotate(0deg); }
             
         }
         .widget-label {
@@ -1128,7 +1120,28 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
+        } 
+
+        /* Hiệu ứng tương tác cho ô Bài tập chuyển hướng (DÁN VÀO ĐÂY) */
+        .clickable-stat-box {
+            cursor: pointer;
+            transition: var(--transition-gentle);
+            position: relative;
         }
+
+        .clickable-stat-box:hover {
+            border-color: var(--accent-purple);
+            background: rgba(192, 132, 252, 0.08);
+            transform: scale(1.05);
+            box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25);
+        }
+
+        .clickable-stat-box:hover .stat-num {
+            color: #ffffff;
+            text-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
+        }
+
+        /* Footer */ /* <--- DÒNG 798 */
 
         /* Footer */
         footer {
@@ -1480,44 +1493,58 @@
                 </section>
 
                 <!-- Conclusion Section -->
-                <section id="conclusion">
-                    <div class="container">
-                        <div class="conclusion-panel">
-                           <!-- PHẦN DÁN THAY THẾ -->
-<div class="conclusion-text">
-    <span class="hero-subtitle">03 / Reflection</span>
-    <h3 style="margin-bottom: 0.5rem;">Tổng Kết Học Phần</h3>
-    <p style="color: var(--text-muted); font-size: 0.95rem; font-style: italic; margin-bottom: 1.5rem;">Di chuyển con trỏ chuột vào từng Widget để xem chi tiết.</p>
-    
-    <div class="conclusion-widgets-container">
-        <!-- Widget 1: Thuận lợi -->
-        <div class="conclusion-widget">
-            <span class="widget-label">✨ Ưu thế học thuật</span>
-            <span class="widget-value">THUẬN LỢI</span>
-            <div class="widget-content-expand">
-                <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
-            </div>
-        </div>
+                <!-- KHU VỰC TỔNG KẾT ĐÃ ĐƯỢC CHUẨN HÓA LAYOUT -->
+<section id="conclusion">
+    <div class="container">
+        <div class="conclusion-panel">
+            
+            <!-- Cột bên trái: Tiêu đề & 3 Widgets mở rộng -->
+            <div class="conclusion-text">
+                <span class="hero-subtitle">03 / Reflection</span>
+                <h3>Tổng Kết Học Phần (Khó khăn, Thuận lợi & Bài học)</h3>
+                
+                <div class="conclusion-widgets-container">
+                    <!-- Widget 1: Thuận lợi -->
+                    <div class="conclusion-widget">
+                        <span class="widget-label">✨ Ưu thế học thuật</span>
+                        <span class="widget-value">THUẬN LỢI</span>
+                        <div class="widget-content-expand">
+                            <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo khoa Sư phạm Anh ULIS, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
+                        </div>
+                    </div>
 
-        <!-- Widget 2: Thách thức -->
-        <div class="conclusion-widget">
-            <span class="widget-label">⚠️ Rào cản công nghệ</span>
-            <span class="widget-value">THÁCH THỨC</span>
-            <div class="widget-content-expand">
-                <p>Thách thức lớn nhất trong lộ trình nghiên cứu số là ranh giới mong manh giữa việc sử dụng AI làm bệ phóng tư duy và thói quen ỷ lại kỹ thuật số (Digital Laziness). Ngoài ra, việc chọn lọc, đối chiếu dữ liệu để triệt tiêu các lỗi ảo tưởng ngôn ngữ của LLM cũng đòi hỏi tính cẩn trọng và năng lực phản biện không ngừng nghỉ.</p>
-            </div>
-        </div>
+                    <!-- Widget 2: Khó khăn -->
+                    <div class="conclusion-widget">
+                        <span class="widget-label">⚠️ Rào cản công nghệ</span>
+                        <span class="widget-value">KHÓ KHĂN</span>
+                        <div class="widget-content-expand">
+                            <p>Thách thức lớn nhất trong lộ trình nghiên cứu số là ranh giới mong manh giữa việc sử dụng AI làm bệ phóng tư duy và thói quen ỷ lại kỹ thuật số (Digital Laziness). Ngoài ra, việc chọn lọc, đối chiếu dữ liệu để triệt tiêu các lỗi ảo tưởng ngôn ngữ của LLM cũng đòi hỏi tính cẩn trọng và năng lực phản biện không ngừng nghỉ.</p>
+                        </div>
+                    </div>
 
-        <!-- Widget 3: Bài học kinh nghiệm -->
-        <div class="conclusion-widget">
-            <span class="widget-label">💡 Đúc kết sư phạm</span>
-            <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
-            <div class="widget-content-expand">
-                <p>Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
+                    <!-- Widget 3: Bài học kinh nghiệm -->
+                    <div class="conclusion-widget">
+                        <span class="widget-label">💡 Đúc kết sư phạm</span>
+                        <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
+                        <div class="widget-content-expand">
+                            <p>Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
+                        </div>
+                    </div>
+                </div>
             </div>
+            
+            <!-- Cột bên phải: Chỉ chứa duy nhất ô 06 Bài tập chuyển hướng -->
+            <div class="conclusion-stats">
+                <div class="stat-box clickable-stat-box" onclick="slidePane('right'); rightScrollToTop();">
+                    <div class="stat-num">06</div>
+                    <div class="stat-label">Bài tập thực tế</div>
+                    <span style="font-size: 0.8rem; color: var(--accent-purple); display: block; margin-top: 0.8rem; font-weight: 600; letter-spacing: 0.5px;">NHẤN ĐỂ XEM CHI TIẾT ➔</span>
+                </div>
+            </div>
+
         </div>
     </div>
-</div>
+</section>
 
             <!-- Right Pane (Vertical scrolling: Gallery grid of exercises) -->
             <div class="exercises-axis-pane">
