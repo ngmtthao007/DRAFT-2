@@ -1601,7 +1601,9 @@
             leftPaneScrollCheck();
         });
 
-        // Creative Bioluminescent Floating Bubbles Cursor Particle System
+        // =====================================================================
+        // Creative Bioluminescent Floating Elements Cursor Particle System
+        // =====================================================================
         const cursorCanvas = document.createElement('canvas');
         cursorCanvas.style.position = 'fixed';
         cursorCanvas.style.top = '0';
@@ -1614,6 +1616,7 @@
 
         const cCtx = cursorCanvas.getContext('2d');
         let cursorParticles = [];
+        const elementTypes = ['bubble', 'star', 'jellyfish'];
 
         window.addEventListener('resize', () => {
             cursorCanvas.width = window.innerWidth;
@@ -1622,49 +1625,60 @@
         cursorCanvas.width = window.innerWidth;
         cursorCanvas.height = window.innerHeight;
 
-        // Sinh bong bóng liên tục khi rê chuột
+        // Sinh phần tử liên tục khi rê chuột (Tăng số lượng sinh, giảm tốc độ đi 40%)
         window.addEventListener('mousemove', (e) => {
-            if (Math.random() < 1.2) { // Điều tiết tần suất sinh để bảo toàn hiệu năng mượt mà nhất
+            // Lặp 2 lần để sinh nhiều phần tử hơn mỗi khi di chuột
+            for (let i = 0; i < 2; i++) {
+                const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                 cursorParticles.push({
                     x: e.clientX,
                     y: e.clientY,
-                    vx: (Math.random() - 0.5) * 1.2,
-                    vy: -Math.random() * 3.5 - 0.5, // Xu hướng trôi lờ lững lên trên
-                    radius: Math.random() * 10 + 2,
+                    // Tốc độ di chuyển đã được giảm 40% (nhân trị số gốc với 0.6)
+                    vx: (Math.random() - 0.5) * 0.72,      // Gốc: 1.2 * 0.6 = 0.72
+                    vy: -Math.random() * 2.1 - 0.3,        // Gốc: (-Math.random() * 3.5 - 0.5) * 0.6
+                    radius: Math.random() * 10 + 3,
                     alpha: 0.95,
-                    color: 'rgba(192, 132, 252, 0.55)'
+                    color: 'rgba(192, 132, 252, 0.55)',
+                    type: type
                 });
             }
         });
 
-        // Hỗ trợ sinh bong bóng trên màn hình cảm ứng di động
+        // Hỗ trợ sinh phần tử trên màn hình cảm ứng di động
         window.addEventListener('touchmove', (e) => {
-            if (e.touches.length > 0 && Math.random() < 0.6) {
+            if (e.touches.length > 0) {
                 const t = e.touches[0];
-                cursorParticles.push({
-                    x: t.clientX,
-                    y: t.clientY,
-                    vx: (Math.random() - 0.5) * 1.2,
-                    vy: -Math.random() * 1.5 - 0.5,
-                    radius: Math.random() * 5 + 2,
-                    alpha: 0.95,
-                    color: 'rgba(192, 132, 252, 0.55)'
-                });
+                for (let i = 0; i < 2; i++) {
+                    const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
+                    cursorParticles.push({
+                        x: t.clientX,
+                        y: t.clientY,
+                        // Tốc độ di chuyển đã được giảm 40% (nhân trị số gốc với 0.6)
+                        vx: (Math.random() - 0.5) * 0.72,  // Gốc: 1.2 * 0.6 = 0.72
+                        vy: -Math.random() * 0.9 - 0.3,    // Gốc: (-Math.random() * 1.5 - 0.5) * 0.6
+                        radius: Math.random() * 6 + 2,
+                        alpha: 0.95,
+                        color: 'rgba(192, 132, 252, 0.55)',
+                        type: type
+                    });
+                }
             }
         }, { passive: true });
 
-        // Hiệu ứng "Bong bóng nổ" bung tỏa mạnh mẽ khi click vào các phần tử tương tác
+        // Hiệu ứng "Nổ" đa dạng phần tử khi click vào các nút/thẻ tương tác
         document.addEventListener('click', (e) => {
             if (e.target.closest('button, a, .widget-card, .gallery-card, .swipe-indicator')) {
                 for (let i = 0; i < 10; i++) {
+                    const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                     cursorParticles.push({
                         x: e.clientX,
                         y: e.clientY,
-                        vx: (Math.random() - 0.5) * 5, // Tốc độ bắn tia nhanh hơn khi nổ
+                        vx: (Math.random() - 0.5) * 5, // Giữ tốc độ nổ bắn tia nhanh để tạo lực phản hồi tốt
                         vy: (Math.random() - 0.5) * 5,
                         radius: Math.random() * 6 + 1.5,
                         alpha: 1,
-                        color: 'rgba(192, 132, 252, 0.8)'
+                        color: 'rgba(192, 132, 252, 0.8)',
+                        type: type
                     });
                 }
             }
@@ -1676,7 +1690,7 @@
                 let p = cursorParticles[i];
                 p.x += p.vx;
                 p.y += p.vy;
-                p.alpha -= 0.016; // Mờ dẫn theo thời gian
+                p.alpha -= 0.016; // Độ mờ dần theo thời gian
 
                 if (p.alpha <= 0) {
                     cursorParticles.splice(i, 1);
@@ -1685,13 +1699,62 @@
 
                 cCtx.save();
                 cCtx.globalAlpha = p.alpha;
-                cCtx.beginPath();
-                cCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                 cCtx.strokeStyle = 'rgba(192, 132, 252, 0.85)';
-                cCtx.lineWidth = 1.2;
-                cCtx.stroke();
                 cCtx.fillStyle = 'rgba(192, 132, 252, 0.12)';
-                cCtx.fill();
+                cCtx.lineWidth = 1.2;
+
+                if (p.type === 'bubble') {
+                    // Vẽ bong bóng
+                    cCtx.beginPath();
+                    cCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    cCtx.stroke();
+                    cCtx.fill();
+
+                    // Điểm sáng phản quang nhỏ bên trong bong bóng
+                    cCtx.beginPath();
+                    cCtx.arc(p.x - p.radius * 0.3, p.y - p.radius * 0.3, p.radius * 0.15, 0, Math.PI * 2);
+                    cCtx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+                    cCtx.fill();
+
+                } else if (p.type === 'star') {
+                    // Vẽ ngôi sao 4 cánh lấp lánh (dùng quadratic curves)
+                    cCtx.beginPath();
+                    cCtx.moveTo(p.x, p.y - p.radius);
+                    cCtx.quadraticCurveTo(p.x, p.y, p.x + p.radius, p.y);
+                    cCtx.quadraticCurveTo(p.x, p.y, p.x, p.y + p.radius);
+                    cCtx.quadraticCurveTo(p.x, p.y, p.x - p.radius, p.y);
+                    cCtx.quadraticCurveTo(p.x, p.y, p.x, p.y - p.radius);
+                    cCtx.closePath();
+                    cCtx.stroke();
+                    cCtx.fill();
+
+                } else if (p.type === 'jellyfish') {
+                    // Vẽ sứa nhỏ dễ thương
+                    // Mũ sứa
+                    cCtx.beginPath();
+                    cCtx.arc(p.x, p.y, p.radius, Math.PI, 0, false);
+                    cCtx.quadraticCurveTo(p.x + p.radius, p.y + p.radius * 0.2, p.x, p.y + p.radius * 0.1);
+                    cCtx.quadraticCurveTo(p.x - p.radius, p.y + p.radius * 0.2, p.x - p.radius, p.y);
+                    cCtx.closePath();
+                    cCtx.stroke();
+                    cCtx.fill();
+                    
+                    // Các xúc tu uốn lượn nhẹ theo chuyển động tọa độ Y
+                    cCtx.beginPath();
+                    for (let offset of [-0.4, 0, 0.4]) {
+                        const startX = p.x + offset * p.radius;
+                        const startY = p.y + p.radius * 0.1;
+                        const wiggle = Math.sin((p.y + p.x) * 0.15) * (p.radius * 0.25);
+                        
+                        cCtx.moveTo(startX, startY);
+                        cCtx.quadraticCurveTo(
+                            startX + wiggle, startY + p.radius * 0.6,
+                            startX + wiggle * 0.5, startY + p.radius * 1.3
+                        );
+                    }
+                    cCtx.stroke();
+                }
+
                 cCtx.restore();
             }
             requestAnimationFrame(animateCursorParticles);
