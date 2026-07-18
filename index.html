@@ -614,8 +614,6 @@
             opacity: 1;
         }
 
-            
-        }
         .widget-label {
             font-size: 0.83rem; /* Tăng 15% kích thước phông chữ nhãn phụ */
             font-weight: 700;
@@ -1356,7 +1354,25 @@
             80% { transform: scale(1.02) translate(1px, 1px) rotate(0.1deg); }
             100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
         }
-        
+        /* Thiết lập chữ in hoa và độ phát sáng mặc định cho widgets tổng kết */
+        .conclusion-widget .widget-value {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase; /* Chuyển chữ in hoa */
+            transition: color 0.4s ease, text-shadow 0.4s ease;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.15); 
+        }
+
+        /* Hiệu ứng phát sáng tím oải hương rực rỡ khi di chuột vào */
+        .conclusion-widget:hover .widget-value {
+            color: var(--accent-purple);
+            text-shadow: 0 0 10px rgba(192, 132, 252, 1), 
+                         0 0 20px rgba(192, 132, 252, 0.6), 
+                         0 0 30px rgba(192, 132, 252, 0.3);
+        }
     </style>
 </head>
 <body>
