@@ -1,4 +1,4 @@
-Bạn hãy sao chép toàn bộ mã nguồn dưới đây và dán đè thay thế vào file HTML của
+file HTML của
 mình:
 
 <!DOCTYPE html>
@@ -464,7 +464,7 @@ mình:
         }
 
         .expandable-intro-card.expanded {
-            max-height: 400px; /* Tăng thêm chiều rộng mở ra tối đa để ngăn tràn văn bản */
+            max-height: 350px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
         }
         
         .glowing-intro-title {
@@ -1147,12 +1147,17 @@ mình:
             max-width: 100%;
         }
 
-        .conclusion-text h3 {
+        #conclusion .hero-subtitle {
+            margin-bottom: 0.1rem !important; /* Đưa phụ đề nhỏ sát nút TỔNG KẾT HỌC PHẦN */
+        }
+
+        #conclusion h3 {
+            margin-top: 0 !important;
+            margin-bottom: 0.6rem !important; /* Đưa sát cụm widget bên dưới */
             font-family: 'Lexend', sans-serif; /* Chuyển sang phông chữ Lexend */
             font-size: 2.8rem; /* Điều chỉnh lại kích thước cho cân đối với phông Lexend */
             font-weight: 800; /* Thiết lập Lexend Extra Bold cực kỳ sắc nét */
             color: var(--text-primary);
-            margin-bottom: 0.5rem; /* Thu nhỏ khoảng cách lề dưới */
             letter-spacing: 0.5px;
             /* Tạo hiệu ứng phát sáng mạnh mẽ màu trắng và oải hương */
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.7), 0 0 30px rgba(192, 132, 252, 0.4);
@@ -1206,7 +1211,7 @@ mình:
                         opacity 0.45s ease;
         }
 
-        /* Hiệu ứng tập trung ô (Sibling Focus-Scale) mở rộng cho toàn bộ khung Tổng kết (conclusion-panel) */
+        /* Hiệu ứng tập trung ô (Sibling Focus-Scale) cho TOÀN BỘ khung Tổng kết (conclusion-panel) */
         .conclusion-panel:hover .conclusion-widget,
         .conclusion-panel:hover .clickable-stat-box {
             opacity: 0.55;
@@ -1405,7 +1410,7 @@ mình:
                          0 0 36px rgba(192, 132, 252, 0.35);
         }
 
-        /* Vùng nội dung ẩn mặc định -> tăng độ cao tối đa mở rộng rộng rãi show hết chữ */
+        /* Vùng nội dung ẩn mặc định - Tăng cực đại lên 800px đảm bảo không bao giờ bị cắt xén chữ */
         .conclusion-widget .widget-content-expand {
             max-height: 0;
             opacity: 0;
@@ -1434,7 +1439,7 @@ mình:
         }
 
         .conclusion-widget:hover .widget-content-expand {
-            max-height: 600px; /* Tăng độ cao mở ra rộng rãi ngăn chặn tràn chữ hoàn toàn */
+            max-height: 800px; /* Đặt 800px đảm bảo show hết 100% chữ */
             opacity: 1;
         }
         /* Phản hồi rung lắc Jiggle tự nhiên */
@@ -1629,7 +1634,6 @@ mình:
                                 <div class="stat-box clickable-stat-box" onclick="slidePane('right'); rightScrollToTop();">
                                     <div class="stat-num">06</div>
                                     <div class="stat-label">Bài tập thực tế</div>
-                                    <span style="font-size: 0.8rem; color: var(--accent-purple); display: block; margin-top: 0.8rem; font-weight: 600; letter-spacing: 0.5px;">NHẤN ĐỂ XEM CHI TIẾT ➔</span>
                                 </div>
                             </div>
 
@@ -2413,7 +2417,7 @@ mình:
                 <p><strong>Mục tiêu:</strong> Ứng dụng kỹ nghệ viết Prompt (Prompt Engineering) chuyên sâu để tối ưu chất lượng phản hồi từ ChatGPT phục vụ 3 tác vụ tự học ngoại ngữ và ngôn ngữ học.</p>
                 
                 <h4>Sơ Đồ Minh Họa Tương Tác: Trình Mô Phỏng Viết Prompt Đa Cấp</h4>
-                <p>Chọn tác vụ học thuật bên dưới và bấm nút chuyển đổi để so sánh sự khác biệt của AI trước và sau khi viết prompt kỹ thuật:</p>
+                <p>Chọn tác vụ học thuật bên dưới và bấm nút chuyển đổi để so sánh sự khát biệt của AI trước và sau khi viết prompt kỹ thuật:</p>
                 <div class="interactive-widget-box" style="background: rgba(15,23,42,0.8); display: flex; flex-direction: column; gap: 1rem;">
                     <div style="display: flex; gap: 0.8rem; flex-wrap: wrap;">
                         <button class="widget-btn active" id="p-task-1" onclick="selectPromptTask(1)">Tác vụ 1: Tóm tắt bài đọc</button>
@@ -2620,7 +2624,7 @@ mình:
                     },
                     advanced: {
                         prompt: "Bạn là một giảng viên ngữ pháp tiếng Anh kỳ cựu. Hãy giải thích khái niệm ’Syntactic Ambiguity’ cho sinh viên năm nhất theo 2 cấp độ: (1) Định nghĩa bình dân kèm ví dụ hài hước; (2) Phân tích sơ đồ cây cú pháp sâu sắc. Hãy học theo cách giải thích mẫu sau: [Ví dụ mẫu về Lexical Ambiguity: ’Bank’ có thể là bờ sông hoặc ngân hàng]. Hãy thực hiện tương tự cho Syntactic Ambiguity.",
-                        response: "• CẤP ĐỘ 1 (BÌNH DÂN): Chào các tân sinh viên! Hãy tưởng tượng câu: 'Visiting relatives can be boring'. Việc đi thăm họ hàng chán, hay những người họ hàng đến thăm ta chán? Ngữ pháp chơi khăm chúng ta đấy!\n• CẤP ĐỘ 2 (SƠ ĐỒ CÂY CÚ PHÁP): Để giải quyết hiện tượng mơ hồ này, chúng ta cần vẽ sơ đồ phân rã cụm danh từ (NP) và cụm động từ (VP). Ví dụ trong câu 'I saw the man with the telescope', giới từ 'with' có thể gắn trực tiếp vào VP (hành động nhìn) hoặc gắn vào NP (người đàn ông có kính)."
+                        response: "• CÂU HỎI NGHIÊN CỨU CỐT LÕI: Làm cách nào mô hình AI hỗ trợ rèn luyện tư duy lập luận phản biện cho sinh viên ngoại ngữ?\n• PHƯƠNG PHÁP THỰC NGHIỆM: Nghiên cứu thực nghiệm đối chứng (mẫu n=80) kết hợp khảo sát bảng hỏi.\n• Ý NGHĨA THỰC TIỄN ULIS: Giúp sinh viên ULIS chủ động xây dựng lộ trình học tập tự chủ, hạn chế đạo văn số."
                     }
                 },
                 3: {
