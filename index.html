@@ -1,4 +1,7 @@
-!DOCTYPE html>
+Bạn hãy sao chép toàn bộ mã nguồn dưới đây và dán đè thay thế vào file HTML của
+mình:
+
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
@@ -461,7 +464,7 @@
         }
 
         .expandable-intro-card.expanded {
-            max-height: 250px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
+            max-height: 400px; /* Tăng thêm chiều rộng mở ra tối đa để ngăn tràn văn bản */
         }
         
         .glowing-intro-title {
@@ -1191,18 +1194,32 @@
             color: var(--text-muted);
         } 
 
-        /* Hiệu ứng tương tác cho ô Bài tập chuyển hướng (DÁN VÀO ĐÂY) */
+        /* Hiệu ứng tương tác cho ô Bài tập chuyển hướng (DÁN VÀO ĐÂY) & Sibling Focus-Scale */
         .clickable-stat-box {
             cursor: pointer;
             position: relative;
             /* Đàn hồi lò xo mượt kiểu Apple khi chuột rời đi */
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+                        border-color 0.4s ease, 
+                        background 0.4s ease, 
+                        box-shadow 0.4s ease,
+                        opacity 0.45s ease;
         }
 
-        .clickable-stat-box:hover {
-            border-color: var(--accent-purple);
-            background: rgba(192, 132, 252, 0.08);
-            box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25);
+        /* Hiệu ứng tập trung ô (Sibling Focus-Scale) mở rộng cho toàn bộ khung Tổng kết (conclusion-panel) */
+        .conclusion-panel:hover .conclusion-widget,
+        .conclusion-panel:hover .clickable-stat-box {
+            opacity: 0.55;
+            transform: scale3d(0.95, 0.95, 0.95);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Thẻ đang được hover trực tiếp sẽ nở to và rõ nét */
+        .conclusion-panel .conclusion-widget:hover,
+        .conclusion-panel .clickable-stat-box:hover {
+            opacity: 1;
+            transform: scale3d(1.05, 1.05, 1.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
         }
 
         .clickable-stat-box:hover .stat-num {
@@ -1336,18 +1353,6 @@
             width: 100%;
         }
 
-        /* Hiệu ứng tập trung ô (Sibling Focus-Scale) cho nhóm Widgets tổng kết */
-        .conclusion-widgets-container:hover .conclusion-widget {
-            opacity: 0.55;
-            transform: scale3d(0.95, 0.95, 0.95);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        .conclusion-widgets-container:hover .conclusion-widget:hover {
-            opacity: 1;
-            transform: scale3d(1.05, 1.05, 1.05);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
-        }
-
         .conclusion-widget {
             background: rgba(15, 23, 42, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1400,12 +1405,12 @@
                          0 0 36px rgba(192, 132, 252, 0.35);
         }
 
-        /* Vùng nội dung ẩn mặc định */
+        /* Vùng nội dung ẩn mặc định -> tăng độ cao tối đa mở rộng rộng rãi show hết chữ */
         .conclusion-widget .widget-content-expand {
             max-height: 0;
             opacity: 0;
             overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: max-height 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .conclusion-widget .widget-content-expand p {
@@ -1429,7 +1434,7 @@
         }
 
         .conclusion-widget:hover .widget-content-expand {
-            max-height: 350px; 
+            max-height: 600px; /* Tăng độ cao mở ra rộng rãi ngăn chặn tràn chữ hoàn toàn */
             opacity: 1;
         }
         /* Phản hồi rung lắc Jiggle tự nhiên */
@@ -1668,7 +1673,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(1)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1hg7ES0Lz_4SFlyO84o5T3WCLY7QwcJ8y/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1hg7ES0Lz_4SFlyO84o5T3WCLY7QwcJ8y/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1684,7 +1689,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(2)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1YrH7FMfryK2P2yKjfNdQSdmcX70VK5mb/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1YrH7FMfryK2P2yKjfNdQSdmcX70VK5mb/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1700,7 +1705,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(3)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/19940-k2CX1aoSr7I8i1n9CBgAGFj4LrZ/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/19940-k2CX1aoSr7I8i1n9CBgAGFj4LrZ/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1716,7 +1721,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(4)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1fXwbZSF18DPDm5VFjsDMSqi4tD800wlU/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1fXwbZSF18DPDm5VFjsDMSqi4tD800wlU/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1732,7 +1737,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(5)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/1j41mbKOmIQtgBWsmy57JvNxidVKx_7hE/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/1j41mbKOmIQtgBWsmy57JvNxidVKx_7hE/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
 
@@ -1748,7 +1753,7 @@
                             </div>
                             <div class="card-btn-group">
                                 <button class="card-action" onclick="openModal(6)">Chi tiết</button>
-                                <a href="https://drive.google.com/file/d/18HhMDGGIiZ6cOkcLndAln6fuxNsljypb/view?usp=drive_link" target="_blank" class="card-action-link">Tệp gốc 📁</a>
+                                <a href="https://drive.google.com/file/d/18HhMDGGIiZ6cOkcLndAln6fuxNsljypb/view?usp=drive_link" target="_blank" class="card-action-link">📁</a>
                             </div>
                         </div>
                     </div>
