@@ -525,7 +525,99 @@
             transform: scale(1.05) translateY(-5px);
             box-shadow: 0 20px 40px rgba(124, 58, 237, 0.25);
         }
+/* --- HIỆU ỨNG CHO CÁC Ô TỔNG KẾT --- */
+        .reflection-cards-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-top: 2rem;
+        }
 
+        .reflection-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 20px;
+            padding: 1.4rem;
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .reflection-card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .reflection-icon {
+            font-size: 1.4rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background: rgba(192, 132, 252, 0.1);
+            border-radius: 50%;
+            border: 1px solid rgba(192, 132, 252, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        .reflection-card-header h4 {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .reflection-card-content {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+        }
+
+        .reflection-card-content p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1.02rem;
+            margin: 0;
+            padding-top: 1rem;
+        }
+
+        /* Trạng thái di chuột: kích hoạt rung lắc và hiển thị nội dung */
+        .reflection-card:hover {
+            background: rgba(15, 23, 42, 0.85);
+            border-color: var(--accent-purple);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(192, 132, 252, 0.15);
+            animation: elegantJiggle 0.5s ease-in-out infinite alternate;
+        }
+
+        .reflection-card:hover .reflection-icon {
+            background: var(--accent-purple);
+            color: #120d24;
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
+        }
+
+        .reflection-card:hover .reflection-card-content {
+            max-height: 300px; /* Độ cao tối đa khi mở ra */
+            opacity: 1;
+        }
+
+        /* Định nghĩa hiệu ứng rung lắc Jiggle nhẹ nhàng */
+        @keyframes elegantJiggle {
+            0% { transform: scale(1.01) translate(0, 0) rotate(0deg); }
+            20% { transform: scale(1.01) translate(-1px, 1px) rotate(-0.3deg); }
+            40% { transform: scale(1.01) translate(1px, -1px) rotate(0.3deg); }
+            60% { transform: scale(1.01) translate(-1px, -1px) rotate(-0.15deg); }
+            80% { transform: scale(1.01) translate(1px, 1px) rotate(0.15deg); }
+            100% { transform: scale(1.01) translate(0, 0) rotate(0deg); }
+            
+        }
         .widget-label {
             font-size: 0.83rem; /* Tăng 15% kích thước phông chữ nhãn phụ */
             font-weight: 700;
@@ -1293,34 +1385,47 @@
                 <section id="conclusion">
                     <div class="container">
                         <div class="conclusion-panel">
-                            <div class="conclusion-text">
-                                <span class="hero-subtitle">03 / Reflection</span>
-                                <h3>Tổng Kết Học Phần (Khó khăn, Thuận lợi & Bài học)</h3>
-                                <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                                    <strong>Thuận lợi:</strong> Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo khoa Sư phạm Anh ULIS, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.
-                                </p>
-                                <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1.5rem;">
-                                    <strong>Khó khăn:</strong> Thách thức lớn nhất trong lộ trình nghiên cứu số là ranh giới mong manh giữa việc sử dụng AI làm bệ phóng tư duy và thói quen ỷ lại kỹ thuật số (Digital Laziness). Ngoài ra, việc chọn lọc, đối chiếu dữ liệu để triệt tiêu các lỗi ảo tưởng ngôn ngữ của LLM cũng đòi hỏi tính cẩn trọng và năng lực phản biện không ngừng nghỉ.
-                                </p>
-                                <p style="color: var(--text-secondary); line-height: 1.8;">
-                                    <strong>Bài học kinh nghiệm:</strong> Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.
-                                </p>
-                            </div>
-                            <div class="conclusion-stats">
-                                <div class="stat-box">
-                                    <div class="stat-num">06</div>
-                                    <div class="stat-label">Bài tập thực tế</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-num">100<span class="stat-num-percent">%</span></div>
-                                    <div class="stat-label">Liêm chính học thuật</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
+                           <!-- PHẦN DÁN THAY THẾ -->
+<div class="conclusion-text">
+    <span class="hero-subtitle">03 / Reflection</span>
+    <h3 style="margin-bottom: 1rem;">Tổng Kết Học Phần</h3>
+    <p style="color: var(--text-muted); font-size: 0.95rem; font-style: italic;">Di chuột vào từng ô để xem chi tiết nội dung.</p>
+    
+    <div class="reflection-cards-container">
+        <!-- Ô số 1: Thuận lợi -->
+        <div class="reflection-card">
+            <div class="reflection-card-header">
+                <span class="reflection-icon">🌟</span>
+                <h4>Thuận lợi</h4>
             </div>
+            <div class="reflection-card-content">
+                <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo khoa Sư phạm Anh ULIS, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
+            </div>
+        </div>
+
+        <!-- Ô số 2: Khó khăn -->
+        <div class="reflection-card">
+            <div class="reflection-card-header">
+                <span class="reflection-icon">⚠️</span>
+                <h4>Khó khăn</h4>
+            </div>
+            <div class="reflection-card-content">
+                <p>Thách thức lớn nhất trong lộ trình nghiên cứu số là ranh giới mong manh giữa việc sử dụng AI làm bệ phóng tư duy và thói quen ỷ lại kỹ thuật số (Digital Laziness). Ngoài ra, việc chọn lọc, đối chiếu dữ liệu để triệt tiêu các lỗi ảo tưởng ngôn ngữ của LLM cũng đòi hỏi tính cẩn trọng và năng lực phản biện không ngừng nghỉ.</p>
+            </div>
+        </div>
+
+        <!-- Ô số 3: Bài học kinh nghiệm -->
+        <div class="reflection-card">
+            <div class="reflection-card-header">
+                <span class="reflection-icon">💡</span>
+                <h4>Bài học kinh nghiệm</h4>
+            </div>
+            <div class="reflection-card-content">
+                <p>Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
+            </div>
+        </div>
+    </div>
+</div>
 
             <!-- Right Pane (Vertical scrolling: Gallery grid of exercises) -->
             <div class="exercises-axis-pane">
