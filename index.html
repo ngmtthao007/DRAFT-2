@@ -1,28 +1,3 @@
-Dưới đây là toàn bộ mã nguồn của tệp HTML đã được tái cấu trúc hoàn chỉnh [1].
-
-Các điểm cải tiến và khắc phục lỗi:
-
-1.  Khóa cứng không gian Bài tập (Project Space) sang bên phải: Đã bổ sung thuộc
-    tính flex: 0 0 100vw; min-width: 100vw; cho cả hai phân vùng hiển thị, kết
-    hợp cùng overscroll-behavior-x: none; ở thẻ html, body và .viewport-wrapper
-    [1]. Điều này đảm bảo trang bài tập luôn nằm gọn gàng ở phía bên phải (2D
-    Spatial Axis) và loại bỏ hiện tượng bị dồn ép hoặc tràn xuống phía dưới [1].
-2.  Apple-style 3D Tilt Card & Parallax: Khi di chuột qua 6 thẻ bài tập (Gallery
-    Cards), thẻ sẽ tự động nghiêng theo góc di chuyển của con trỏ chuột, bóng đổ
-    bên dưới thay đổi hướng thực tế, đồng thời các thành phần bên trong (Số thứ
-    tự, Huy hiệu trạng thái, Tiêu đề và Nút bấm) dịch chuyển với các vận tốc
-    khác nhau (Parallax) tạo độ sâu 3D chân thực [1].
-3.  Vệt sáng quét qua kính mờ (Shine sweep): Toàn bộ các thẻ bài tập kính mờ có
-    thêm vệt sáng tinh tế tự động quét chéo qua mỗi 9 giây để tăng tính sống
-    động và thẩm mỹ [1].
-4.  Nút bấm nam châm "độ đàn hồi cao" (Fluffy Magnetic Buttons): Các nút hành
-    động chính, phụ và nút xem báo cáo Google Drive sẽ tự động bị hút nhẹ về
-    phía con trỏ chuột khi đến gần [1]. Khi con trỏ chuột rời đi, nút sẽ nảy nhẹ
-    về vị trí cũ bằng hàm chuyển động lò xo vật lý (cubic-bezier phản hồi ngược)
-    [1].
-5.  Cử chỉ vuốt/kéo mượt mà: Người dùng có thể vuốt màn hình (trên di động) hoặc
-    nhấn giữ kéo chuột ngang (trên máy tính) để trượt mượt mà giữa không gian
-    Giới thiệu và không gian Bài tập [1].
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -1487,7 +1462,7 @@ Các điểm cải tiến và khắc phục lỗi:
                             <!-- Cột bên trái: Tiêu đề & 3 Widgets mở rộng -->
                             <div class="conclusion-text">
                                 <span class="hero-subtitle">03 / Reflection</span>
-                                <h3>Tổng Kết Học Phần (Khó khăn, Thuận lợi & Bài học)</h3>
+                                <h3>TỔNG KẾT HỌC PHẦN </h3>
                                 
                                 <div class="conclusion-widgets-container">
                                     <!-- Widget 1: Thuận lợi -->
@@ -1495,7 +1470,7 @@ Các điểm cải tiến và khắc phục lỗi:
                                         <span class="widget-label">✨ Ưu thế học thuật</span>
                                         <span class="widget-value">THUẬN LỢI</span>
                                         <div class="widget-content-expand">
-                                            <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo khoa Sư phạm Anh ULIS, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
+                                            <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các thầy cô, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
                                         </div>
                                     </div>
 
@@ -1746,6 +1721,7 @@ Các điểm cải tiến và khắc phục lỗi:
         document.addEventListener('touchstart', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
             startX = e.touches[0].clientX;
+            currentX = startX; // Reset tránh lấy giá trị cũ từ lượt vuốt trước
             isDragging = true;
         }, { passive: true });
 
@@ -1758,11 +1734,11 @@ Các điểm cải tiến và khắc phục lỗi:
             if (!isDragging) return;
             isDragging = false;
             let diffX = currentX - startX;
-            if (Math.abs(diffX) > 80) { // Vuốt đủ 80px để chuyển trang
+            if (Math.abs(diffX) > 50) { // Vuốt nhẹ 50px trên điện thoại để chuyển trang nhanh
                 if (diffX < 0 && currentPane === 'left') {
-                    slidePane('right'); // Vuốt sang trái -> chuyển sang Bài tập
+                    slidePane('right'); // Vuốt sang trái -> chuyển sang không gian Bài tập bên phải
                 } else if (diffX > 0 && currentPane === 'right') {
-                    slidePane('left'); // Vuốt sang phải -> quay về Giới thiệu
+                    slidePane('left'); // Vuốt sang phải -> quay về không gian Giới thiệu bên trái
                 }
             }
         }, { passive: true });
@@ -1770,9 +1746,10 @@ Các điểm cải tiến và khắc phục lỗi:
         // Desktop mouse drag gestures
         document.addEventListener('mousedown', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
-            // Tránh kích hoạt trên các thành phần tương tác
-            if (e.target.closest('button, a, .widget-card, .conclusion-widget, .gallery-card, .swipe-indicator')) return;
+            // Chỉ hủy kéo nếu nhấn trực tiếp vào các nút bấm tương tác sâu để không làm hỏng tính năng click của nút
+            if (e.target.closest('button, a, .card-action, .card-action-link, .btn-drive-glass')) return;
             startX = e.clientX;
+            currentX = startX; // Reset tránh lấy giá trị cũ
             isDragging = true;
         });
 
@@ -1785,11 +1762,11 @@ Các điểm cải tiến và khắc phục lỗi:
             if (!isDragging) return;
             isDragging = false;
             let diffX = currentX - startX;
-            if (Math.abs(diffX) > 100) { // Kéo chuột đủ 100px để chuyển trang
+            if (Math.abs(diffX) > 80) { // Kéo chuột nhẹ 80px trên máy tính để chuyển trang
                 if (diffX < 0 && currentPane === 'left') {
-                    slidePane('right');
+                    slidePane('right'); // Kéo sang trái -> chuyển sang không gian Bài tập bên phải
                 } else if (diffX > 0 && currentPane === 'right') {
-                    slidePane('left');
+                    slidePane('left'); // Kéo sang phải -> quay về không gian Giới thiệu bên trái
                 }
             }
         });
