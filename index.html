@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -104,32 +105,29 @@
         .ocean-depth-fog {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 40%, rgba(139, 92, 246, 0.1) 0%, rgba(15, 23, 42, 0) 70%),
-                        radial-gradient(circle at 20% 70%, rgba(192, 132, 252, 0.06) 0%, rgba(15, 23, 42, 0) 50%);
-            mix-blend-mode: screen;
+            background: radial-gradient(circle at 50% 30%, rgba(192, 132, 252, 0.08) 0%, rgba(9, 9, 11, 0.6) 80%),
+                        linear-gradient(to bottom, rgba(8, 12, 28, 0.1) 0%, rgba(3, 7, 18, 0.95) 100%);
+            mix-blend-mode: multiply;
             pointer-events: none;
             z-index: -1;
         }
 
-        /* Sunlight Caustics Overlay */
+        /* Sunlight Caustics Overlay with fluid scroll ray patterns */
         .ocean-caustics {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000' viewBox='0 0 1000 1000'%3E%3Cpath d='M0 100 Q 250 50, 500 100 T 1000 100 L 1000 0 L 0 0 Z' fill='rgba(192, 132, 252, 0.03)'/%3E%3Cpath d='M0 300 Q 250 250, 500 300 T 1000 300 L 1000 0 L 0 0 Z' fill='rgba(139, 92, 246, 0.02)'/%3E%3C/svg%3E");
-            background-size: cover;
-            filter: blur(15px);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='caustics' width='200' height='200' patternUnits='userSpaceOnUse'%3E%3Cpath d='M0,50 Q50,0 100,50 T200,50' fill='none' stroke='rgba(192, 132, 252, 0.06)' stroke-width='2'/%3E%3Cpath d='M0,150 Q50,100 100,150 T200,150' fill='none' stroke='rgba(192, 132, 252, 0.04)' stroke-width='1.5'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23caustics)'/%3E%3C/svg%3E");
             mix-blend-mode: overlay;
-            opacity: 0.35;
+            opacity: 0.45;
             pointer-events: none;
             z-index: -1;
-            animation: causticsWobble 16s infinite alternate ease-in-out;
-            transform-origin: center top;
+            animation: causticsMove 25s infinite linear;
         }
 
-        @keyframes causticsWobble {
-            0% { transform: scale(1.1) rotate(-3deg) translateY(0); opacity: 0.25; }
-            50% { transform: scale(1.2) rotate(2deg) translateY(-20px); opacity: 0.45; }
-            100% { transform: scale(1.1) rotate(-1deg) translateY(10px); opacity: 0.25; }
+        @keyframes causticsMove {
+            0% { background-position: 0 0; transform: scale(1.1) rotate(0deg); }
+            50% { transform: scale(1.25) rotate(3deg); }
+            100% { background-position: 400px 400px; transform: scale(1.1) rotate(0deg); }
         }
 
         /* Master Spatial Viewport Wrapper */
@@ -139,7 +137,8 @@
             overflow: hidden;
             position: relative;
             overscroll-behavior-x: none;
-            transition: filter 0.5s cubic-bezier(0.25, 1, 0.2, 1);
+            transition: filter 0.6s cubic-bezier(0.25, 1, 0.2, 1);
+            will-change: filter;
         }
 
         /* Horizontal Axis Container */
@@ -272,9 +271,10 @@
             top: 35%;
             left: 4%;
             width: 90px;
-            animation: floatUpDown 12s infinite alternate ease-in-out, jellyBreathe 6s infinite ease-in-out;
-            filter: drop-shadow(0 0 15px rgba(192, 132, 252, 0.4));
+            animation: floatUpDown 15s infinite alternate ease-in-out, jellyBreathe 8s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px rgba(192, 132, 252, 0.45));
             transform-origin: center top;
+            opacity: 0.5;
         }
 
         .decor-starfish {
@@ -305,14 +305,14 @@
 
         @keyframes jellyBreathe {
             0%, 100% {
-                opacity: 0.35;
-                filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.35)) saturate(0.9);
-                transform: scale(1);
+                opacity: 0.4;
+                filter: drop-shadow(0 0 10px rgba(192, 132, 252, 0.35)) saturate(0.85);
+                transform: scale(1) translateY(0);
             }
             50% {
-                opacity: 0.75;
-                filter: drop-shadow(0 0 25px rgba(192, 132, 252, 0.8)) saturate(1.3);
-                transform: scale(1.08) skewX(2deg);
+                opacity: 0.85;
+                filter: drop-shadow(0 0 28px rgba(192, 132, 252, 0.9)) saturate(1.4);
+                transform: scale(1.1) translateY(-8px) skewX(3deg);
             }
         }
 
@@ -650,10 +650,11 @@
         }
 
         @keyframes jellyPulsateExpand {
-            0% { transform: scale(1); }
-            30% { transform: scale(0.96); box-shadow: 0 0 10px rgba(192, 132, 252, 0.2); } /* co lại */
-            60% { transform: scale(1.05); box-shadow: 0 0 45px rgba(192, 132, 252, 0.6); } /* phồng lên */
-            100% { transform: scale(1); } /* cân bằng */
+            0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+            20% { transform: scale(0.94); box-shadow: 0 0 10px rgba(192, 132, 252, 0.1); } /* co lại */
+            50% { transform: scale(1.06); box-shadow: 0 0 45px rgba(192, 132, 252, 0.7); } /* phồng lên */
+            75% { transform: scale(0.98); box-shadow: 0 0 20px rgba(192, 132, 252, 0.3); }
+            100% { transform: scale(1); box-shadow: 0 0 35px rgba(192, 132, 252, 0.4); } /* cân bằng */
         }
 
         .expandable-intro-card.expanded {
@@ -771,7 +772,7 @@
             box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
         }
 
-        /* Floating Drift Animations for Cards (Simulates floating in currents) */
+        /* Floating Drift Animations for Cards (Simulates floating in currents with very subtle tilt values) */
         .gallery-card:nth-child(3n+1) { animation: driftA 10s infinite ease-in-out; }
         .gallery-card:nth-child(3n+2) { animation: driftB 12s infinite ease-in-out; }
         .gallery-card:nth-child(3n) { animation: driftC 8s infinite ease-in-out; }
@@ -783,9 +784,18 @@
         .widget-card:nth-child(2n) { animation: driftA 10s infinite ease-in-out; }
         .widget-card:nth-child(2n+1) { animation: driftB 11s infinite ease-in-out; }
 
-        @keyframes driftA { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-        @keyframes driftB { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        @keyframes driftC { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+        @keyframes driftA { 
+            0%, 100% { transform: translateY(0) rotate(0deg); } 
+            50% { transform: translateY(-4px) rotate(0.5deg); } 
+        }
+        @keyframes driftB { 
+            0%, 100% { transform: translateY(0) rotate(0deg); } 
+            50% { transform: translateY(-5px) rotate(-0.5deg); } 
+        }
+        @keyframes driftC { 
+            0%, 100% { transform: translateY(0) rotate(0deg); } 
+            50% { transform: translateY(-3px) rotate(0.2deg); } 
+        }
 
         /* Enlarged and Spaced Out Profile Widget Cards */
         .widget-card {
@@ -1682,8 +1692,8 @@
     <svg style="display:none; position: absolute; width: 0; height: 0;">
         <defs>
             <filter id="water-distortion-filter">
-                <feTurbulence type="fractalNoise" baseFrequency="0.01 0.015" numOctaves="3" result="noise" seed="1" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" />
+                <feTurbulence id="turbulence-prop" type="fractalNoise" baseFrequency="0.015 0.02" numOctaves="3" result="noise" seed="1" />
+                <feDisplacementMap id="displacement-prop" in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
             </filter>
         </defs>
     </svg>
@@ -2024,6 +2034,7 @@
     <script {nonce}>
         let currentPane = 'left'; // 'left' hoặc 'right'
         let currentPaneIndex = 0; // 0 = Left Pane, 1 = Right Pane
+        let currentLogicalState = 0; // 0 = Giới thiệu, 1 = Bài tập, 2 = Tổng kết
         let isSwiping = false;
         let isHorizontalSwipe = false;
         let startX = 0;
@@ -2040,15 +2051,58 @@
         // Slowly modify turbulence based on cursor displacement
         const svgFilter = document.querySelector('#water-distortion-filter feDisplacementMap');
         const svgTurbulence = document.querySelector('#water-distortion-filter feTurbulence');
-        if (svgFilter && svgTurbulence) {
-            window.addEventListener('mousemove', (e) => {
-                const normalizedX = e.clientX / window.innerWidth;
-                const normalizedY = e.clientY / window.innerHeight;
-                // Shift displacement map dynamically to look like water distortion
-                svgFilter.setAttribute('scale', (8 + Math.abs(normalizedX - 0.5) * 12).toFixed(1));
-                svgTurbulence.setAttribute('baseFrequency', `${(0.01 + normalizedX * 0.004).toFixed(4)} ${(0.015 + normalizedY * 0.004).toFixed(4)}`);
-            });
+        
+        let waterStep = 0;
+        let targetDisplacementScale = 10;
+        let currentDisplacementScale = 10;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+
+        // Animate the water waves turbulence seed and baseFrequency over time smoothly
+        function animateWaterRipples() {
+            waterStep += 0.003;
+            if (svgTurbulence) {
+                const freqX = 0.012 + Math.sin(waterStep) * 0.003;
+                const freqY = 0.018 + Math.cos(waterStep * 1.2) * 0.003;
+                svgTurbulence.setAttribute('baseFrequency', `${freqX.toFixed(5)} ${freqY.toFixed(5)}`);
+            }
+            requestAnimationFrame(animateWaterRipples);
         }
+        requestAnimationFrame(animateWaterRipples);
+
+        // Smoothly update displacement map scale (decays back to base 10)
+        function updateDisplacementScale() {
+            currentDisplacementScale += (targetDisplacementScale - currentDisplacementScale) * 0.08;
+            targetDisplacementScale += (10 - targetDisplacementScale) * 0.05;
+            if (svgFilter) {
+                svgFilter.setAttribute('scale', currentDisplacementScale.toFixed(1));
+            }
+            requestAnimationFrame(updateDisplacementScale);
+        }
+        requestAnimationFrame(updateDisplacementScale);
+
+        // Track cursor velocity on mousemove to increase ripple displacement scale
+        window.addEventListener('mousemove', (e) => {
+            const deltaX = Math.abs(e.clientX - lastMouseX);
+            const deltaY = Math.abs(e.clientY - lastMouseY);
+            const speed = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+            
+            targetDisplacementScale = 10 + Math.min(speed * 0.15, 25);
+            
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+        });
+
+        // Slow down background video playback speed to super-slow fluid underwater motion (0.18)
+        window.addEventListener('DOMContentLoaded', () => {
+            const bgVideo = document.querySelector('.video-background');
+            if (bgVideo) {
+                bgVideo.playbackRate = 0.18; // Super fluid slow motion
+            }
+            // Khởi tạo kích thước thanh Liquid Indicator lần đầu tiên
+            setTimeout(updateNavIndicator, 200);
+            setTimeout(updateNavIndicator, 600); // Kích hoạt dự phòng khi phông chữ đã render xong
+        });
 
         // Dynamic Active Tab Sliding Liquid Indicator Logic
         function updateNavIndicator() {
@@ -2149,65 +2203,107 @@
             });
         });
 
-        // Core Gesture Controller: Live Stylings & Scales on Swiping (Physical 2-Pane Mapping)
+        // Determine current logical page view state (0, 1, or 2)
+        function determineLogicalState() {
+            if (currentPane === 'right') {
+                currentLogicalState = 1; // Bài tập
+            } else {
+                const conclusion = document.getElementById('conclusion');
+                const scrollPos = leftPane.scrollTop;
+                // Nếu cột trái đang được cuộn tới mốc của section Reflection
+                if (scrollPos >= (conclusion.offsetTop - leftPane.clientHeight / 2)) {
+                    currentLogicalState = 2; // Tổng kết
+                } else {
+                    currentLogicalState = 0; // Giới thiệu
+                }
+            }
+        }
+
+        // Core Gesture Controller: Live Stylings & Scales on Swiping
         function handleDragMove(deltaX) {
             const viewportWidth = window.innerWidth;
-            let baseTranslate = -currentPaneIndex * viewportWidth;
-            let targetTranslate = baseTranslate + deltaX;
+            let targetTranslate = 0;
 
             let ratio = Math.abs(deltaX) / viewportWidth;
             if (ratio > 1) ratio = 1;
 
-            // Boundary Bounce (rubber-band effect) at the edges
-            if (currentPaneIndex === 0 && deltaX > 0) {
-                // Swiping right on Left Pane (outer boundary)
-                let elasticFactor = 0.25;
-                targetTranslate = deltaX * elasticFactor;
-                leftPane.style.transform = `scale(${1 - (deltaX / viewportWidth) * 0.05})`;
-                leftPane.style.opacity = '1';
-                return;
+            if (currentLogicalState === 0) {
+                // Đang ở "Giới thiệu"
+                if (deltaX > 0) {
+                    // Kéo sang phải -> Lò xo nảy đàn hồi (Giới hạn biên trái)
+                    targetTranslate = deltaX * 0.25;
+                    leftPane.style.transform = `scale(${1 - (deltaX / viewportWidth) * 0.05})`;
+                    leftPane.style.opacity = '1';
+                    return;
+                } else {
+                    // Kéo sang trái -> Chuyển hướng sang "Bài tập" (Pane 1)
+                    targetTranslate = deltaX;
+                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
+
+                    // Thiết lập Scale & Opacity đồng bộ
+                    leftPane.style.transform = `scale(${1 - 0.03 * ratio})`;
+                    leftPane.style.opacity = 1 - ratio;
+                    rightPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
+                    rightPane.style.opacity = 0.6 + 0.4 * ratio;
+                }
+            } 
+            else if (currentLogicalState === 1) {
+                // Đang ở "Bài tập"
+                if (deltaX > 0) {
+                    // Kéo sang phải -> Chuyển hướng về "Giới thiệu" (Pane 0, top)
+                    targetTranslate = -viewportWidth + deltaX;
+                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
+
+                    rightPane.style.transform = `scale(${1 - 0.03 * ratio})`;
+                    rightPane.style.opacity = 1 - ratio;
+                    leftPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
+                    leftPane.style.opacity = 0.6 + 0.4 * ratio;
+                } else {
+                    // Kéo sang trái -> Chuyển hướng sang "Tổng kết" (Pane 0, bottom)
+                    // Thiết lập mô phỏng trượt đều đặn slider về 0
+                    targetTranslate = -viewportWidth + Math.abs(deltaX);
+                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
+
+                    rightPane.style.transform = `scale(${1 - 0.03 * ratio})`;
+                    rightPane.style.opacity = 1 - ratio;
+                    leftPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
+                    leftPane.style.opacity = 0.6 + 0.4 * ratio;
+                }
+            } 
+            else if (currentLogicalState === 2) {
+                // Đang ở "Tổng kết"
+                if (deltaX < 0) {
+                    // Kéo sang trái -> Lò xo nảy đàn hồi (Giới hạn biên phải)
+                    targetTranslate = deltaX * 0.25;
+                    leftPane.style.transform = `scale(${1 - (Math.abs(deltaX) / viewportWidth) * 0.05})`;
+                    leftPane.style.opacity = '1';
+                    return;
+                } else {
+                    // Kéo sang phải -> Quay lại "Bài tập" (Pane 1)
+                    targetTranslate = -deltaX;
+                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
+
+                    leftPane.style.transform = `scale(${1 - 0.03 * ratio})`;
+                    leftPane.style.opacity = 1 - ratio;
+                    rightPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
+                    rightPane.style.opacity = 0.6 + 0.4 * ratio;
+                }
             }
-            if (currentPaneIndex === 1 && deltaX < 0) {
-                // Swiping left on Right Pane (outer boundary)
-                let elasticFactor = 0.25;
-                targetTranslate = baseTranslate + (deltaX * elasticFactor);
-                rightPane.style.transform = `scale(${1 - (Math.abs(deltaX) / viewportWidth) * 0.05})`;
-                rightPane.style.opacity = '1';
-                return;
-            }
 
-            // Gỡ bỏ transition tạm thời khi kéo để đạt độ bám ngón tay hoàn hảo nhất
-            horizontalAxis.style.transition = 'none';
-            leftPane.style.transition = 'none';
-            rightPane.style.transition = 'none';
-            viewportWrapper.style.transition = 'none';
-
-            // Tịnh tiến ngang container chính
-            horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-            let activePane = currentPaneIndex === 0 ? leftPane : rightPane;
-            let incomingPane = currentPaneIndex === 0 ? rightPane : leftPane;
-
-            // Scale & Opacity Transitions mượt mà
-            let activeScale = 1 - (0.03 * ratio); // 100% -> 97%
-            let activeOpacity = 1 - ratio;        // 100% -> 0%
-            let incomingScale = 0.98 + (0.02 * ratio); // 98% -> 100%
-            let incomingOpacity = 0.6 + (0.4 * ratio);  // 60% -> 100%
-
-            activePane.style.transform = `scale(${activeScale})`;
-            activePane.style.opacity = activeOpacity;
-
-            incomingPane.style.transform = `scale(${incomingScale})`;
-            incomingPane.style.opacity = incomingOpacity;
-
-            // Mid-swipe Background Blur Transition (Max 12px blur at 50% midpoint mimicking diving through mist)
+            // Đồng bộ hiệu ứng Mid-swipe Background Blur & slightly dims midpoint
             let midSwipeBlur = Math.sin(ratio * Math.PI) * 12;
-            let midSwipeBrightness = 1 - Math.sin(ratio * Math.PI) * 0.15; // slightly dims midpoint
+            let midSwipeBrightness = 1 - Math.sin(ratio * Math.PI) * 0.15;
             viewportWrapper.style.filter = `blur(${midSwipeBlur}px) brightness(${midSwipeBrightness})`;
 
-            // Đồng bộ live progress bar (Trang trái = 50% -> Trang phải = 100%)
-            let livePercentage = 50 + (currentPaneIndex === 0 ? (ratio * 50) : (-ratio * 50));
-            progressBarFill.style.transition = 'none';
+            // Đồng bộ live progress bar
+            let livePercentage = 33;
+            if (currentLogicalState === 0) {
+                livePercentage = 33 + (ratio * 33);
+            } else if (currentLogicalState === 1) {
+                livePercentage = deltaX > 0 ? (66 - ratio * 33) : (66 + ratio * 34);
+            } else if (currentLogicalState === 2) {
+                livePercentage = 100 - (ratio * 34);
+            }
             progressBarFill.style.width = `${livePercentage}%`;
         }
 
@@ -2217,7 +2313,7 @@
             const viewportWidth = window.innerWidth;
             const threshold = viewportWidth * 0.3; // Ngưỡng lực kéo 30%
 
-            // Khôi phục thuộc tính transition spring đàn hồi mượt kiểu Apple
+            // Trả lại các transition spring mượt mà
             horizontalAxis.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             leftPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             rightPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
@@ -2228,13 +2324,20 @@
             viewportWrapper.style.filter = 'none';
 
             if (Math.abs(deltaX) >= threshold) {
-                if (deltaX < 0 && currentPaneIndex === 0) {
-                    // Vuốt sang trái -> Sang cột Bài tập bên phải (Pane 1)
-                    completeTransition(1);
-                } else if (deltaX > 0 && currentPaneIndex === 1) {
-                    // Vuốt sang phải -> Quay lại cột Giới thiệu/Tổng kết bên trái (Pane 0)
-                    completeTransition(0);
-                } else {
+                if (currentLogicalState === 0 && deltaX < 0) {
+                    completeTransition(1); // Từ Giới thiệu, kéo trái -> Chuyển sang Bài tập
+                } 
+                else if (currentLogicalState === 1) {
+                    if (deltaX > 0) {
+                        completeTransition(0); // Từ Bài tập, kéo phải -> Về Giới thiệu
+                    } else {
+                        completeTransition(2); // Từ Bài tập, kéo trái -> Chuyển sang Tổng kết
+                    }
+                } 
+                else if (currentLogicalState === 2 && deltaX > 0) {
+                    completeTransition(1); // Từ Tổng kết, kéo phải -> Chuyển sang Bài tập
+                } 
+                else {
                     recoilTransition();
                 }
             } else {
@@ -2242,34 +2345,57 @@
             }
         }
 
-        function completeTransition(targetIndex) {
-            currentPaneIndex = targetIndex;
-            currentPane = currentPaneIndex === 0 ? 'left' : 'right';
+        function completeTransition(targetState) {
+            currentLogicalState = targetState;
 
-            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
-
-            leftPane.style.transform = 'scale(1)';
-            rightPane.style.transform = 'scale(1)';
-            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
-            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
-
-            // Đồng bộ trạng thái dynamic island và indicators
-            slidePane(currentPane);
+            if (currentLogicalState === 0) {
+                // Giới thiệu: Slide về Pane 0, cuộn dọc lên đầu trang
+                horizontalAxis.style.transform = 'translateX(0)';
+                leftScrollTo('hero');
+                
+                leftPane.style.transform = 'scale(1)';
+                rightPane.style.transform = 'scale(1)';
+                leftPane.style.opacity = '1';
+                rightPane.style.opacity = '0.6';
+                
+                slidePane('left');
+                progressBarFill.style.width = '33%';
+            } 
+            else if (currentLogicalState === 1) {
+                // Bài tập: Slide sang Pane 1
+                horizontalAxis.style.transform = 'translateX(-100vw)';
+                
+                leftPane.style.transform = 'scale(1)';
+                rightPane.style.transform = 'scale(1)';
+                leftPane.style.opacity = '0.6';
+                rightPane.style.opacity = '1';
+                
+                slidePane('right');
+                progressBarFill.style.width = '66%';
+            } 
+            else if (currentLogicalState === 2) {
+                // Tổng kết: Slide về Pane 0, cuộn dọc xuống phần kết luận
+                horizontalAxis.style.transform = 'translateX(0)';
+                leftScrollTo('conclusion');
+                
+                leftPane.style.transform = 'scale(1)';
+                rightPane.style.transform = 'scale(1)';
+                leftPane.style.opacity = '1';
+                rightPane.style.opacity = '0.6';
+                
+                slidePane('left');
+                progressBarFill.style.width = '100%';
+            }
         }
 
         function recoilTransition() {
-            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
-            leftPane.style.transform = 'scale(1)';
-            rightPane.style.transform = 'scale(1)';
-            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
-            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
-            
-            progressBarFill.style.width = currentPaneIndex === 0 ? '50%' : '100%';
+            completeTransition(currentLogicalState);
         }
 
         // Touch Gesture Listeners (Thiết bị di động)
         document.addEventListener('touchstart', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
+            determineLogicalState(); // Xác định chính xác vị trí scroll trước khi bắt đầu cử chỉ vuốt
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             currentX = startX;
@@ -2311,6 +2437,7 @@
         document.addEventListener('mousedown', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
             if (e.target.closest('button, a, .card-action, .card-action-link, .btn-drive-glass, .swipe-indicator')) return;
+            determineLogicalState();
             startX = e.clientX;
             startY = e.clientY;
             currentX = startX;
@@ -2383,7 +2510,7 @@
                 rightIndicator.style.pointerEvents = 'none';
                 rightIndicator.style.transform = 'translateY(-50%) translateX(40px)';
 
-                if (progressBarFill) progressBarFill.style.width = '100%';
+                if (progressBarFill) progressBarFill.style.width = '66%';
             } else {
                 slider.style.transform = 'translateX(0)';
                 currentPane = 'left';
@@ -2922,7 +3049,7 @@
                             <strong style="color: #3b82f6; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">⏳ ĐANG LÀM (IN PROGRESS)</strong>
                         </div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1rem;" id="kanban-col-done">
-                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀT TẤT (DONE)</strong>
+                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀN TẤT (DONE)</strong>
                         </div>
                     </div>
                 </div>
@@ -3010,7 +3137,7 @@
                 </div>
 
                 <h4>Nhận Định Cá Nhân Về Chính Sách AI Của Đại Học Ngoại Ngữ</h4>
-                <p>Em hoàn toàn ủng hộ triết lý quản lý AI của nhà trường: coi AI là công cụ bổ trợ nâng cao hiệu suất học tập nhưng nghiên cấm đạo văn số (AI-Plagiarism). AI giống như kính hiển vi giúp phóng đại các lỗi sai ngữ pháp, mở rộng trường từ vựng nhưng không thể thay thế bộ não con người trong việc kiến tạo tư duy phản biện độc lập. Quy chuẩn nộp Tờ khai báo sử dụng AI (AI Disclosure Statement) giúp tụi em tự tin nghiên cứu trong ranh giới đạo đức cho phép.</p>
+                <p>Em hoàn toàn ủng hộ triết lý quản lý AI của nhà trường: coi AI là công cụ bổ trợ nâng cao hiệu suất học tập nhưng nghiêm cấm đạo văn số (AI-Plagiarism). AI giống như kính hiển vi giúp phóng đại các lỗi sai ngữ pháp, mở rộng trường từ vựng nhưng không thể thay thế bộ não con người trong việc kiến tạo tư duy phản biện độc lập. Quy chuẩn nộp Tờ khai báo sử dụng AI (AI Disclosure Statement) giúp tụi em tự tin nghiên cứu trong ranh giới đạo đức cho phép.</p>
 
                 <h4>Bài học rút ra</h4>
                 <p>Bản lĩnh ứng dụng công nghệ nằm ở khả năng kiểm soát đạo đức tự thân của người học. Đạo đức học thuật vững vàng giúp nhà giáo tương lai làm chủ tiến trình giảng dạy sáng tạo, liêm chính số.</p>
