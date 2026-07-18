@@ -671,12 +671,29 @@ mình:
 
         /* Section Title Style */
         .section-header-panel {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr; /* Chia 2 cột tỷ lệ cân đối */
+            gap: 4rem;
             align-items: flex-end;
             margin-bottom: 4rem;
-            flex-wrap: wrap;
-            gap: 2rem;
+        }
+
+        .header-left-col {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .header-right-col {
+            max-width: 580px;
+        }
+
+        /* Thích ứng trên màn hình máy tính bảng và điện thoại */
+        @media (max-width: 1024px) {
+            .section-header-panel {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
         }
 
         .section-intro-text {
@@ -1667,22 +1684,26 @@ mình:
             <div class="exercises-axis-pane">
                 
                 <!-- Projects / Exercises Section -->
-                <section id="projects" class="container">
-                    <div class="section-header-panel">
-                        <div style="width: 100%;">
-                            <span class="hero-subtitle">02 / Project Space</span>
-                            <h2 class="section-title-large">6 BÀI TẬP</h2>
-                            <!-- Simplified explanation under the new title -->
-                            <p class="section-intro-text" style="margin-top: 1rem; max-width: 650px;">
-                                Sáu dự án trong học phần không chỉ ghi lại những kiến thức và kỹ năng em đã tiếp thu, mà còn lưu giữ hành trình trưởng thành của một sinh viên sư phạm trên con đường khám phá công nghệ số và trí tuệ nhân tạo. Từ những kiến thức nền tảng đầu tiên đến việc ứng dụng AI và các công cụ số, từng dự án đều phản ánh quá trình không ngừng khám phá, thích nghi và hoàn thiện bản thân trong một thế giới công nghệ luôn đổi mới.</p>
-                            <!-- Elegant glowing glassmorphic button perfectly matching the website design -->
-                            <div style="margin-top: 1.5rem;">
-                                <a href="https://drive.google.com/drive/folders/1WxK5N13-DsHVcmxPzxaP6B_z1EcSHbcb" target="_blank" class="btn-drive-glass">
-                                    <span style="font-size: 1.1rem; vertical-align: middle;">📂</span> Xem báo cáo GG drive
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                <!-- === DÁN ĐOẠN HTML MỚI NÀY VÀO === -->
+        <div class="section-header-panel">
+            <!-- Cột bên trái: Tiêu đề lớn và Nút Drive -->
+            <div class="header-left-col">
+                <span class="hero-subtitle">02 / Project Space</span>
+                <h2 class="section-title-large" style="margin: 0;">6 BÀI TẬP</h2>
+                <div style="margin-top: 1rem;">
+                    <a href="https://drive.google.com/drive/folders/1WxK5N13-DsHVcmxPzxaP6B_z1EcSHbcb" target="_blank" class="btn-drive-glass">
+                        <span style="font-size: 1.1rem; vertical-align: middle;">📂</span> Xem báo cáo GG drive
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Cột bên phải: Đoạn văn mô tả sư phạm học thuật -->
+            <div class="header-right-col">
+                <p class="section-intro-text" style="line-height: 1.8; color: var(--text-secondary); margin: 0;">
+                    Sáu dự án trong học phần không chỉ ghi lại những kiến thức và kỹ năng em đã tiếp thu, mà còn lưu giữ hành trình trưởng thành của một sinh viên sư phạm trên con đường khám phá công nghệ số và trí tuệ nhân tạo. Từ những kiến thức nền tảng đầu tiên đến việc ứng dụng AI và các công cụ số, từng dự án đều phản ánh quá trình không ngừng khám phá, thích nghi và hoàn thiện bản thân trong một thế giới công nghệ luôn đổi mới.
+                </p>
+            </div>
+        </div>
 
                     <div class="gallery-grid">
                         <!-- Card 1 -->
