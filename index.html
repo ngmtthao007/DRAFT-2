@@ -1,29 +1,28 @@
-Dưới đây là toàn bộ mã nguồn hoàn chỉnh của file HTML đã được cập nhật [1].
+Dưới đây là toàn bộ mã nguồn của tệp HTML đã được tái cấu trúc hoàn chỉnh [1].
 
-Các điểm nâng cấp:
+Các điểm cải tiến và khắc phục lỗi:
 
-1.  Khóa cứng bố cục ngang (Không bị tràn/xuống hàng): Đã bổ sung
-    overscroll-behavior-x: none; cho html, body và .viewport-wrapper để chặn
-    hoàn toàn lỗi cử chỉ cuộn ngang của chuột/trackpad khiến trang bị dịch
-    chuyển tự do [1]. Không gian "Bài tập" được giữ cố định ở bên phải và chỉ
-    dịch chuyển khi click nút hoặc vuốt chuyển vùng [1].
-2.  Tính năng vuốt (Swipe) & Kéo (Drag) đa nền tảng: Tích hợp bộ bắt sự kiện cử
-    chỉ thông minh:
-      - Trên điện thoại/tablet: Vuốt từ phải sang trái để sang trang "Bài tập",
-        vuốt ngược lại để về trang "Giới thiệu" [1].
-      - Trên máy tính: Bạn có thể dùng chuột nhấn giữ và kéo ngang để trượt
-        trang cực kỳ mượt mà [1].
-3.  Hiệu ứng tương tác Widget bài tập (6 bài tập) sinh động: Khi bạn rê chuột
-    vào mỗi thẻ bài tập:
-      - Viền thẻ sẽ phát sáng ánh tím nhẹ nhàng [1].
-      - Huy hiệu số (Number Badge) tự động phóng lớn, đổi sang màu trắng và phát
-        sáng hào quang [1].
-      - Trạng thái "Đã hoàn thành" đổi màu nổi bật hơn [1].
-      - Các nút bấm chính và phụ sẽ tự nâng nhẹ lên (translateY) kèm theo bóng
-        đổ đổ sâu, tạo chiều dọc không gian 3D ấn tượng [1].
-
-Bạn hãy sao chép toàn bộ mã nguồn dưới đây và dán thay thế vào file HTML của
-mình:
+1.  Khóa cứng không gian Bài tập (Project Space) sang bên phải: Đã bổ sung thuộc
+    tính flex: 0 0 100vw; min-width: 100vw; cho cả hai phân vùng hiển thị, kết
+    hợp cùng overscroll-behavior-x: none; ở thẻ html, body và .viewport-wrapper
+    [1]. Điều này đảm bảo trang bài tập luôn nằm gọn gàng ở phía bên phải (2D
+    Spatial Axis) và loại bỏ hiện tượng bị dồn ép hoặc tràn xuống phía dưới [1].
+2.  Apple-style 3D Tilt Card & Parallax: Khi di chuột qua 6 thẻ bài tập (Gallery
+    Cards), thẻ sẽ tự động nghiêng theo góc di chuyển của con trỏ chuột, bóng đổ
+    bên dưới thay đổi hướng thực tế, đồng thời các thành phần bên trong (Số thứ
+    tự, Huy hiệu trạng thái, Tiêu đề và Nút bấm) dịch chuyển với các vận tốc
+    khác nhau (Parallax) tạo độ sâu 3D chân thực [1].
+3.  Vệt sáng quét qua kính mờ (Shine sweep): Toàn bộ các thẻ bài tập kính mờ có
+    thêm vệt sáng tinh tế tự động quét chéo qua mỗi 9 giây để tăng tính sống
+    động và thẩm mỹ [1].
+4.  Nút bấm nam châm "độ đàn hồi cao" (Fluffy Magnetic Buttons): Các nút hành
+    động chính, phụ và nút xem báo cáo Google Drive sẽ tự động bị hút nhẹ về
+    phía con trỏ chuột khi đến gần [1]. Khi con trỏ chuột rời đi, nút sẽ nảy nhẹ
+    về vị trí cũ bằng hàm chuyển động lò xo vật lý (cubic-bezier phản hồi ngược)
+    [1].
+5.  Cử chỉ vuốt/kéo mượt mà: Người dùng có thể vuốt màn hình (trên di động) hoặc
+    nhấn giữ kéo chuột ngang (trên máy tính) để trượt mượt mà giữa không gian
+    Giới thiệu và không gian Bài tập [1].
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -65,7 +64,7 @@ mình:
             font-family: 'Lexend', sans-serif; /* Chuyển đổi toàn bộ nội dung sang phông Lexend [1] */
             color: var(--text-primary);
             position: relative;
-            overscroll-behavior-x: none; /* Khóa các hành vi vuốt lùi/tiến trang mặc định của trình duyệt */
+            overscroll-behavior-x: none; /* Ngăn chặn cuộn trang ngang mặc định hệ thống */
         }
 
         /* Custom scrollbar cho các phân vùng cuộn riêng biệt */
@@ -153,6 +152,7 @@ mình:
             overflow-y: auto;
             overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
             scroll-behavior: smooth;
+            box-sizing: border-box;
         }
 
         /* Right Pane (Scrolls Vertically: Gallery grid of exercises) */
@@ -165,6 +165,7 @@ mình:
             overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
             scroll-behavior: smooth;
             background: transparent;
+            box-sizing: border-box;
         }
 
         /* Floating Edge Swipe Indicators (TO GẤP ĐÔI & CÓ VIỀN GLASS DÀY) */
@@ -413,6 +414,7 @@ mình:
             max-width: 1300px;
             margin: 0 auto;
             padding: 0 5%;
+            box-sizing: border-box;
         }
 
         /* Hero Section (Re-designed with new spatial layout) */
@@ -629,16 +631,16 @@ mình:
             align-items: center;
             gap: 12px;
             font-weight: 600;
-            transition: var(--transition-gentle);
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 25px rgba(192, 132, 252, 0.15);
             cursor: pointer;
+            /* Thiết lập đàn hồi (fluffy transition) khi con trỏ di chuyển ra */
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .btn-drive-glass:hover {
             background: rgba(192, 132, 252, 0.18);
             border-color: var(--accent-purple);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 35px rgba(192, 132, 252, 0.35);
-            transform: translateY(-3px);
         }
 
         /* Exercises Gallery Section */
@@ -655,6 +657,7 @@ mình:
             gap: 2rem;
         }
 
+        /* Nâng cấp giao diện 6 bài tập (6 exercise cards / widgets) */
         .gallery-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -665,18 +668,43 @@ mình:
             flex-direction: column;
             justify-content: space-between;
             min-height: 320px;
-            /* Cấu trúc hiệu ứng chuyển động mượt mà nâng cấp */
-            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+            position: relative; /* Chứa hiệu ứng vệt sáng tuyệt đối */
+            overflow: hidden; /* Ngăn chặn vệt sáng tràn ra ngoài thẻ */
+            transform-style: preserve-3d; /* Cho phép các thành phần bên trong hiển thị hiệu ứng Parallax 3D thực thụ */
+            /* Phản hồi mượt mà khi di chuột ra khỏi thẻ */
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
                         border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
                         box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05);
         }
 
-        /* Hoạt họa nâng nhẹ và phát quầng sáng khi hover vào thẻ bài tập */
-        .gallery-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--accent-purple);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(192, 132, 252, 0.25);
+        /* Hiệu ứng vệt sáng tinh tế (Subtle Light Streak Sweep) quét qua mỗi 9 giây */
+        @keyframes shineSweep {
+            0% { left: -150%; opacity: 0; }
+            12% { opacity: 1; }
+            24% { left: 150%; opacity: 0; }
+            100% { left: 150%; opacity: 0; }
+        }
+
+        .gallery-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.02) 20%,
+                rgba(255, 255, 255, 0.12) 50%,
+                rgba(255, 255, 255, 0.02) 80%,
+                transparent
+            );
+            transform: skewX(-25deg) translateZ(0);
+            pointer-events: none;
+            animation: shineSweep 9s infinite cubic-bezier(0.25, 1, 0.5, 1);
+            z-index: 5;
         }
 
         .card-top {
@@ -684,6 +712,7 @@ mình:
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2rem;
+            transform-style: preserve-3d;
         }
 
         .card-num {
@@ -698,14 +727,8 @@ mình:
             font-weight: 700;
             font-size: 1.03rem; /* Tăng 15% kích thước số */
             box-shadow: 0 4px 10px rgba(192, 132, 252, 0.3);
-            transition: background 0.4s ease, color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
-        }
-
-        .gallery-card:hover .card-num {
-            background: #ffffff;
-            color: #120d24;
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+            /* Chuyển động đàn hồi cho các lớp Parallax bên trong thẻ */
+            transition: background 0.4s ease, color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-status {
@@ -716,14 +739,7 @@ mình:
             border: 1px solid rgba(192, 132, 252, 0.2);
             padding: 0.35rem 0.9rem;
             border-radius: 50px;
-            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
-        }
-
-        .gallery-card:hover .card-status {
-            background: rgba(192, 132, 252, 0.25);
-            color: #ffffff;
-            border-color: var(--accent-purple);
-            transform: scale(1.05);
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-title {
@@ -733,6 +749,7 @@ mình:
             line-height: 1.2;
             color: var(--text-primary);
             margin-bottom: 1rem;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-desc {
@@ -740,6 +757,7 @@ mình:
             color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 2rem;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         /* Split-button action row for gallery cards [1] */
@@ -748,6 +766,8 @@ mình:
             grid-template-columns: 1.15fr 0.85fr; /* Sửa tỷ lệ chiều rộng chia đều tinh tế */
             gap: 0.65rem;
             width: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .card-action {
@@ -760,16 +780,9 @@ mình:
             font-weight: 700;
             font-size: 0.95rem; /* Tăng 15% kích thước */
             cursor: pointer;
-            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
             text-align: center;
-        }
-
-        .gallery-card:hover .card-action {
-            background: var(--accent-purple);
-            color: #120d24;
-            border-color: var(--accent-purple);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(192, 132, 252, 0.4);
+            /* Đàn hồi mượt kiểu nam châm khi chuột di chuyển ra ngoài */
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .card-action-link {
@@ -781,19 +794,13 @@ mình:
             border-radius: 50px;
             font-weight: 700;
             font-size: 0.95rem; /* Tăng 15% kích thước */
-            transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 4px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .gallery-card:hover .card-action-link {
-            background: rgba(192, 132, 252, 0.15);
-            border-color: var(--accent-purple);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(192, 132, 252, 0.2);
+            /* Đàn hồi mượt kiểu nam châm khi chuột di chuyển ra ngoài */
+            transition: background 0.4s ease, border-color 0.4s ease, transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s ease;
         }
 
         /* Vector lines style */
@@ -1045,6 +1052,8 @@ mình:
             grid-template-columns: 1.2fr 0.8fr;
             gap: 4rem;
             align-items: center;
+            box-sizing: border-box;
+            max-width: 100%;
         }
 
         .conclusion-text h3 {
@@ -1094,14 +1103,14 @@ mình:
         /* Hiệu ứng tương tác cho ô Bài tập chuyển hướng (DÁN VÀO ĐÂY) */
         .clickable-stat-box {
             cursor: pointer;
-            transition: var(--transition-gentle);
             position: relative;
+            /* Đàn hồi lò xo mượt kiểu Apple khi chuột rời đi */
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
         }
 
         .clickable-stat-box:hover {
             border-color: var(--accent-purple);
             background: rgba(192, 132, 252, 0.08);
-            transform: scale(1.05);
             box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25);
         }
 
@@ -1109,8 +1118,6 @@ mình:
             color: #ffffff;
             text-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
         }
-
-        /* Footer */ /* <--- DÒNG 798 */
 
         /* Footer */
         footer {
@@ -1312,15 +1319,7 @@ mình:
             max-height: 350px; 
             opacity: 1;
         }
-        /* Phản hồi rung lắc Jiggle tự nhiên */
-        @keyframes elegantJiggle {
-            0% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
-            20% { transform: scale(1.02) translate(-1px, 1px) rotate(-0.25deg); }
-            40% { transform: scale(1.02) translate(1px, -1px) rotate(0.25deg); }
-            60% { transform: scale(1.02) translate(-1px, -1px) rotate(-0.1deg); }
-            80% { transform: scale(1.02) translate(1px, 1px) rotate(0.1deg); }
-            100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
-        }
+        
         /* Thiết lập chữ in hoa và độ phát sáng mặc định cho widgets tổng kết */
         .conclusion-widget .widget-value {
             font-family: 'Lexend', sans-serif;
@@ -1430,7 +1429,7 @@ mình:
                         <!-- Giới thiệu mục tiêu Sư phạm của giáo viên tương lai -->
                         <div class="intro-glass-box">
                             <span class="intro-box-title">Định hướng & Mục tiêu</span>
-                            <p>Mục tiêu của em là nghiên ứng dụng Generative AI và các nền tảng EdTech hiện đại nhằm tối ưu hóa phương pháp giảng dạy tiếng Anh, cá nhân hóa lộ trình học tập và phát triển học liệu số tương tác cao cho học sinh.</p>
+                            <p>Mục tiêu của em là nghiên cứu ứng dụng Generative AI và các nền tảng EdTech hiện đại nhằm tối ưu hóa phương pháp giảng dạy tiếng Anh, cá nhân hóa lộ trình học tập và phát triển học liệu số tương tác cao cho học sinh.</p>
                         </div>
 
                         <!-- Gmail cá nhân hay j đó của mình -->
@@ -1793,6 +1792,77 @@ mình:
                     slidePane('left');
                 }
             }
+        });
+
+        // 3D Apple-Style Tilt Card with Parallax & Fluffy Magnetic Buttons [1]
+        document.querySelectorAll('.gallery-card').forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; // Tọa độ X tương đối với thẻ
+                const y = e.clientY - rect.top;  // Tọa độ Y tương đối với thẻ
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Tính toán góc xoay dựa trên vị trí chuột (giới hạn góc tối đa là 12 độ)
+                const rotateX = ((centerY - y) / centerY) * 12; 
+                const rotateY = ((x - centerX) / centerX) * 12;
+                
+                // Đồng bộ hướng đổ bóng tương ứng với góc nghiêng của thẻ [1]
+                const shadowX = -rotateY * 1.5;
+                const shadowY = rotateX * 1.5;
+                
+                // Áp dụng góc nghiêng 3D và bóng đổ động thực tế
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                card.style.boxShadow = `${shadowX}px ${shadowY}px 35px rgba(0, 0, 0, 0.45), 0 0 25px rgba(192, 132, 252, 0.22)`;
+                
+                // Hiệu ứng Parallax: Trượt các thành phần nội dung bên trong ở các độ sâu (vận tốc) khác nhau [1]
+                const cardNum = card.querySelector('.card-num');
+                const cardStatus = card.querySelector('.card-status');
+                const cardTitle = card.querySelector('.card-title');
+                const cardDesc = card.querySelector('.card-desc');
+                const cardButtons = card.querySelector('.card-btn-group');
+                
+                if (cardNum) cardNum.style.transform = `translate3d(${(x - centerX) * 0.08}px, ${(y - centerY) * 0.08}px, 40px)`;
+                if (cardStatus) cardStatus.style.transform = `translate3d(${(x - centerX) * 0.04}px, ${(y - centerY) * 0.04}px, 20px)`;
+                if (cardTitle) cardTitle.style.transform = `translate3d(${(x - centerX) * 0.05}px, ${(y - centerY) * 0.05}px, 30px)`;
+                if (cardDesc) cardDesc.style.transform = `translate3d(${(x - centerX) * 0.03}px, ${(y - centerY) * 0.03}px, 10px)`;
+                if (cardButtons) cardButtons.style.transform = `translate3d(${(x - centerX) * 0.06}px, ${(y - centerY) * 0.06}px, 15px)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                // Khôi phục mượt mà trạng thái cân bằng ban đầu
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+                card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05)';
+                
+                // Đưa các lớp nội dung parallax về trung tâm
+                const parallaxElements = card.querySelectorAll('.card-num, .card-status, .card-title, .card-desc, .card-btn-group');
+                parallaxElements.forEach(el => {
+                    el.style.transform = 'translate3d(0, 0, 0)';
+                });
+            });
+        });
+
+        // Thiết lập tính năng Fluffy Magnetic Buttons (Nút nam châm đàn hồi) [1]
+        document.querySelectorAll('.card-action, .card-action-link, .btn-drive-glass').forEach(btn => {
+            btn.addEventListener('mousemove', e => {
+                const rect = btn.getBoundingClientRect();
+                const btnX = e.clientX - rect.left - rect.width / 2;
+                const btnY = e.clientY - rect.top - rect.height / 2;
+                
+                // Di chuyển tịnh tiến nút bám nhẹ theo hướng con trỏ chuột
+                const magnetX = btnX * 0.35;
+                const magnetY = btnY * 0.35;
+                
+                btn.style.transition = 'transform 0.15s cubic-bezier(0.25, 1, 0.5, 1)';
+                btn.style.transform = `translate3d(${magnetX}px, ${magnetY}px, 0)`;
+            });
+            
+            btn.addEventListener('mouseleave', () => {
+                // Đàn hồi lò xo mềm nảy về vị trí cũ một cách mượt mà [1]
+                btn.style.transition = 'transform 0.55s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                btn.style.transform = 'translate3d(0, 0, 0)';
+            });
         });
 
         // Scroll helpers inside the panes
@@ -2573,9 +2643,9 @@ mình:
         function selectDesignTimeline(step) {
             currentDesignTimelineStep = step;
             for (let i = 1; i <= 3; i++) {
-                document.getElementById(`btn-timeline-${i}`).classList.remove('active');
+                document.getElementById('btn-timeline-' + i).classList.remove('active');
             }
-            document.getElementById(`btn-timeline-${step}`).classList.add('active');
+            document.getElementById('btn-timeline-' + step).classList.add('active');
 
             const desc = document.getElementById('design-timeline-description');
             desc.textContent = widgetContents[5][step];
@@ -2585,9 +2655,9 @@ mình:
         function selectEthicalRule(idx) {
             currentEthicalRuleIndex = idx;
             for (let i = 1; i <= 6; i++) {
-                document.getElementById(`btn-rule-${i}`).classList.remove('active');
+                document.getElementById('btn-rule-' + i).classList.remove('active');
             }
-            document.getElementById(`btn-rule-${idx}`).classList.add('active');
+            document.getElementById('btn-rule-' + idx).classList.add('active');
 
             const display = document.getElementById('ethical-rule-display');
             display.innerHTML = widgetContents[6][idx];
@@ -2632,3 +2702,6 @@ mình:
     </script>
 </body>
 </html>
+
+Hi vọng bản cập nhật này mang lại đúng trải nghiệm giao diện 3D tinh tế và các
+hiệu ứng động mượt mà như bạn mong đợi [1]!
