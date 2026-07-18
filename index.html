@@ -1,3 +1,30 @@
+Dưới đây là toàn bộ mã nguồn hoàn chỉnh của file HTML đã được cập nhật [1].
+
+Các điểm nâng cấp:
+
+1.  Khóa cứng bố cục ngang (Không bị tràn/xuống hàng): Đã bổ sung
+    overscroll-behavior-x: none; cho html, body và .viewport-wrapper để chặn
+    hoàn toàn lỗi cử chỉ cuộn ngang của chuột/trackpad khiến trang bị dịch
+    chuyển tự do [1]. Không gian "Bài tập" được giữ cố định ở bên phải và chỉ
+    dịch chuyển khi click nút hoặc vuốt chuyển vùng [1].
+2.  Tính năng vuốt (Swipe) & Kéo (Drag) đa nền tảng: Tích hợp bộ bắt sự kiện cử
+    chỉ thông minh:
+      - Trên điện thoại/tablet: Vuốt từ phải sang trái để sang trang "Bài tập",
+        vuốt ngược lại để về trang "Giới thiệu" [1].
+      - Trên máy tính: Bạn có thể dùng chuột nhấn giữ và kéo ngang để trượt
+        trang cực kỳ mượt mà [1].
+3.  Hiệu ứng tương tác Widget bài tập (6 bài tập) sinh động: Khi bạn rê chuột
+    vào mỗi thẻ bài tập:
+      - Viền thẻ sẽ phát sáng ánh tím nhẹ nhàng [1].
+      - Huy hiệu số (Number Badge) tự động phóng lớn, đổi sang màu trắng và phát
+        sáng hào quang [1].
+      - Trạng thái "Đã hoàn thành" đổi màu nổi bật hơn [1].
+      - Các nút bấm chính và phụ sẽ tự nâng nhẹ lên (translateY) kèm theo bóng
+        đổ đổ sâu, tạo chiều dọc không gian 3D ấn tượng [1].
+
+Bạn hãy sao chép toàn bộ mã nguồn dưới đây và dán thay thế vào file HTML của
+mình:
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -38,6 +65,7 @@
             font-family: 'Lexend', sans-serif; /* Chuyển đổi toàn bộ nội dung sang phông Lexend [1] */
             color: var(--text-primary);
             position: relative;
+            overscroll-behavior-x: none; /* Khóa các hành vi vuốt lùi/tiến trang mặc định của trình duyệt */
         }
 
         /* Custom scrollbar cho các phân vùng cuộn riêng biệt */
@@ -104,6 +132,7 @@
             height: 100vh;
             overflow: hidden;
             position: relative;
+            overscroll-behavior-x: none;
         }
 
         /* Horizontal Axis Container */
@@ -531,88 +560,6 @@
             transform: scale(1.05) translateY(-5px);
             box-shadow: 0 20px 40px rgba(124, 58, 237, 0.25);
         }
-/* --- HIỆU ỨNG CHO CÁC Ô TỔNG KẾT --- */
-        .reflection-cards-container {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            margin-top: 2rem;
-        }
-
-        .reflection-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 20px;
-            padding: 1.4rem;
-            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
-            cursor: pointer;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .reflection-card-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .reflection-icon {
-            font-size: 1.4rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            background: rgba(192, 132, 252, 0.1);
-            border-radius: 50%;
-            border: 1px solid rgba(192, 132, 252, 0.2);
-            transition: all 0.4s ease;
-        }
-
-        .reflection-card-header h4 {
-            font-family: 'Lexend', sans-serif;
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0;
-        }
-
-        .reflection-card-content {
-            max-height: 0;
-            opacity: 0;
-            overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
-        }
-
-        .reflection-card-content p {
-            color: var(--text-secondary);
-            line-height: 1.7;
-            font-size: 1.02rem;
-            margin: 0;
-            padding-top: 1rem;
-        }
-
-        /* Trạng thái di chuột: kích hoạt rung lắc và hiển thị nội dung */
-        .reflection-card:hover {
-            background: rgba(15, 23, 42, 0.85);
-            border-color: var(--accent-purple);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 20px rgba(192, 132, 252, 0.15);
-            animation: elegantJiggle 0.5s ease-in-out infinite alternate;
-        }
-
-        .reflection-card:hover .reflection-icon {
-            background: var(--accent-purple);
-            color: #120d24;
-            border-color: var(--accent-purple);
-            box-shadow: 0 0 15px rgba(192, 132, 252, 0.4);
-        }
-
-        .reflection-card:hover .reflection-card-content {
-            max-height: 300px; /* Độ cao tối đa khi mở ra */
-            opacity: 1;
-        }
 
         .widget-label {
             font-size: 0.83rem; /* Tăng 15% kích thước phông chữ nhãn phụ */
@@ -718,14 +665,18 @@
             flex-direction: column;
             justify-content: space-between;
             min-height: 320px;
-            transition: var(--transition-gentle);
+            /* Cấu trúc hiệu ứng chuyển động mượt mà nâng cấp */
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.05);
         }
 
         /* Hoạt họa nâng nhẹ và phát quầng sáng khi hover vào thẻ bài tập */
         .gallery-card:hover {
-            transform: translateY(-12px) scale(1.03);
+            transform: translateY(-10px) scale(1.02);
             border-color: var(--accent-purple);
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 30px rgba(192, 132, 252, 0.25);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(192, 132, 252, 0.25);
         }
 
         .card-top {
@@ -747,6 +698,14 @@
             font-weight: 700;
             font-size: 1.03rem; /* Tăng 15% kích thước số */
             box-shadow: 0 4px 10px rgba(192, 132, 252, 0.3);
+            transition: background 0.4s ease, color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+        }
+
+        .gallery-card:hover .card-num {
+            background: #ffffff;
+            color: #120d24;
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
         }
 
         .card-status {
@@ -757,6 +716,14 @@
             border: 1px solid rgba(192, 132, 252, 0.2);
             padding: 0.35rem 0.9rem;
             border-radius: 50px;
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+        }
+
+        .gallery-card:hover .card-status {
+            background: rgba(192, 132, 252, 0.25);
+            color: #ffffff;
+            border-color: var(--accent-purple);
+            transform: scale(1.05);
         }
 
         .card-title {
@@ -793,7 +760,7 @@
             font-weight: 700;
             font-size: 0.95rem; /* Tăng 15% kích thước */
             cursor: pointer;
-            transition: var(--transition-gentle);
+            transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
             text-align: center;
         }
 
@@ -801,8 +768,8 @@
             background: var(--accent-purple);
             color: #120d24;
             border-color: var(--accent-purple);
-            box-shadow: 0 4px 12px rgba(192, 132, 252, 0.3);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(192, 132, 252, 0.4);
         }
 
         .card-action-link {
@@ -814,7 +781,7 @@
             border-radius: 50px;
             font-weight: 700;
             font-size: 0.95rem; /* Tăng 15% kích thước */
-            transition: var(--transition-gentle);
+            transition: background 0.4s ease, border-color 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -822,11 +789,11 @@
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .card-action-link:hover {
+        .gallery-card:hover .card-action-link {
             background: rgba(192, 132, 252, 0.15);
             border-color: var(--accent-purple);
-            box-shadow: 0 4px 12px rgba(192, 132, 252, 0.25);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(192, 132, 252, 0.2);
         }
 
         /* Vector lines style */
@@ -1463,7 +1430,7 @@
                         <!-- Giới thiệu mục tiêu Sư phạm của giáo viên tương lai -->
                         <div class="intro-glass-box">
                             <span class="intro-box-title">Định hướng & Mục tiêu</span>
-                            <p>Mục tiêu của em là nghiên cứu ứng dụng Generative AI và các nền tảng EdTech hiện đại nhằm tối ưu hóa phương pháp giảng dạy tiếng Anh, cá nhân hóa lộ trình học tập và phát triển học liệu số tương tác cao cho học sinh.</p>
+                            <p>Mục tiêu của em là nghiên ứng dụng Generative AI và các nền tảng EdTech hiện đại nhằm tối ưu hóa phương pháp giảng dạy tiếng Anh, cá nhân hóa lộ trình học tập và phát triển học liệu số tương tác cao cho học sinh.</p>
                         </div>
 
                         <!-- Gmail cá nhân hay j đó của mình -->
@@ -1514,57 +1481,59 @@
 
                 <!-- Conclusion Section -->
                 <!-- KHU VỰC TỔNG KẾT ĐÃ ĐƯỢC CHUẨN HÓA LAYOUT -->
-<section id="conclusion">
-    <div class="container">
-        <div class="conclusion-panel">
-            
-            <!-- Cột bên trái: Tiêu đề & 3 Widgets mở rộng -->
-            <div class="conclusion-text">
-                <span class="hero-subtitle">03 / Reflection</span>
-                <h3>Tổng Kết Học Phần (Khó khăn, Thuận lợi & Bài học)</h3>
-                
-                <div class="conclusion-widgets-container">
-                    <!-- Widget 1: Thuận lợi -->
-                    <div class="conclusion-widget">
-                        <span class="widget-label">✨ Ưu thế học thuật</span>
-                        <span class="widget-value">THUẬN LỢI</span>
-                        <div class="widget-content-expand">
-                            <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo khoa Sư phạm Anh ULIS, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
-                        </div>
-                    </div>
+                <section id="conclusion">
+                    <div class="container">
+                        <div class="conclusion-panel">
+                            
+                            <!-- Cột bên trái: Tiêu đề & 3 Widgets mở rộng -->
+                            <div class="conclusion-text">
+                                <span class="hero-subtitle">03 / Reflection</span>
+                                <h3>Tổng Kết Học Phần (Khó khăn, Thuận lợi & Bài học)</h3>
+                                
+                                <div class="conclusion-widgets-container">
+                                    <!-- Widget 1: Thuận lợi -->
+                                    <div class="conclusion-widget">
+                                        <span class="widget-label">✨ Ưu thế học thuật</span>
+                                        <span class="widget-value">THUẬN LỢI</span>
+                                        <div class="widget-content-expand">
+                                            <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo khoa Sư phạm Anh ULIS, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
+                                        </div>
+                                    </div>
 
-                    <!-- Widget 2: Khó khăn -->
-                    <div class="conclusion-widget">
-                        <span class="widget-label">⚠️ Rào cản công nghệ</span>
-                        <span class="widget-value">KHÓ KHĂN</span>
-                        <div class="widget-content-expand">
-                            <p>Thách thức lớn nhất trong lộ trình nghiên cứu số là ranh giới mong manh giữa việc sử dụng AI làm bệ phóng tư duy và thói quen ỷ lại kỹ thuật số (Digital Laziness). Ngoài ra, việc chọn lọc, đối chiếu dữ liệu để triệt tiêu các lỗi ảo tưởng ngôn ngữ của LLM cũng đòi hỏi tính cẩn trọng và năng lực phản biện không ngừng nghỉ.</p>
-                        </div>
-                    </div>
+                                    <!-- Widget 2: Khó khăn -->
+                                    <div class="conclusion-widget">
+                                        <span class="widget-label">⚠️ Rào cản công nghệ</span>
+                                        <span class="widget-value">KHÓ KHĂN</span>
+                                        <div class="widget-content-expand">
+                                            <p>Thách thức lớn nhất trong lộ trình nghiên cứu số là ranh giới mong manh giữa việc sử dụng AI làm bệ phóng tư duy và thói quen ỷ lại kỹ thuật số (Digital Laziness). Ngoài ra, việc chọn lọc, đối chiếu dữ liệu để triệt tiêu các lỗi ảo tưởng ngôn ngữ của LLM cũng đòi hỏi tính cẩn trọng và năng lực phản biện không ngừng nghỉ.</p>
+                                        </div>
+                                    </div>
 
-                    <!-- Widget 3: Bài học kinh nghiệm -->
-                    <div class="conclusion-widget">
-                        <span class="widget-label">💡 Đúc kết sư phạm</span>
-                        <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
-                        <div class="widget-content-expand">
-                            <p>Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
+                                    <!-- Widget 3: Bài học kinh nghiệm -->
+                                    <div class="conclusion-widget">
+                                        <span class="widget-label">💡 Đúc kết sư phạm</span>
+                                        <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
+                                        <div class="widget-content-expand">
+                                            <p>Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Cột bên phải: Chỉ chứa duy nhất ô 06 Bài tập chuyển hướng -->
+                            <div class="conclusion-stats">
+                                <div class="stat-box clickable-stat-box" onclick="slidePane('right'); rightScrollToTop();">
+                                    <div class="stat-num">06</div>
+                                    <div class="stat-label">Bài tập thực tế</div>
+                                    <span style="font-size: 0.8rem; color: var(--accent-purple); display: block; margin-top: 0.8rem; font-weight: 600; letter-spacing: 0.5px;">NHẤN ĐỂ XEM CHI TIẾT ➔</span>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                </div>
+                </section>
+
             </div>
-            
-            <!-- Cột bên phải: Chỉ chứa duy nhất ô 06 Bài tập chuyển hướng -->
-            <div class="conclusion-stats">
-                <div class="stat-box clickable-stat-box" onclick="slidePane('right'); rightScrollToTop();">
-                    <div class="stat-num">06</div>
-                    <div class="stat-label">Bài tập thực tế</div>
-                    <span style="font-size: 0.8rem; color: var(--accent-purple); display: block; margin-top: 0.8rem; font-weight: 600; letter-spacing: 0.5px;">NHẤN ĐỂ XEM CHI TIẾT ➔</span>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</section>
 
             <!-- Right Pane (Vertical scrolling: Gallery grid of exercises) -->
             <div class="exercises-axis-pane">
@@ -1769,31 +1738,62 @@
             }
         }
 
-        // Horizontal Slide Touch Swipes Detection for Mobile
-        let touchStartX = 0;
-        let touchStartY = 0;
+        // Swipe & Drag Gesture Controller
+        let startX = 0;
+        let currentX = 0;
+        let isDragging = false;
 
+        // Mobile touch gestures
         document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-            touchStartY = e.changedTouches[0].screenY;
+            if (document.getElementById('modalOverlay').classList.contains('active')) return;
+            startX = e.touches[0].clientX;
+            isDragging = true;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', e => {
+            if (!isDragging) return;
+            currentX = e.touches[0].clientX;
         }, { passive: true });
 
         document.addEventListener('touchend', e => {
-            // Ngăn chặn trượt trang khi các modal thuyết trình đang mở rộng hiển thị
-            if (document.getElementById('modalOverlay').classList.contains('active')) return;
-
-            const diffX = e.changedTouches[0].screenX - touchStartX;
-            const diffY = e.changedTouches[0].screenY - touchStartY;
-
-            // Xác định xem cử chỉ vuốt ngang có mạnh hơn vuốt dọc và đạt ngưỡng không
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 80) {
+            if (!isDragging) return;
+            isDragging = false;
+            let diffX = currentX - startX;
+            if (Math.abs(diffX) > 80) { // Vuốt đủ 80px để chuyển trang
                 if (diffX < 0 && currentPane === 'left') {
-                    slidePane('right'); // Vuốt sang trái để dịch chuyển sang bài tập
+                    slidePane('right'); // Vuốt sang trái -> chuyển sang Bài tập
                 } else if (diffX > 0 && currentPane === 'right') {
-                    slidePane('left'); // Vuốt sang phải để quay về trang chính
+                    slidePane('left'); // Vuốt sang phải -> quay về Giới thiệu
                 }
             }
         }, { passive: true });
+
+        // Desktop mouse drag gestures
+        document.addEventListener('mousedown', e => {
+            if (document.getElementById('modalOverlay').classList.contains('active')) return;
+            // Tránh kích hoạt trên các thành phần tương tác
+            if (e.target.closest('button, a, .widget-card, .conclusion-widget, .gallery-card, .swipe-indicator')) return;
+            startX = e.clientX;
+            isDragging = true;
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (!isDragging) return;
+            currentX = e.clientX;
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (!isDragging) return;
+            isDragging = false;
+            let diffX = currentX - startX;
+            if (Math.abs(diffX) > 100) { // Kéo chuột đủ 100px để chuyển trang
+                if (diffX < 0 && currentPane === 'left') {
+                    slidePane('right');
+                } else if (diffX > 0 && currentPane === 'right') {
+                    slidePane('left');
+                }
+            }
+        });
 
         // Scroll helpers inside the panes
         function leftScrollTo(elementId) {
