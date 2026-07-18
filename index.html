@@ -1,4 +1,4 @@
-mình:
+mmmmmmmmmmmmmmmmmmmmmình:
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -1451,24 +1451,26 @@ mình:
             80% { transform: scale(1.02) translate(1px, 1px) rotate(0.1deg); }
             100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
         }
-        /* Thiết lập chữ in hoa và độ phát sáng mặc định cho widgets tổng kết */
+        /* Thiết lập chữ in hoa và độ phát sáng mặc định nhẹ màu TRẮNG trùng màu chữ khi tĩnh */
         .conclusion-widget .widget-value {
             font-family: 'Lexend', sans-serif;
             font-size: 1.35rem;
             font-weight: 700;
             color: var(--text-primary);
             text-transform: uppercase; /* Chuyển chữ in hoa */
-            transition: color 0.4s ease, text-shadow 0.4s ease;
+            transition: color 0.4s ease, text-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             letter-spacing: 1px;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.15); 
+            /* Phát sáng nhẹ màu trắng đồng bộ sắc độ chữ */
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.45), 0 0 16px rgba(255, 255, 255, 0.2); 
         }
 
-        /* Hiệu ứng phát sáng tím oải hương rực rỡ khi di chuột vào */
+        /* Khi di chuột vào: Đổi sang màu tím oải hương và hiệu ứng phát sáng mạnh lên */
         .conclusion-widget:hover .widget-value {
-            color: var(--accent-purple);
-            text-shadow: 0 0 10px rgba(192, 132, 252, 1), 
-                         0 0 20px rgba(192, 132, 252, 0.6), 
-                         0 0 30px rgba(192, 132, 252, 0.3);
+            color: var(--accent-purple); /* Chuyển sắc chữ sang tím */
+            /* Phát sáng đa tầng màu tím rực rỡ và sắc nét */
+            text-shadow: 0 0 12px rgba(192, 132, 252, 1), 
+                         0 0 24px rgba(192, 132, 252, 0.65), 
+                         0 0 36px rgba(192, 132, 252, 0.35);
         }
     </style>
 </head>
@@ -1615,7 +1617,7 @@ mình:
                             
                             <!-- Cột bên trái: Tiêu đề & 3 Widgets mở rộng -->
                             <div class="conclusion-text">
-                                <span class="hero-subtitle">03 / Reflection</span>
+                                <span class="hero-subtitle">Reflection</span>
                                 <h3>TỔNG KẾT HỌC PHẦN</h3>
                                 
                                 <div class="conclusion-widgets-container">
@@ -1669,10 +1671,10 @@ mình:
                 <section id="projects" class="container">
                     <div class="section-header-panel">
                         <div style="width: 100%;">
-                            <span class="hero-subtitle">02 / Project Space</span>
+                            <span class="hero-subtitle">Project Space</span>
                             <h2 class="section-title-large">6 BÀI TẬP</h2>
                             <!-- Simplified explanation under the new title -->
-                            <p class="section-intro-text" style="margin-top: 1rem; max-width: 880px; line-height: 1.8;">
+                            <p class="section-intro-text" style="margin-top: 1rem; max-width: 650px;">
                                 Sáu dự án trong học phần không chỉ ghi lại những kiến thức và kỹ năng em đã tiếp thu, mà còn lưu giữ hành trình trưởng thành của một sinh viên sư phạm trên con đường khám phá công nghệ số và trí tuệ nhân tạo. Từ những kiến thức nền tảng đầu tiên đến việc ứng dụng AI và các công cụ số, từng dự án đều phản ánh quá trình không ngừng khám phá, thích nghi và hoàn thiện bản thân trong một thế giới công nghệ luôn đổi mới.</p>
                             <!-- Elegant glowing glassmorphic button perfectly matching the website design -->
                             <div style="margin-top: 1.5rem;">
@@ -2487,7 +2489,7 @@ mình:
                             <strong style="color: #3b82f6; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">⏳ ĐANG LÀM (IN PROGRESS)</strong>
                         </div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1rem;" id="kanban-col-done">
-                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀN TẤT (DONE)</strong>
+                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀT TẤT (DONE)</strong>
                         </div>
                     </div>
                 </div>
@@ -2647,7 +2649,7 @@ mình:
                     }
                 },
                 3: {
-                    name: "Tác vụ 3: Thiết lập bộ câu hỏi ôn tập Văn hóa Anh - Mỹ",
+                    name: "Tác vụ 3: Tạo bộ câu hỏi ôn tập học phần Văn hóa Anh - Mỹ",
                     basic: {
                         prompt: "Tạo cho tôi bài tập trắc nghiệm về văn hóa nước Anh.",
                         response: "Câu 1: Thủ đô nước Anh là gì? A. London, B. Paris, C. New York. Đáp án đúng: A."
