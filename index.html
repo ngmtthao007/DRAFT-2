@@ -1,4 +1,4 @@
-nhất.
+ư xác.
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -156,7 +156,7 @@ nhất.
             pointer-events: none;
         }
         .progress-bar-fill {
-            width: 33%; /* Khởi điểm trang bên trái chiếm 33% thanh */
+            width: 50%; /* Khởi điểm trang bên trái chiếm 50% thanh */
             height: 100%;
             background: linear-gradient(90deg, var(--accent-purple), #ec4899);
             box-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
@@ -875,7 +875,7 @@ nhất.
         .gallery-grid:hover .gallery-card:hover {
             opacity: 1;
             transform: scale3d(1.04, 1.04, 1.04); /* Base hover scale, JS will multiply on top of this */
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(192, 132, 252, 0.25);
         }
 
         /* Giao diện 6 bài tập (6 exercise cards / widgets) với hiệu ứng vệt sáng và 3D Parallax */
@@ -1940,8 +1940,7 @@ nhất.
     <!-- JS for Interactive Systems & Slow Motion Background Video -->
     <script {nonce}>
         let currentPane = 'left'; // 'left' hoặc 'right'
-        let currentPaneIndex = 0; // 0 = Left Pane, 1 = Right Pane
-        let currentLogicalState = 0; // 0 = Giới thiệu, 1 = Bài tập, 2 = Tổng kết
+        let currentPaneIndex = 0; // 0 = Left Pane (Giới thiệu/Tổng kết), 1 = Right Pane (Bài tập)
         let isSwiping = false;
         let isHorizontalSwipe = false;
         let startX = 0;
@@ -2065,106 +2064,64 @@ nhất.
             });
         });
 
-        // Determine current logical page view state (0, 1, or 2)
-        function determineLogicalState() {
-            if (currentPane === 'right') {
-                currentLogicalState = 1; // Bài tập
-            } else {
-                const conclusion = document.getElementById('conclusion');
-                const scrollPos = leftPane.scrollTop;
-                // Nếu cột trái đang được cuộn tới mốc của section Reflection
-                if (scrollPos >= (conclusion.offsetTop - leftPane.clientHeight / 2)) {
-                    currentLogicalState = 2; // Tổng kết
-                } else {
-                    currentLogicalState = 0; // Giới thiệu
-                }
-            }
-        }
-
-        // Core Gesture Controller: Live Stylings & Scales on Swiping
+        // Core Gesture Controller: Live Stylings & Scales on Swiping (Physical 2-Pane Mapping)
         function handleDragMove(deltaX) {
             const viewportWidth = window.innerWidth;
-            let targetTranslate = 0;
+            let baseTranslate = -currentPaneIndex * viewportWidth;
+            let targetTranslate = baseTranslate + deltaX;
 
             let ratio = Math.abs(deltaX) / viewportWidth;
             if (ratio > 1) ratio = 1;
 
-            if (currentLogicalState === 0) {
-                // Đang ở "Giới thiệu"
-                if (deltaX > 0) {
-                    // Kéo sang phải -> Lò xo nảy đàn hồi (Giới hạn biên trái)
-                    targetTranslate = deltaX * 0.25;
-                    leftPane.style.transform = `scale(${1 - (deltaX / viewportWidth) * 0.05})`;
-                    leftPane.style.opacity = '1';
-                    return;
-                } else {
-                    // Kéo sang trái -> Chuyển hướng sang "Bài tập" (Pane 1)
-                    targetTranslate = deltaX;
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    // Thiết lập Scale & Opacity đồng bộ
-                    leftPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    leftPane.style.opacity = 1 - ratio;
-                    rightPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    rightPane.style.opacity = 0.6 + 0.4 * ratio;
-                }
-            } 
-            else if (currentLogicalState === 1) {
-                // Đang ở "Bài tập"
-                if (deltaX > 0) {
-                    // Kéo sang phải -> Chuyển hướng về "Giới thiệu" (Pane 0, top)
-                    targetTranslate = -viewportWidth + deltaX;
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    rightPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    rightPane.style.opacity = 1 - ratio;
-                    leftPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    leftPane.style.opacity = 0.6 + 0.4 * ratio;
-                } else {
-                    // Kéo sang trái -> Chuyển hướng sang "Tổng kết" (Pane 0, bottom)
-                    // Thiết lập mô phỏng trượt đều đặn slider về 0
-                    targetTranslate = -viewportWidth + Math.abs(deltaX);
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    rightPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    rightPane.style.opacity = 1 - ratio;
-                    leftPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    leftPane.style.opacity = 0.6 + 0.4 * ratio;
-                }
-            } 
-            else if (currentLogicalState === 2) {
-                // Đang ở "Tổng kết"
-                if (deltaX < 0) {
-                    // Kéo sang trái -> Lò xo nảy đàn hồi (Giới hạn biên phải)
-                    targetTranslate = deltaX * 0.25;
-                    leftPane.style.transform = `scale(${1 - (Math.abs(deltaX) / viewportWidth) * 0.05})`;
-                    leftPane.style.opacity = '1';
-                    return;
-                } else {
-                    // Kéo sang phải -> Quay lại "Bài tập" (Pane 1)
-                    targetTranslate = -deltaX;
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    leftPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    leftPane.style.opacity = 1 - ratio;
-                    rightPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    rightPane.style.opacity = 0.6 + 0.4 * ratio;
-                }
+            // Boundary Bounce (rubber-band effect) at the edges
+            if (currentPaneIndex === 0 && deltaX > 0) {
+                // Swiping right on Left Pane (outer boundary)
+                let elasticFactor = 0.25;
+                targetTranslate = deltaX * elasticFactor;
+                leftPane.style.transform = `scale(${1 - (deltaX / viewportWidth) * 0.05})`;
+                leftPane.style.opacity = '1';
+                return;
+            }
+            if (currentPaneIndex === 1 && deltaX < 0) {
+                // Swiping left on Right Pane (outer boundary)
+                let elasticFactor = 0.25;
+                targetTranslate = baseTranslate + (deltaX * elasticFactor);
+                rightPane.style.transform = `scale(${1 - (Math.abs(deltaX) / viewportWidth) * 0.05})`;
+                rightPane.style.opacity = '1';
+                return;
             }
 
-            // Đồng bộ hiệu ứng Mid-swipe Background Blur
+            // Gỡ bỏ transition tạm thời khi kéo để đạt độ bám ngón tay hoàn hảo nhất
+            horizontalAxis.style.transition = 'none';
+            leftPane.style.transition = 'none';
+            rightPane.style.transition = 'none';
+            viewportWrapper.style.transition = 'none';
+
+            // Tịnh tiến ngang container chính
+            horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
+
+            let activePane = currentPaneIndex === 0 ? leftPane : rightPane;
+            let incomingPane = currentPaneIndex === 0 ? rightPane : leftPane;
+
+            // Scale & Opacity Transitions mượt mà
+            let activeScale = 1 - (0.03 * ratio); // 100% -> 97%
+            let activeOpacity = 1 - ratio;        // 100% -> 0%
+            let incomingScale = 0.98 + (0.02 * ratio); // 98% -> 100%
+            let incomingOpacity = 0.6 + (0.4 * ratio);  // 60% -> 100%
+
+            activePane.style.transform = `scale(${activeScale})`;
+            activePane.style.opacity = activeOpacity;
+
+            incomingPane.style.transform = `scale(${incomingScale})`;
+            incomingPane.style.opacity = incomingOpacity;
+
+            // Hiệu ứng Mid-swipe Background Blur (Độ mờ đạt cực đại 8px ở điểm giữa)
             let midSwipeBlur = Math.sin(ratio * Math.PI) * 8;
             viewportWrapper.style.filter = `blur(${midSwipeBlur}px)`;
 
-            // Đồng bộ live progress bar
-            let livePercentage = 33;
-            if (currentLogicalState === 0) {
-                livePercentage = 33 + (ratio * 33);
-            } else if (currentLogicalState === 1) {
-                livePercentage = deltaX > 0 ? (66 - ratio * 33) : (66 + ratio * 34);
-            } else if (currentLogicalState === 2) {
-                livePercentage = 100 - (ratio * 34);
-            }
+            // Đồng bộ live progress bar (Trang trái = 50% -> Trang phải = 100%)
+            let livePercentage = 50 + (currentPaneIndex === 0 ? (ratio * 50) : (-ratio * 50));
+            progressBarFill.style.transition = 'none';
             progressBarFill.style.width = `${livePercentage}%`;
         }
 
@@ -2174,30 +2131,24 @@ nhất.
             const viewportWidth = window.innerWidth;
             const threshold = viewportWidth * 0.3; // Ngưỡng lực kéo 30%
 
-            // Trả lại các transition spring mượt mà
+            // Khôi phục thuộc tính transition spring đàn hồi mượt kiểu Apple
             horizontalAxis.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             leftPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             rightPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             viewportWrapper.style.transition = 'filter 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             progressBarFill.style.transition = 'width 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
 
+            // Khử hoàn toàn filter mờ của viewport
             viewportWrapper.style.filter = 'none';
 
             if (Math.abs(deltaX) >= threshold) {
-                if (currentLogicalState === 0 && deltaX < 0) {
-                    completeTransition(1); // Từ Giới thiệu, kéo trái -> Chuyển sang Bài tập
-                } 
-                else if (currentLogicalState === 1) {
-                    if (deltaX > 0) {
-                        completeTransition(0); // Từ Bài tập, kéo phải -> Về Giới thiệu
-                    } else {
-                        completeTransition(2); // Từ Bài tập, kéo trái -> Chuyển sang Tổng kết
-                    }
-                } 
-                else if (currentLogicalState === 2 && deltaX > 0) {
-                    completeTransition(1); // Từ Tổng kết, kéo phải -> Chuyển sang Bài tập
-                } 
-                else {
+                if (deltaX < 0 && currentPaneIndex === 0) {
+                    // Vuốt sang trái -> Sang cột Bài tập bên phải (Pane 1)
+                    completeTransition(1);
+                } else if (deltaX > 0 && currentPaneIndex === 1) {
+                    // Vuốt sang phải -> Quay lại cột Giới thiệu/Tổng kết bên trái (Pane 0)
+                    completeTransition(0);
+                } else {
                     recoilTransition();
                 }
             } else {
@@ -2205,57 +2156,34 @@ nhất.
             }
         }
 
-        function completeTransition(targetState) {
-            currentLogicalState = targetState;
+        function completeTransition(targetIndex) {
+            currentPaneIndex = targetIndex;
+            currentPane = currentPaneIndex === 0 ? 'left' : 'right';
 
-            if (currentLogicalState === 0) {
-                // Giới thiệu: Slide về Pane 0, cuộn dọc lên đầu trang
-                horizontalAxis.style.transform = 'translateX(0)';
-                leftScrollTo('hero');
-                
-                leftPane.style.transform = 'scale(1)';
-                rightPane.style.transform = 'scale(1)';
-                leftPane.style.opacity = '1';
-                rightPane.style.opacity = '0.6';
-                
-                slidePane('left');
-                progressBarFill.style.width = '33%';
-            } 
-            else if (currentLogicalState === 1) {
-                // Bài tập: Slide sang Pane 1
-                horizontalAxis.style.transform = 'translateX(-100vw)';
-                
-                leftPane.style.transform = 'scale(1)';
-                rightPane.style.transform = 'scale(1)';
-                leftPane.style.opacity = '0.6';
-                rightPane.style.opacity = '1';
-                
-                slidePane('right');
-                progressBarFill.style.width = '66%';
-            } 
-            else if (currentLogicalState === 2) {
-                // Tổng kết: Slide về Pane 0, cuộn dọc xuống phần kết luận
-                horizontalAxis.style.transform = 'translateX(0)';
-                leftScrollTo('conclusion');
-                
-                leftPane.style.transform = 'scale(1)';
-                rightPane.style.transform = 'scale(1)';
-                leftPane.style.opacity = '1';
-                rightPane.style.opacity = '0.6';
-                
-                slidePane('left');
-                progressBarFill.style.width = '100%';
-            }
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
+
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+
+            // Đồng bộ trạng thái dynamic island và indicators
+            slidePane(currentPane);
         }
 
         function recoilTransition() {
-            completeTransition(currentLogicalState);
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+            
+            progressBarFill.style.width = currentPaneIndex === 0 ? '50%' : '100%';
         }
 
         // Touch Gesture Listeners (Thiết bị di động)
         document.addEventListener('touchstart', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
-            determineLogicalState(); // Xác định chính xác vị trí scroll trước khi bắt đầu cử chỉ vuốt
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             currentX = startX;
@@ -2272,6 +2200,7 @@ nhất.
             let diffX = currentX - startX;
             let diffY = currentY - startY;
 
+            // Xác định xem có phải vuốt ngang không
             if (!isHorizontalSwipe && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
                 isHorizontalSwipe = true;
             }
@@ -2296,7 +2225,6 @@ nhất.
         document.addEventListener('mousedown', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
             if (e.target.closest('button, a, .card-action, .card-action-link, .btn-drive-glass, .swipe-indicator')) return;
-            determineLogicalState();
             startX = e.clientX;
             startY = e.clientY;
             currentX = startX;
@@ -2369,7 +2297,7 @@ nhất.
                 rightIndicator.style.pointerEvents = 'none';
                 rightIndicator.style.transform = 'translateY(-50%) translateX(40px)';
 
-                if (progressBarFill) progressBarFill.style.width = '66%';
+                if (progressBarFill) progressBarFill.style.width = '100%';
             } else {
                 slider.style.transform = 'translateX(0)';
                 currentPane = 'left';
@@ -2389,6 +2317,8 @@ nhất.
                 rightIndicator.style.opacity = '1';
                 rightIndicator.style.pointerEvents = 'auto';
                 rightIndicator.style.transform = 'translateY(-50%) translateX(0)';
+
+                if (progressBarFill) progressBarFill.style.width = '50%';
             }
             
             // Trigger indicator update
@@ -2515,13 +2445,6 @@ nhất.
                     link.classList.add('active');
                 }
             });
-            
-            // Đồng bộ trực tiếp thanh tiến trình progress bar và liquid kén
-            if (activeId === 'hero') {
-                progressBarFill.style.width = '33%';
-            } else if (activeId === 'conclusion') {
-                progressBarFill.style.width = '100%';
-            }
             updateNavIndicator();
         }
 
@@ -2910,7 +2833,7 @@ nhất.
                             <strong style="color: #3b82f6; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">⏳ ĐANG LÀM (IN PROGRESS)</strong>
                         </div>
                         <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 1rem;" id="kanban-col-done">
-                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀT TẤT (DONE)</strong>
+                            <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀN TẤT (DONE)</strong>
                         </div>
                     </div>
                 </div>
