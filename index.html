@@ -1601,8 +1601,8 @@
             leftPaneScrollCheck();
         });
 
-        // =====================================================================
-        // Creative Bioluminescent Floating Elements Cursor Particle System
+       // =====================================================================
+        // Creative Bioluminescent Floating Elements Cursor Particle System (Enhanced Physics)
         // =====================================================================
         const cursorCanvas = document.createElement('canvas');
         cursorCanvas.style.position = 'fixed';
@@ -1625,21 +1625,21 @@
         cursorCanvas.width = window.innerWidth;
         cursorCanvas.height = window.innerHeight;
 
-        // Sinh phần tử liên tục khi rê chuột (Tăng số lượng sinh, giảm tốc độ đi 40%)
+        // Sinh phần tử liên tục khi rê chuột (Trôi lờ lững và tồn tại lâu hơn)
         window.addEventListener('mousemove', (e) => {
-            // Lặp 2 lần để sinh nhiều phần tử hơn mỗi khi di chuột
             for (let i = 0; i < 2; i++) {
                 const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                 cursorParticles.push({
                     x: e.clientX,
                     y: e.clientY,
-                    // Tốc độ di chuyển đã được giảm 40% (nhân trị số gốc với 0.6)
-                    vx: (Math.random() - 0.5) * 0.72,      // Gốc: 1.2 * 0.6 = 0.72
-                    vy: -Math.random() * 2.1 - 0.3,        // Gốc: (-Math.random() * 3.5 - 0.5) * 0.6
-                    radius: Math.random() * 10 + 3,
+                    vx: (Math.random() - 0.5) * 0.35,      
+                    vy: -Math.random() * 0.8 - 0.15,       
+                    radius: Math.random() * 16 + 2,
                     alpha: 0.95,
                     color: 'rgba(192, 132, 252, 0.55)',
-                    type: type
+                    type: type,
+                    decay: 0.0035,   // Tốc độ mờ đi cực chậm giúp giữ phần tử tồn tại lâu hơn gấp nhiều lần
+                    friction: 1.0    // Di chuyển đều không giảm tốc độ
                 });
             }
         });
@@ -1653,32 +1653,37 @@
                     cursorParticles.push({
                         x: t.clientX,
                         y: t.clientY,
-                        // Tốc độ di chuyển đã được giảm 40% (nhân trị số gốc với 0.6)
-                        vx: (Math.random() - 0.5) * 0.72,  // Gốc: 1.2 * 0.6 = 0.72
-                        vy: -Math.random() * 0.9 - 0.3,    // Gốc: (-Math.random() * 1.5 - 0.5) * 0.6
-                        radius: Math.random() * 6 + 2,
+                        vx: (Math.random() - 0.5) * 0.35,  
+                        vy: -Math.random() * 0.4 - 0.1,    
+                        radius: Math.random() * 10 + 2,
                         alpha: 0.95,
                         color: 'rgba(192, 132, 252, 0.55)',
-                        type: type
+                        type: type,
+                        decay: 0.0035,   // Tồn tại lâu hơn trên di động
+                        friction: 1.0
                     });
                 }
             }
         }, { passive: true });
 
-        // Hiệu ứng "Nổ" đa dạng phần tử khi click vào các nút/thẻ tương tác
+        // Hiệu ứng "Nổ" bung tỏa cực mạnh khi click vào các phần tử tương tác
         document.addEventListener('click', (e) => {
             if (e.target.closest('button, a, .widget-card, .gallery-card, .swipe-indicator')) {
-                for (let i = 0; i < 10; i++) {
+                // Tăng vọt lên 25 hạt để tạo vụ nổ dày đặc, hoành tráng
+                for (let i = 0; i < 25; i++) { 
                     const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                     cursorParticles.push({
                         x: e.clientX,
                         y: e.clientY,
-                        vx: (Math.random() - 0.5) * 5, // Giữ tốc độ nổ bắn tia nhanh để tạo lực phản hồi tốt
-                        vy: (Math.random() - 0.5) * 5,
-                        radius: Math.random() * 6 + 1.5,
-                        alpha: 1,
-                        color: 'rgba(192, 132, 252, 0.8)',
-                        type: type
+                        // Tốc độ bắn tia ban đầu cực nhanh
+                        vx: (Math.random() - 0.5) * 8.5, 
+                        vy: (Math.random() - 0.5) * 8.5,
+                        radius: Math.random() * 8 + 1.5,
+                        alpha: 1.0,
+                        color: 'rgba(192, 132, 252, 0.85)',
+                        type: type,
+                        decay: 0.015,     // Hạt nổ tan biến nhanh dần sau khi bung ra để tránh rối mắt
+                        friction: 0.94    // Lực cản ma sát: Bắn ra siêu nhanh rồi từ từ chậm lại cực kỳ mượt mà
                     });
                 }
             }
@@ -1688,9 +1693,14 @@
             cCtx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
             for (let i = cursorParticles.length - 1; i >= 0; i--) {
                 let p = cursorParticles[i];
+                
+                // Áp dụng lực ma sát giảm tốc dần (đặc biệt hiệu quả cho vụ nổ click)
+                p.vx *= p.friction;
+                p.vy *= p.friction;
+                
                 p.x += p.vx;
                 p.y += p.vy;
-                p.alpha -= 0.016; // Độ mờ dần theo thời gian
+                p.alpha -= p.decay; // Sử dụng tốc độ mờ riêng biệt của từng loại hạt
 
                 if (p.alpha <= 0) {
                     cursorParticles.splice(i, 1);
@@ -1729,7 +1739,7 @@
                     cCtx.fill();
 
                 } else if (p.type === 'jellyfish') {
-                    // Vẽ sứa nhỏ dễ thương
+                    // Vẽ sứa nhỏ dễ thương (Tự động co giãn theo bán kính ngẫu nhiên)
                     // Mũ sứa
                     cCtx.beginPath();
                     cCtx.arc(p.x, p.y, p.radius, Math.PI, 0, false);
@@ -1741,6 +1751,7 @@
                     
                     // Các xúc tu uốn lượn nhẹ theo chuyển động tọa độ Y
                     cCtx.beginPath();
+                    cCtx.lineWidth = p.radius * 0.15; // Độ dày nét xúc tu thay đổi theo kích cỡ sứa
                     for (let offset of [-0.4, 0, 0.4]) {
                         const startX = p.x + offset * p.radius;
                         const startY = p.y + p.radius * 0.1;
