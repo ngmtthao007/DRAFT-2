@@ -118,6 +118,8 @@
        /* Left Pane (Scrolls Vertically: Hero -> Reflection) */
         .vertical-axis-pane {
             width: 100vw;
+            min-width: 100vw; /* Đảm bảo chiều rộng tối thiểu */
+            flex: 0 0 100vw;  /* Khóa cứng kích thước, ngăn chặn co rút */
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
@@ -127,6 +129,8 @@
         /* Right Pane (Scrolls Vertically: Gallery grid of exercises) */
         .exercises-axis-pane {
             width: 100vw;
+            min-width: 100vw; /* Đảm bảo chiều rộng tối thiểu */
+            flex: 0 0 100vw;  /* Khóa cứng kích thước, ngăn chặn co rút */
             height: 100%;
             overflow-y: auto;
             overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
