@@ -1627,7 +1627,7 @@
 
         // Sinh phần tử liên tục khi rê chuột (Trôi lờ lững và tồn tại lâu hơn)
         window.addEventListener('mousemove', (e) => {
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 1; i++) {
                 const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                 cursorParticles.push({
                     x: e.clientX,
@@ -1635,7 +1635,7 @@
                     vx: (Math.random() - 0.5) * 0.35,      
                     vy: -Math.random() * 0.8 - 0.15,       
                     radius: Math.random() * 16 + 2,
-                    alpha: 0.95,
+                    alpha: 0.75,
                     color: 'rgba(192, 132, 252, 0.55)',
                     type: type,
                     decay: 0.0035,   // Tốc độ mờ đi cực chậm giúp giữ phần tử tồn tại lâu hơn gấp nhiều lần
