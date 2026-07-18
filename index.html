@@ -115,11 +115,12 @@
             transform: translateX(0);
         }
 
-        /* Left Pane (Scrolls Vertically: Hero -> Reflection) */
+       /* Left Pane (Scrolls Vertically: Hero -> Reflection) */
         .vertical-axis-pane {
             width: 100vw;
             height: 100%;
             overflow-y: auto;
+            overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
             scroll-behavior: smooth;
         }
 
@@ -128,6 +129,7 @@
             width: 100vw;
             height: 100%;
             overflow-y: auto;
+            overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
             scroll-behavior: smooth;
             background: transparent;
         }
@@ -1243,7 +1245,8 @@
             }
         }
 
-        /* --- WIDGETS TỔNG KẾT MỞ RỘNG (EXPANDABLE) --- */
+        
+/* --- WIDGETS TỔNG KẾT MỞ RỘNG (EXPANDABLE) --- */
         .conclusion-widgets-container {
             display: flex;
             flex-direction: column;
@@ -1253,14 +1256,13 @@
         }
 
         .conclusion-widget {
-            /* Kế thừa chính xác các thuộc tính của .widget-card gốc */
             background: rgba(15, 23, 42, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border-radius: 20px;
             padding: 1.4rem 1.8rem;
-            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             cursor: pointer;
             overflow: hidden;
@@ -1284,7 +1286,9 @@
             font-size: 1.35rem;
             font-weight: 700;
             color: var(--text-primary);
-            transition: color 0.3s ease;
+            text-transform: uppercase; /* Chữ in hoa */
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            letter-spacing: 1px;
         }
 
         /* Vùng nội dung ẩn mặc định */
@@ -1304,12 +1308,12 @@
             border-top: 1px dashed rgba(255, 255, 255, 0.1);
         }
 
-        /* --- Hiệu ứng di chuột (Hover & Jiggle) --- */
+        /* --- Hiệu ứng di chuột (Chỉ nâng nhẹ và phát sáng nhẹ, KHÔNG RUNG LẮC) --- */
         .conclusion-widget:hover {
             background: rgba(15, 23, 42, 0.85);
             border-color: var(--accent-purple);
             box-shadow: 0 20px 40px rgba(124, 58, 237, 0.25);
-            animation: elegantJiggle 0.45s ease-in-out infinite alternate;
+            transform: translateY(-4px); /* Di chuyển tịnh tiến nhẹ lên trên */
         }
 
         .conclusion-widget:hover .widget-label {
@@ -1318,14 +1322,14 @@
 
         .conclusion-widget:hover .widget-value {
             color: var(--accent-purple);
-            text-shadow: 0 0 10px rgba(192, 132, 252, 0.35);
+            /* Tạo hiệu ứng chữ phát sáng tím dịu mắt */
+            text-shadow: 0 0 12px rgba(192, 132, 252, 0.8), 0 0 24px rgba(192, 132, 252, 0.4); 
         }
 
         .conclusion-widget:hover .widget-content-expand {
-            max-height: 350px; /* Chiều cao mở rộng mượt mà chứa đủ văn bản */
+            max-height: 350px; 
             opacity: 1;
         }
-
         /* Phản hồi rung lắc Jiggle tự nhiên */
         @keyframes elegantJiggle {
             0% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
@@ -1489,7 +1493,7 @@
         <!-- Widget 1: Thuận lợi -->
         <div class="conclusion-widget">
             <span class="widget-label">✨ Ưu thế học thuật</span>
-            <span class="widget-value">Thuận lợi</span>
+            <span class="widget-value">THUẬN LỢI</span>
             <div class="widget-content-expand">
                 <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các Thầy Cô giáo, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
             </div>
@@ -1498,7 +1502,7 @@
         <!-- Widget 2: Thách thức -->
         <div class="conclusion-widget">
             <span class="widget-label">⚠️ Rào cản công nghệ</span>
-            <span class="widget-value">Thách thức</span>
+            <span class="widget-value">THÁCH THỨC</span>
             <div class="widget-content-expand">
                 <p>Thách thức lớn nhất trong lộ trình nghiên cứu số là ranh giới mong manh giữa việc sử dụng AI làm bệ phóng tư duy và thói quen ỷ lại kỹ thuật số (Digital Laziness). Ngoài ra, việc chọn lọc, đối chiếu dữ liệu để triệt tiêu các lỗi ảo tưởng ngôn ngữ của LLM cũng đòi hỏi tính cẩn trọng và năng lực phản biện không ngừng nghỉ.</p>
             </div>
@@ -1507,7 +1511,7 @@
         <!-- Widget 3: Bài học kinh nghiệm -->
         <div class="conclusion-widget">
             <span class="widget-label">💡 Đúc kết sư phạm</span>
-            <span class="widget-value">Bài học kinh nghiệm</span>
+            <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
             <div class="widget-content-expand">
                 <p>Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
             </div>
