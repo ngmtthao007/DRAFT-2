@@ -39,7 +39,7 @@
             font-family: 'Lexend', sans-serif; /* Chuyển đổi toàn bộ nội dung sang phông Lexend [1] */
             color: var(--text-primary);
             position: relative;
-            overscroll-behavior-x: none; /* Ngăn chặn cuộn trang ngang mặc định hệ thống */
+            overscroll-behavior-x: none;
         }
 
         /* Custom scrollbar cho các phân vùng cuộn riêng biệt */
@@ -114,7 +114,7 @@
             display: flex;
             width: 200vw;
             height: 100%;
-            transition: var(--transition-gentle);
+            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); /* Chỉ chuyển động transform để đạt 60fps */
             transform: translateX(0);
         }
 
@@ -127,7 +127,6 @@
             overflow-y: auto;
             overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
             scroll-behavior: smooth;
-            box-sizing: border-box;
         }
 
         /* Right Pane (Scrolls Vertically: Gallery grid of exercises) */
@@ -140,7 +139,6 @@
             overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
             scroll-behavior: smooth;
             background: transparent;
-            box-sizing: border-box;
         }
 
         /* Floating Edge Swipe Indicators (TO GẤP ĐÔI & CÓ VIỀN GLASS DÀY) */
@@ -389,7 +387,6 @@
             max-width: 1300px;
             margin: 0 auto;
             padding: 0 5%;
-            box-sizing: border-box;
         }
 
         /* Hero Section (Re-designed with new spatial layout) */
@@ -625,14 +622,27 @@
             min-height: 100vh;
         }
 
-        /* Projects Section Gallery */
+        /* Projects Section Gallery & Hover Siblings focus effect */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
         }
 
-        /* Nâng cấp giao diện 6 bài tập (6 exercise cards / widgets) */
+        /* Khi rê chuột vào 1 thẻ trong danh sách bài tập, các thẻ còn lại tự động thu nhỏ và mờ nhẹ */
+        .gallery-grid:hover .gallery-card {
+            opacity: 0.55;
+            transform: scale3d(0.95, 0.95, 0.95);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        /* Thẻ đang được chọn sẽ nở to và rõ nét (JS mousemove sẽ kiểm soát transform góc nghiêng tiếp theo) */
+        .gallery-grid:hover .gallery-card:hover {
+            opacity: 1;
+            transform: scale3d(1.04, 1.04, 1.04); /* Base hover scale, JS will multiply on top of this */
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
+        }
+
+        /* Giao diện 6 bài tập (6 exercise cards / widgets) với hiệu ứng vệt sáng và 3D Parallax */
         .gallery-card {
             background: var(--glass-bg);
             border: 1px solid var(--glass-border);
@@ -649,11 +659,12 @@
             /* Phản hồi mượt mà khi di chuột ra khỏi thẻ */
             transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
                         border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
-                        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+                        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.45s ease;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05);
         }
 
-        /* Hiệu ứng vệt sáng tinh tế (Subtle Light Streak Sweep) quét qua mỗi 9 giây */
+        /* Hiệu ứng vệt sáng tinh tế (Subtle Light Streak Sweep) quét qua mỗi 9 giây cho cả Bài tập và Widgets tổng kết */
         @keyframes shineSweep {
             0% { left: -150%; opacity: 0; }
             12% { opacity: 1; }
@@ -661,7 +672,7 @@
             100% { left: 150%; opacity: 0; }
         }
 
-        .gallery-card::after {
+        .gallery-card::after, .conclusion-widget::after {
             content: '';
             position: absolute;
             top: 0;
@@ -1032,11 +1043,14 @@
         }
 
         .conclusion-text h3 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 3.2rem; /* Tăng kích thước */
-            font-weight: 700;
+            font-family: 'Lexend', sans-serif; /* Chuyển sang phông chữ Lexend */
+            font-size: 2.8rem; /* Điều chỉnh lại kích thước cho cân đối với phông Lexend */
+            font-weight: 800; /* Thiết lập Lexend Extra Bold cực kỳ sắc nét */
             color: var(--text-primary);
             margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+            /* Tạo hiệu ứng phát sáng trắng - tím oải hương nhẹ nhàng xung quanh chữ */
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.25), 0 0 25px rgba(192, 132, 252, 0.15);
         }
 
         .conclusion-stats {
@@ -1093,6 +1107,8 @@
             color: #ffffff;
             text-shadow: 0 0 15px rgba(192, 132, 252, 0.8);
         }
+
+        /* Footer */
 
         /* Footer */
         footer {
@@ -1219,6 +1235,18 @@
             width: 100%;
         }
 
+        /* Hiệu ứng tập trung ô (Sibling Focus-Scale) cho nhóm Widgets tổng kết */
+        .conclusion-widgets-container:hover .conclusion-widget {
+            opacity: 0.55;
+            transform: scale3d(0.95, 0.95, 0.95);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .conclusion-widgets-container:hover .conclusion-widget:hover {
+            opacity: 1;
+            transform: scale3d(1.05, 1.05, 1.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
+        }
+
         .conclusion-widget {
             background: rgba(15, 23, 42, 0.65);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1226,7 +1254,10 @@
             -webkit-backdrop-filter: blur(24px);
             border-radius: 20px;
             padding: 1.4rem 1.8rem;
-            transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        border-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                        box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.45s ease;
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
             cursor: pointer;
             overflow: hidden;
@@ -1234,6 +1265,7 @@
             flex-direction: column;
             gap: 0.25rem;
             position: relative;
+            transform-style: preserve-3d; /* Hỗ trợ Parallax 3D cho các lớp con bên trong */
         }
 
         .conclusion-widget .widget-label {
@@ -1242,17 +1274,29 @@
             text-transform: uppercase;
             letter-spacing: 1.2px;
             color: var(--text-muted);
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* Thiết lập chữ in hoa và độ phát sáng mặc định nhẹ màu TRẮNG trùng màu chữ khi tĩnh */
         .conclusion-widget .widget-value {
             font-family: 'Lexend', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
+            font-size: 1.5rem;
+            font-weight: 800;
             color: var(--text-primary);
-            text-transform: uppercase; /* Chữ in hoa */
-            transition: color 0.3s ease, text-shadow 0.3s ease;
+            text-transform: uppercase; /* Chuyển chữ in hoa */
+            transition: color 0.4s ease, text-shadow 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             letter-spacing: 1px;
+            /* Phát sáng nhẹ màu trắng đồng bộ sắc độ chữ */
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.45), 0 0 16px rgba(255, 255, 255, 0.2); 
+        }
+
+        /* Khi di chuột vào: Đổi sang màu tím oải hương và hiệu ứng phát sáng mạnh lên */
+        .conclusion-widget:hover .widget-value {
+            color: var(--accent-purple); /* Chuyển sắc chữ sang tím */
+            /* Phát sáng đa tầng màu tím rực rỡ và sắc nét */
+            text-shadow: 0 0 12px rgba(192, 132, 252, 1), 
+                         0 0 24px rgba(192, 132, 252, 0.65), 
+                         0 0 36px rgba(192, 132, 252, 0.35);
         }
 
         /* Vùng nội dung ẩn mặc định */
@@ -1260,7 +1304,7 @@
             max-height: 0;
             opacity: 0;
             overflow: hidden;
-            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease;
+            transition: max-height 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .conclusion-widget .widget-content-expand p {
@@ -1277,7 +1321,6 @@
             background: rgba(15, 23, 42, 0.85);
             border-color: var(--accent-purple);
             box-shadow: 0 20px 40px rgba(124, 58, 237, 0.25);
-            transform: translateY(-4px); /* Di chuyển tịnh tiến nhẹ lên trên */
         }
 
         .conclusion-widget:hover .widget-label {
@@ -1294,7 +1337,15 @@
             max-height: 350px; 
             opacity: 1;
         }
-        
+        /* Phản hồi rung lắc Jiggle tự nhiên */
+        @keyframes elegantJiggle {
+            0% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
+            20% { transform: scale(1.02) translate(-1px, 1px) rotate(-0.25deg); }
+            40% { transform: scale(1.02) translate(1px, -1px) rotate(0.25deg); }
+            60% { transform: scale(1.02) translate(-1px, -1px) rotate(-0.1deg); }
+            80% { transform: scale(1.02) translate(1px, 1px) rotate(0.1deg); }
+            100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
+        }
         /* Thiết lập chữ in hoa và độ phát sáng mặc định cho widgets tổng kết */
         .conclusion-widget .widget-value {
             font-family: 'Lexend', sans-serif;
@@ -1462,7 +1513,7 @@
                             <!-- Cột bên trái: Tiêu đề & 3 Widgets mở rộng -->
                             <div class="conclusion-text">
                                 <span class="hero-subtitle">03 / Reflection</span>
-                                <h3>TỔNG KẾT HỌC PHẦN </h3>
+                                <h3>TỔNG KẾT HỌC PHẦN</h3>
                                 
                                 <div class="conclusion-widgets-container">
                                     <!-- Widget 1: Thuận lợi -->
@@ -1470,7 +1521,7 @@
                                         <span class="widget-label">✨ Ưu thế học thuật</span>
                                         <span class="widget-value">THUẬN LỢI</span>
                                         <div class="widget-content-expand">
-                                            <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các thầy cô, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
+                                            <p>Được rèn luyện học tập dưới sự dẫn dắt tận tâm của các thầy cô giáo, kết hợp nền tảng tri thức EdTech phong phú và kho tàng cơ sở dữ liệu học thuật mở chất lượng cao. Khung chính sách AI cởi mở, khuyến khích tư duy của trường đã tạo điều kiện tối đa để em tự tin khai phá công nghệ một cách có trách nhiệm.</p>
                                         </div>
                                     </div>
 
@@ -1488,7 +1539,7 @@
                                         <span class="widget-label">💡 Đúc kết sư phạm</span>
                                         <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
                                         <div class="widget-content-expand">
-                                            <p>Buổi thực hành giúp một sinh viên ngôn ngữ như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
+                                            <p>Buổi thực hành giúp một sinh viên sư phạm như em nhận ra rằng công cụ dù tối tân đến đâu cũng chỉ phát huy giá trị khi con người có tư duy tổ chức chặt chẽ và tinh thần đạo đức số liêm chính. Em tự hào khi đã rèn luyện được tư duy hệ thống và tác phong làm việc số chuẩn mực, sẵn sàng cho những dự án Edtech quy mô trong tương lai học đường.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -1712,33 +1763,52 @@
             }
         }
 
-        // Swipe & Drag Gesture Controller
+        // Touch & Drag Gesture Controller (Tối ưu hóa siêu mượt, chống lệch layout khi vuốt ngang) [1]
         let startX = 0;
+        let startY = 0;
         let currentX = 0;
+        let currentY = 0;
         let isDragging = false;
+        let isHorizontalSwipe = false;
 
-        // Mobile touch gestures
         document.addEventListener('touchstart', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
             startX = e.touches[0].clientX;
-            currentX = startX; // Reset tránh lấy giá trị cũ từ lượt vuốt trước
+            startY = e.touches[0].clientY;
+            currentX = startX;
+            currentY = startY;
             isDragging = true;
+            isHorizontalSwipe = false;
         }, { passive: true });
 
         document.addEventListener('touchmove', e => {
             if (!isDragging) return;
             currentX = e.touches[0].clientX;
-        }, { passive: true });
+            currentY = e.touches[0].clientY;
+
+            let diffX = currentX - startX;
+            let diffY = currentY - startY;
+
+            // Xác định xem cử chỉ vuốt ngang có chiếm ưu thế rõ rệt so với vuốt dọc không
+            if (!isHorizontalSwipe && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                isHorizontalSwipe = true;
+            }
+
+            // Chặn cuộn dọc mặc định của trình duyệt để khóa trượt ngang không gian mượt mà, không bị xô lệch [1]
+            if (isHorizontalSwipe) {
+                if (e.cancelable) e.preventDefault();
+            }
+        }, { passive: false }); // Bắt buộc set passive: false để can-prevent-default [1]
 
         document.addEventListener('touchend', e => {
             if (!isDragging) return;
             isDragging = false;
             let diffX = currentX - startX;
-            if (Math.abs(diffX) > 50) { // Vuốt nhẹ 50px trên điện thoại để chuyển trang nhanh
+            if (isHorizontalSwipe && Math.abs(diffX) > 60) { // Ngưỡng trượt mượt mà 60px [1]
                 if (diffX < 0 && currentPane === 'left') {
-                    slidePane('right'); // Vuốt sang trái -> chuyển sang không gian Bài tập bên phải
+                    slidePane('right'); // Vuốt sang trái -> Trượt sang Bài tập bên phải
                 } else if (diffX > 0 && currentPane === 'right') {
-                    slidePane('left'); // Vuốt sang phải -> quay về không gian Giới thiệu bên trái
+                    slidePane('left'); // Vuốt sang phải -> Quay về Giới thiệu bên trái
                 }
             }
         }, { passive: true });
@@ -1746,10 +1816,10 @@
         // Desktop mouse drag gestures
         document.addEventListener('mousedown', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
-            // Chỉ hủy kéo nếu nhấn trực tiếp vào các nút bấm tương tác sâu để không làm hỏng tính năng click của nút
+            // Chỉ kích hoạt kéo thả ngoài các nút bấm tương tác hệ thống
             if (e.target.closest('button, a, .card-action, .card-action-link, .btn-drive-glass')) return;
             startX = e.clientX;
-            currentX = startX; // Reset tránh lấy giá trị cũ
+            currentX = startX;
             isDragging = true;
         });
 
@@ -1762,42 +1832,42 @@
             if (!isDragging) return;
             isDragging = false;
             let diffX = currentX - startX;
-            if (Math.abs(diffX) > 80) { // Kéo chuột nhẹ 80px trên máy tính để chuyển trang
+            if (Math.abs(diffX) > 80) { // Ngưỡng trượt chuột 80px
                 if (diffX < 0 && currentPane === 'left') {
-                    slidePane('right'); // Kéo sang trái -> chuyển sang không gian Bài tập bên phải
+                    slidePane('right');
                 } else if (diffX > 0 && currentPane === 'right') {
-                    slidePane('left'); // Kéo sang phải -> quay về không gian Giới thiệu bên trái
+                    slidePane('left');
                 }
             }
         });
 
-        // 3D Apple-Style Tilt Card with Parallax & Fluffy Magnetic Buttons [1]
-        document.querySelectorAll('.gallery-card').forEach(card => {
+        // 3D Apple-Style Tilt Card with Parallax & Fluffy Magnetic Buttons cho cả Bài tập và Widgets tổng kết [1]
+        document.querySelectorAll('.gallery-card, .conclusion-widget').forEach(card => {
             card.addEventListener('mousemove', e => {
                 const rect = card.getBoundingClientRect();
-                const x = e.clientX - rect.left; // Tọa độ X tương đối với thẻ
-                const y = e.clientY - rect.top;  // Tọa độ Y tương đối với thẻ
+                const x = e.clientX - rect.left; // Tọa độ X tương đối
+                const y = e.clientY - rect.top;  // Tọa độ Y tương đối
                 
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
                 
-                // Tính toán góc xoay dựa trên vị trí chuột (giới hạn góc tối đa là 12 độ)
-                const rotateX = ((centerY - y) / centerY) * 12; 
-                const rotateY = ((x - centerX) / centerX) * 12;
+                // Tính toán góc xoay dựa trên vị trí chuột (giới hạn góc tối đa là 10 độ cho mượt mà)
+                const rotateX = ((centerY - y) / centerY) * 10; 
+                const rotateY = ((x - centerX) / centerX) * 10;
                 
                 // Đồng bộ hướng đổ bóng tương ứng với góc nghiêng của thẻ [1]
                 const shadowX = -rotateY * 1.5;
                 const shadowY = rotateX * 1.5;
                 
-                // Áp dụng góc nghiêng 3D và bóng đổ động thực tế
-                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                // Áp dụng góc nghiêng 3D, tỉ lệ scale nhẹ (1.04) đồng bộ cùng Sibling Focus-Scale [1]
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
                 card.style.boxShadow = `${shadowX}px ${shadowY}px 35px rgba(0, 0, 0, 0.45), 0 0 25px rgba(192, 132, 252, 0.22)`;
                 
-                // Hiệu ứng Parallax: Trượt các thành phần nội dung bên trong ở các độ sâu (vận tốc) khác nhau [1]
-                const cardNum = card.querySelector('.card-num');
-                const cardStatus = card.querySelector('.card-status');
-                const cardTitle = card.querySelector('.card-title');
-                const cardDesc = card.querySelector('.card-desc');
+                // Hiệu ứng Parallax cho các thành phần nội dung bên trong (Số, Icon, Trạng thái, Tiêu đề, Nội dung) [1]
+                const cardNum = card.querySelector('.card-num, .reflection-icon');
+                const cardStatus = card.querySelector('.card-status, .widget-label');
+                const cardTitle = card.querySelector('.card-title, .widget-value');
+                const cardDesc = card.querySelector('.card-desc, .widget-content-expand');
                 const cardButtons = card.querySelector('.card-btn-group');
                 
                 if (cardNum) cardNum.style.transform = `translate3d(${(x - centerX) * 0.08}px, ${(y - centerY) * 0.08}px, 40px)`;
@@ -1808,12 +1878,12 @@
             });
             
             card.addEventListener('mouseleave', () => {
-                // Khôi phục mượt mà trạng thái cân bằng ban đầu
+                // Khôi phục mượt mà trạng thái cân bằng ban đầu (không scale cứng để nhường cho Sibling hover CSS kiểm soát)
                 card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
-                card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.05)';
+                card.style.boxShadow = '';
                 
                 // Đưa các lớp nội dung parallax về trung tâm
-                const parallaxElements = card.querySelectorAll('.card-num, .card-status, .card-title, .card-desc, .card-btn-group');
+                const parallaxElements = card.querySelectorAll('.card-num, .reflection-icon, .card-status, .widget-label, .card-title, .widget-value, .card-desc, .widget-content-expand, .card-btn-group');
                 parallaxElements.forEach(el => {
                     el.style.transform = 'translate3d(0, 0, 0)';
                 });
@@ -2439,7 +2509,7 @@
                     },
                     improved: {
                         prompt: "Tạo bộ 5 câu hỏi trắc nghiệm kèm đáp án về chủ đề Hệ thống giáo dục Vương quốc Anh dành cho sinh viên đại học ngoại ngữ.",
-                        response: "Câu 1: Kỳ thi chuẩn quốc gia ở độ tuổi 16 tại Anh được gọi là gì? A. GCSE, B. A-Level, C. SAT. Đáp án đúng: A.\n(Hệ thống tự động hiển thị 5 câu hỏi chuẩn học thuật ngoại ngữ)."
+                        response: "Câu 1: Kỳ thi chuẩn quốc gia ở độ tuổi 16 tại Anh được gọi và gì? A. GCSE, B. A-Level, C. SAT. Đáp án đúng: A.\n(Hệ thống tự động hiển thị 5 câu hỏi chuẩn học thuật ngoại ngữ)."
                     },
                     advanced: {
                         prompt: "Bạn là chuyên gia khảo thí và kiểm định giáo dục. Dựa trên tài liệu văn hóa Anh đính kèm, hãy tạo một bộ đề ôn tập gồm: 3 câu hỏi trắc nghiệm ở cấp độ ’Hiểu’ (Comprehension) và 2 câu hỏi tự luận ở cấp độ ’Phân tích phản biện’ (Critical Analysis). Đối với mỗi câu trắc nghiệm, cung cấp 4 đáp án gây nhiễu chất lượng và giải thích chi tiết lý do chọn đáp án đúng theo chuẩn tài liệu.",
@@ -2541,9 +2611,9 @@
             currentPromptTask = taskIdx;
             // Update active buttons
             for (let i = 1; i <= 3; i++) {
-                document.getElementById(`p-task-${i}`).classList.remove('active');
+                document.getElementById('p-task-' + i).classList.remove('active');
             }
-            document.getElementById(`p-task-${taskIdx}`).classList.add('active');
+            document.getElementById('p-task-' + taskIdx).classList.add('active');
             renderPromptSimulator();
         }
 
@@ -2551,9 +2621,9 @@
             currentPromptLevel = level;
             // Update active buttons
             ['basic', 'improved', 'advanced'].forEach(lvl => {
-                document.getElementById(`p-level-${lvl}`).classList.remove('active');
+                document.getElementById('p-level-' + lvl).classList.remove('active');
             });
-            document.getElementById(`p-level-${level}`).classList.add('active');
+            document.getElementById('p-level-' + level).classList.add('active');
             renderPromptSimulator();
         }
 
@@ -2680,5 +2750,5 @@
 </body>
 </html>
 
-Hi vọng bản cập nhật này mang lại đúng trải nghiệm giao diện 3D tinh tế và các
-hiệu ứng động mượt mà như bạn mong đợi [1]!
+Hi vọng bản nâng cấp này mang lại đúng trải nghiệm giao diện và các hiệu ứng
+động mượt mà như bạn mong đợi [1]!
