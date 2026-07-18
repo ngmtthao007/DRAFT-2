@@ -1637,7 +1637,7 @@
         // Sinh phần tử phân tán rộng xung quanh con trỏ khi rê chuột [1]
         window.addEventListener('mousemove', (e) => {
             // Tỷ lệ sinh sản (0.3 = 30%). Bạn có thể giảm xuống 0.15 hoặc 0.1 để sinh ít hơn nữa [1].
-            if (Math.random() < 0.75) { 
+            if (Math.random() < 0.9) { 
                 const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                 const color = elementColors[Math.floor(Math.random() * elementColors.length)];
 
@@ -1669,7 +1669,7 @@
         window.addEventListener('touchmove', (e) => {
             if (e.touches.length > 0) {
                 // Tỷ lệ sinh sản trên di động (0.2 = 20%) [1]
-                if (Math.random() < 0.2) {
+                if (Math.random() < 0.1) {
                     const t = e.touches[0];
                     const type = elementTypes[Math.floor(Math.random() * elementTypes.length)];
                     const color = elementColors[Math.floor(Math.random() * elementColors.length)];
