@@ -1,4 +1,4 @@
-lên.
+ trang.
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -108,6 +108,7 @@ lên.
             overflow: hidden;
             position: relative;
             overscroll-behavior-x: none;
+            transition: filter 0.45s cubic-bezier(0.25, 1, 0.2, 1);
         }
 
         /* Horizontal Axis Container */
@@ -115,7 +116,7 @@ lên.
             display: flex;
             width: 200vw;
             height: 100%;
-            transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1); /* Chỉ chuyển động transform để đạt độ mượt tối đa */
+            transition: transform 0.7s cubic-bezier(0.25, 1, 0.2, 1); /* Đồng bộ timing chuyển động spring mượt mà */
             transform: translateX(0);
         }
 
@@ -140,6 +141,26 @@ lên.
             overflow-x: hidden; /* Khóa tràn ngang tuyệt đối */
             scroll-behavior: smooth;
             background: transparent;
+            opacity: 0.6; /* Trạng thái tĩnh mờ nhẹ khi không active */
+        }
+
+        /* Thin Top Swipe Progress Bar */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.05);
+            z-index: 110;
+            pointer-events: none;
+        }
+        .progress-bar-fill {
+            width: 50%; /* Khởi điểm trang bên trái chiếm 50% thanh */
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-purple), #ec4899);
+            box-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
+            transition: width 0.5s cubic-bezier(0.25, 1, 0.2, 1);
         }
 
         /* Floating Edge Swipe Indicators (TO GẤP ĐÔI & CÓ VIỀN GLASS DÀY) */
@@ -291,7 +312,6 @@ lên.
             overflow: hidden;
         }
 
-        /* Dynamic Island Hover Effects */
         nav:hover {
             background-color: rgba(15, 15, 24, 0.85);
             backdrop-filter: blur(24px);
@@ -300,7 +320,6 @@ lên.
             border-color: rgba(192, 132, 252, 0.35);
         }
 
-        /* Subtle Light Sweep Reflection overlay */
         .island-shine {
             position: absolute;
             top: 0;
@@ -348,7 +367,7 @@ lên.
 
         .nav-links {
             display: flex;
-            gap: 0.5rem; /* Giảm nhẹ khoảng cách thô vì các nút đã có padding rộng */
+            gap: 0.5rem;
             list-style: none;
             align-items: center;
             position: relative;
@@ -1588,6 +1607,11 @@ lên.
 </head>
 <body>
 
+    <!-- Thin top progress bar to show swipe status -->
+    <div class="progress-bar-container">
+        <div class="progress-bar-fill"></div>
+    </div>
+
     <!-- Fullscreen Video Background (No Blur) -->
     <div class="video-background-container">
         <video autoplay muted loop playsinline class="video-background">
@@ -1916,6 +1940,19 @@ lên.
     <!-- JS for Interactive Systems & Slow Motion Background Video -->
     <script {nonce}>
         let currentPane = 'left'; // 'left' or 'right'
+        let currentPaneIndex = 0; // 0 = Left (Giới thiệu/Tổng kết), 1 = Right (Bài tập)
+        let isSwiping = false;
+        let isHorizontalSwipe = false;
+        let startX = 0;
+        let startY = 0;
+        let currentX = 0;
+        let currentY = 0;
+
+        const horizontalAxis = document.querySelector('.spatial-axis-horizontal');
+        const leftPane = document.querySelector('.vertical-axis-pane');
+        const rightPane = document.querySelector('.exercises-axis-pane');
+        const progressBarFill = document.querySelector('.progress-bar-fill');
+        const viewportWrapper = document.querySelector('.viewport-wrapper');
 
         // Slow down background video playback speed smoothly
         window.addEventListener('DOMContentLoaded', () => {
@@ -1923,7 +1960,6 @@ lên.
             if (bgVideo) {
                 bgVideo.playbackRate = 0.4; // Đặt về 40% tốc độ gốc để chuyển động mềm mại lững lờ
             }
-            
             // Khởi tạo kích thước thanh Liquid Indicator lần đầu tiên
             setTimeout(updateNavIndicator, 200);
             setTimeout(updateNavIndicator, 600); // Kích hoạt dự phòng khi phông chữ đã render xong
@@ -1999,6 +2035,7 @@ lên.
             const rightPaneElement = document.querySelector('.exercises-axis-pane');
             
             function handleScroll(e) {
+                if (isSwiping) return; // Bỏ qua scroll khi đang thực hiện vuốt ngang
                 const pane = e.target;
                 let st = pane.scrollTop;
                 if (st > lastScrollTop && st > 100) {
@@ -2027,6 +2064,204 @@ lên.
             });
         });
 
+        // Core Gesture Controller: Live Styling on Swipe
+        function handleDragMove(deltaX) {
+            const viewportWidth = window.innerWidth;
+            let baseTranslate = -currentPaneIndex * viewportWidth;
+            let targetTranslate = baseTranslate + deltaX;
+
+            // Tính toán tỷ lệ phần trăm hành trình vuốt (từ 0 tới 1)
+            let ratio = Math.abs(deltaX) / viewportWidth;
+            if (ratio > 1) ratio = 1;
+
+            // Xử lý nảy đàn hồi (elastic boundary bounce) ở 2 trang biên
+            if (currentPaneIndex === 0 && deltaX > 0) {
+                // Đang ở trang 1 và cố kéo sang phải
+                let elasticFactor = 0.25;
+                targetTranslate = deltaX * elasticFactor;
+                leftPane.style.transform = `scale(${1 - (deltaX / viewportWidth) * 0.05})`;
+                leftPane.style.opacity = '1';
+                return;
+            }
+            if (currentPaneIndex === 1 && deltaX < 0) {
+                // Đang ở trang 2 và cố kéo sang trái
+                let elasticFactor = 0.25;
+                targetTranslate = baseTranslate + (deltaX * elasticFactor);
+                rightPane.style.transform = `scale(${1 - (Math.abs(deltaX) / viewportWidth) * 0.05})`;
+                rightPane.style.opacity = '1';
+                return;
+            }
+
+            // Gỡ bỏ transition tạm thời khi kéo để đạt độ bám ngón tay hoàn hảo nhất
+            horizontalAxis.style.transition = 'none';
+            leftPane.style.transition = 'none';
+            rightPane.style.transition = 'none';
+            viewportWrapper.style.transition = 'none';
+
+            // Tịnh tiến ngang container chính
+            horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
+
+            let activePane = currentPaneIndex === 0 ? leftPane : rightPane;
+            let incomingPane = currentPaneIndex === 0 ? rightPane : leftPane;
+
+            // Scale & Opacity Transitions mượt mà
+            let activeScale = 1 - (0.03 * ratio); // 100% -> 97%
+            let activeOpacity = 1 - ratio;        // 100% -> 0%
+            let incomingScale = 0.98 + (0.02 * ratio); // 98% -> 100%
+            let incomingOpacity = 0.6 + (0.4 * ratio);  // 60% -> 100%
+
+            activePane.style.transform = `scale(${activeScale})`;
+            activePane.style.opacity = activeOpacity;
+
+            incomingPane.style.transform = `scale(${incomingScale})`;
+            incomingPane.style.opacity = incomingOpacity;
+
+            // Hiệu ứng Mid-swipe Background Blur (Độ mờ đạt cực đại 8px ở điểm giữa)
+            let midSwipeBlur = Math.sin(ratio * Math.PI) * 8;
+            viewportWrapper.style.filter = `blur(${midSwipeBlur}px)`;
+
+            // Đồng bộ trực tiếp progress bar trên đầu theo tay vuốt
+            let livePercentage = 50 + (currentPaneIndex === 0 ? (ratio * 50) : (-ratio * 50));
+            progressBarFill.style.transition = 'none';
+            progressBarFill.style.width = `${livePercentage}%`;
+        }
+
+        // Kết thúc vuốt: Đánh giá ngưỡng lực vuốt để chuyển trang hoặc đàn hồi recoil về vị trí cũ
+        function handleDragEnd(deltaX) {
+            isSwiping = false;
+            const viewportWidth = window.innerWidth;
+            const threshold = viewportWidth * 0.3; // Ngưỡng lực 30% chiều rộng màn hình
+
+            // Khôi phục thuộc tính transition spring đàn hồi mượt kiểu Apple
+            horizontalAxis.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
+            leftPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
+            rightPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
+            viewportWrapper.style.transition = 'filter 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
+            progressBarFill.style.transition = 'width 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
+
+            // Khử hoàn toàn filter mờ của viewport
+            viewportWrapper.style.filter = 'none';
+
+            if (Math.abs(deltaX) >= threshold) {
+                // Vượt ngưỡng lực -> Thực hiện chuyển chương
+                if (deltaX < 0 && currentPaneIndex === 0) {
+                    completeTransition(1);
+                } else if (deltaX > 0 && currentPaneIndex === 1) {
+                    completeTransition(0);
+                } else {
+                    recoilTransition();
+                }
+            } else {
+                // Chưa đạt ngưỡng -> Đàn hồi co hồi vị trí ban đầu
+                recoilTransition();
+            }
+        }
+
+        function completeTransition(targetIndex) {
+            currentPaneIndex = targetIndex;
+            currentPane = currentPaneIndex === 0 ? 'left' : 'right';
+
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
+
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+
+            // Đồng bộ trạng thái dynamic island và indicators
+            slidePane(currentPane);
+        }
+
+        function recoilTransition() {
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+            
+            progressBarFill.style.width = currentPaneIndex === 0 ? '50%' : '100%';
+        }
+
+        // Touch & Drag Gesture Controller (Vuốt chạm màn hình di động)
+        document.addEventListener('touchstart', e => {
+            if (document.getElementById('modalOverlay').classList.contains('active')) return;
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            currentX = startX;
+            currentY = startY;
+            isSwiping = true;
+            isHorizontalSwipe = false;
+        }, { passive: true });
+
+        document.addEventListener('touchmove', e => {
+            if (!isSwiping) return;
+            currentX = e.touches[0].clientX;
+            currentY = e.touches[0].clientY;
+
+            let diffX = currentX - startX;
+            let diffY = currentY - startY;
+
+            // Xác định xem có phải vuốt ngang không
+            if (!isHorizontalSwipe && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                isHorizontalSwipe = true;
+            }
+
+            if (isHorizontalSwipe) {
+                if (e.cancelable) e.preventDefault();
+                handleDragMove(diffX);
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchend', e => {
+            if (!isSwiping) return;
+            let diffX = currentX - startX;
+            if (isHorizontalSwipe) {
+                handleDragEnd(diffX);
+            } else {
+                isSwiping = false;
+            }
+        }, { passive: true });
+
+        // Desktop Mouse Swipe Navigation (Vuốt kéo chuột trên máy tính)
+        document.addEventListener('mousedown', e => {
+            if (document.getElementById('modalOverlay').classList.contains('active')) return;
+            // Bỏ qua drag nếu nhấp vào các phần tử chức năng click sâu
+            if (e.target.closest('button, a, .card-action, .card-action-link, .btn-drive-glass, .swipe-indicator')) return;
+            startX = e.clientX;
+            startY = e.clientY;
+            currentX = startX;
+            currentY = startY;
+            isSwiping = true;
+            isHorizontalSwipe = false;
+        });
+
+        document.addEventListener('mousemove', e => {
+            if (!isSwiping) return;
+            currentX = e.clientX;
+            currentY = e.clientY;
+
+            let diffX = currentX - startX;
+            let diffY = currentY - startY;
+
+            if (!isHorizontalSwipe && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                isHorizontalSwipe = true;
+            }
+
+            if (isHorizontalSwipe) {
+                handleDragMove(diffX);
+            }
+        });
+
+        document.addEventListener('mouseup', e => {
+            if (!isSwiping) return;
+            let diffX = currentX - startX;
+            if (isHorizontalSwipe) {
+                handleDragEnd(diffX);
+            } else {
+                isSwiping = false;
+            }
+        });
+
         // 2D Spatial Axis Navigation Function
         function slidePane(pane) {
             const slider = document.querySelector('.spatial-axis-horizontal');
@@ -2034,9 +2269,18 @@ lên.
             const leftIndicator = document.querySelector('.left-indicator');
             const rightIndicator = document.querySelector('.right-indicator');
 
+            // Thiết lập lò xo đàn hồi đều nhau khi slide bằng click
+            slider.style.transition = 'transform 0.7s cubic-bezier(0.25, 1, 0.2, 1)';
+            leftPane.style.transition = 'transform 0.7s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.7s cubic-bezier(0.25, 1, 0.2, 1)';
+            rightPane.style.transition = 'transform 0.7s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.7s cubic-bezier(0.25, 1, 0.2, 1)';
+
             if (pane === 'right') {
                 slider.style.transform = 'translateX(-100vw)';
                 currentPane = 'right';
+                currentPaneIndex = 1;
+
+                leftPane.style.opacity = '0.6';
+                rightPane.style.opacity = '1';
 
                 // Highlight "Bài tập" in dynamic island
                 navLinks.forEach(link => {
@@ -2054,9 +2298,15 @@ lên.
                 rightIndicator.style.opacity = '0';
                 rightIndicator.style.pointerEvents = 'none';
                 rightIndicator.style.transform = 'translateY(-50%) translateX(40px)';
+
+                if (progressBarFill) progressBarFill.style.width = '100%';
             } else {
                 slider.style.transform = 'translateX(0)';
                 currentPane = 'left';
+                currentPaneIndex = 0;
+
+                leftPane.style.opacity = '1';
+                rightPane.style.opacity = '0.6';
 
                 // Highlight active state based on left scroll
                 leftPaneScrollCheck();
@@ -2069,126 +2319,13 @@ lên.
                 rightIndicator.style.opacity = '1';
                 rightIndicator.style.pointerEvents = 'auto';
                 rightIndicator.style.transform = 'translateY(-50%) translateX(0)';
+
+                if (progressBarFill) progressBarFill.style.width = '50%';
             }
-            // Trigger liquid indicator recalculation smoothly
-            setTimeout(updateNavIndicator, 100);
+            
+            // Trigger indicator update
+            setTimeout(updateNavIndicator, 50);
         }
-
-        // Touch & Drag Gesture Controller (Tối ưu hóa siêu mượt và hỗ trợ kéo theo tay trực quan)
-        let startX = 0;
-        let startY = 0;
-        let currentX = 0;
-        let currentY = 0;
-        let isDragging = false;
-        let isHorizontalSwipe = false;
-
-        document.addEventListener('touchstart', e => {
-            if (document.getElementById('modalOverlay').classList.contains('active')) return;
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-            currentX = startX;
-            currentY = startY;
-            isDragging = true;
-            isHorizontalSwipe = false;
-        }, { passive: true });
-
-        document.addEventListener('touchmove', e => {
-            if (!isDragging) return;
-            currentX = e.touches[0].clientX;
-            currentY = e.touches[0].clientY;
-
-            let diffX = currentX - startX;
-            let diffY = currentY - startY;
-
-            // Xác định xem có phải vuốt ngang không
-            if (!isHorizontalSwipe && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
-                isHorizontalSwipe = true;
-            }
-
-            // Chặn chuyển trang dọc và khóa dịch chuyển ngang mượt mà theo ngón tay
-            if (isHorizontalSwipe) {
-                if (e.cancelable) e.preventDefault();
-                
-                const slider = document.querySelector('.spatial-axis-horizontal');
-                let baseTranslate = currentPane === 'left' ? 0 : -100;
-                let targetTranslate = baseTranslate + (diffX / window.innerWidth) * 100;
-                
-                // Giới hạn biên độ kéo thả đàn hồi (rubberband effect)
-                if (targetTranslate > 0) targetTranslate = targetTranslate * 0.15;
-                if (targetTranslate < -100) targetTranslate = -100 + (targetTranslate + 100) * 0.15;
-                
-                slider.style.transition = 'none'; // Tạm thời tắt hiệu ứng chuyển tiếp trong lúc kéo
-                slider.style.transform = `translateX(${targetTranslate}vw)`;
-            }
-        }, { passive: false });
-
-        document.addEventListener('touchend', e => {
-            if (!isDragging) return;
-            isDragging = false;
-            
-            const slider = document.querySelector('.spatial-axis-horizontal');
-            slider.style.transition = 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)'; // Khởi động lại chuyển tiếp lò xo mềm
-            
-            let diffX = currentX - startX;
-            if (isHorizontalSwipe && Math.abs(diffX) > 60) {
-                if (diffX < 0 && currentPane === 'left') {
-                    slidePane('right');
-                } else if (diffX > 0 && currentPane === 'right') {
-                    slidePane('left');
-                } else {
-                    slidePane(currentPane); // Khôi phục về pane hiện tại nếu vuốt chưa đủ lực
-                }
-            } else {
-                slidePane(currentPane);
-            }
-        }, { passive: true });
-
-        // Desktop mouse drag gestures (Hỗ trợ kéo rê chuột mượt mà kéo trang theo tay)
-        document.addEventListener('mousedown', e => {
-            if (document.getElementById('modalOverlay').classList.contains('active')) return;
-            // Chỉ bỏ qua kéo nếu click các thẻ nút tương tác sâu
-            if (e.target.closest('button, a, .card-action, .card-action-link, .btn-drive-glass')) return;
-            startX = e.clientX;
-            currentX = startX;
-            isDragging = true;
-        });
-
-        document.addEventListener('mousemove', e => {
-            if (!isDragging) return;
-            currentX = e.clientX;
-            
-            const slider = document.querySelector('.spatial-axis-horizontal');
-            let diffX = currentX - startX;
-            let baseTranslate = currentPane === 'left' ? 0 : -100;
-            let targetTranslate = baseTranslate + (diffX / window.innerWidth) * 100;
-            
-            if (targetTranslate > 0) targetTranslate = targetTranslate * 0.15;
-            if (targetTranslate < -100) targetTranslate = -100 + (targetTranslate + 100) * 0.15;
-            
-            slider.style.transition = 'none';
-            slider.style.transform = `translateX(${targetTranslate}vw)`;
-        });
-
-        document.addEventListener('mouseup', e => {
-            if (!isDragging) return;
-            isDragging = false;
-            
-            const slider = document.querySelector('.spatial-axis-horizontal');
-            slider.style.transition = 'transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)';
-            
-            let diffX = currentX - startX;
-            if (Math.abs(diffX) > 80) {
-                if (diffX < 0 && currentPane === 'left') {
-                    slidePane('right');
-                } else if (diffX > 0 && currentPane === 'right') {
-                    slidePane('left');
-                } else {
-                    slidePane(currentPane);
-                }
-            } else {
-                slidePane(currentPane);
-            }
-        });
 
         // 3D Apple-Style Tilt Card with Parallax & Fluffy Magnetic Buttons
         // Đồng bộ hoàn chỉnh hiệu ứng cho cả Bài tập (Gallery Cards), Widgets tổng kết (conclusion-widget) và Profile Giới thiệu (widget-card)
@@ -2291,16 +2428,16 @@ lên.
         }
 
         // Listeners for internal pane scrolling to update Dynamic Island active highlight
-        const leftPane = document.querySelector('.vertical-axis-pane');
+        const leftPaneElement = document.querySelector('.vertical-axis-pane');
         const navLinks = document.querySelectorAll('.nav-links a');
 
         function leftPaneScrollCheck() {
             const hero = document.getElementById('hero');
             const conclusion = document.getElementById('conclusion');
-            const scrollPos = leftPane.scrollTop;
+            const scrollPos = leftPaneElement.scrollTop;
             
             let activeId = 'hero';
-            if (scrollPos >= (conclusion.offsetTop - leftPane.clientHeight / 2)) {
+            if (scrollPos >= (conclusion.offsetTop - leftPaneElement.clientHeight / 2)) {
                 activeId = 'conclusion';
             }
             
@@ -2314,7 +2451,7 @@ lên.
             updateNavIndicator();
         }
 
-        leftPane.addEventListener('scroll', () => {
+        leftPaneElement.addEventListener('scroll', () => {
             if (currentPane === 'right') return;
             leftPaneScrollCheck();
         });
@@ -2822,7 +2959,7 @@ lên.
                 { id: 5, title: "Zhang, D. & Cui, Y. (2024) - The impact of AI-assisted...", type: "article", desc: "Thực nghiệm định lượng tâm lý và kết quả viết luận.", rank: "Rất tốt" },
                 { id: 6, title: "Bailey, S. (2021) - Academic Writing: A Handbook...", type: "book", desc: "NXB Routledge. Cẩm nang cấu trúc chuẩn quốc tế kinh điển.", rank: "Rất tốt" },
                 { id: 7, title: "Belcher, D. (2023) - Writing in the disciplines...", type: "article", desc: "Đánh giá trực diện rủi ro suy giảm kỹ năng. Scopus Q1.", rank: "Tốt" },
-                { id: 8, title: "Tran, Q. M. (2025) - Ứng dụng mô hình ngôn ngữ lớn...", type: "article", desc: "Phù hợp bối cảnh tự học thực tiễn của sinh viên ngoại ngữ.", rank: "Tốt" },
+                { id: 8, title: "Tran, Q. M. (2025) - Ứng dụng mô hình ngôn ngữ lớn...", type: "article", desc: "Phụ hợp bối cảnh tự học thực tiễn của sinh viên ngoại ngữ.", rank: "Tốt" },
                 { id: 9, title: "Swales, J. M. & Feak, C. B. (2020) - Academic Writing...", type: "book", desc: "NXB Đại học Michigan. Phân tích thể loại chuẩn mực.", rank: "Rất tốt" },
                 { id: 10, title: "British Council (2023) - Artificial Intelligence...", type: "report", desc: "Hội đồng Anh. Khảo sát diện rộng, gợi mở định hướng số.", rank: "Tốt" },
                 { id: 11, title: "Stanford Human-AI (2025) - AI and the Future of...", type: "report", desc: "Stanford University. Phân tích đa diện, phản biện tương lai.", rank: "Tốt" }
@@ -2855,7 +2992,7 @@ lên.
                     },
                     advanced: {
                         prompt: "Bạn là một giảng viên ngữ pháp tiếng Anh kỳ cựu. Hãy giải thích khái niệm ’Syntactic Ambiguity’ cho sinh viên năm nhất theo 2 cấp độ: (1) Định nghĩa bình dân kèm ví dụ hài hước; (2) Phân tích sơ đồ cây cú pháp sâu sắc. Hãy học theo cách giải thích mẫu sau: [Ví dụ mẫu về Lexical Ambiguity: ’Bank’ có thể là bờ sông hoặc ngân hàng]. Hãy thực hiện tương tự cho Syntactic Ambiguity.",
-                        response: "• CẤP ĐỘ 1 (BÌNH DÂN): Chào các tân sinh viên! Hãy tưởng tượng câu: 'Visiting relatives can be boring'. Việc đi thăm họ hàng chán, hay những người họ hàng đến thăm ta chán? Ngữ pháp chơi khăm chúng ta đấy!\n• CẤP ĐỘ 2 (SƠ ĐỒ CẤY CÚ PHÁP): Để giải quyết hiện tượng mơ hồ này, chúng ta cần vẽ sơ đồ phân rã cụm danh từ (NP) và cụm động từ (VP). Ví dụ trong câu 'I saw the man with the telescope', giới từ 'with' có thể gắn trực tiếp vào VP (hành động nhìn) hoặc gắn vào NP (nguyên nhân là người đàn ông có kính viễn vọng)."
+                        response: "• CẤP ĐỘ 1 (BÌNH DÂN): Chào các tân sinh viên! Hãy tưởng tượng câu: 'Visiting relatives can be boring'. Việc đi thăm họ hàng chán, hay những người họ hàng đến thăm ta chán? Ngữ pháp chơi khăm chúng ta đấy!\n• CẤP ĐỘ 2 (SƠ ĐỒ CÂY CÚ PHÁP): Để giải quyết hiện tượng mơ hồ này, chúng ta cần vẽ sơ đồ phân rã cụm danh từ (NP) và cụm động từ (VP). Ví dụ trong câu 'I saw the man with the telescope', giới từ 'with' có thể gắn trực tiếp vào VP (hành động nhìn) hoặc gắn vào NP (nguyên nhân là người đàn ông có kính viễn vọng)."
                     }
                 },
                 3: {
