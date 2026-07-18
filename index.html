@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -86,7 +85,7 @@
             object-fit: cover;
             transform: translate(-50%, -50%) rotate(90deg);
             opacity: 0.45;
-            filter: saturate(0.9); /* Loại bỏ hoàn toàn hiệu ứng mờ kính gốc */
+            filter: saturate(0.9) url(#water-distortion-filter); /* Áp dụng hiệu ứng khúc xạ nước */
         }
 
         /* Dark Vignette Overlay for High Contrast Legibility */
@@ -96,9 +95,41 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(9, 9, 11, 0.3) 0%, rgba(9, 9, 11, 0.75) 100%);
+            background: radial-gradient(circle at 50% 50%, rgba(9, 9, 11, 0.2) 0%, rgba(9, 9, 11, 0.8) 100%);
             z-index: -1;
             pointer-events: none;
+        }
+
+        /* Deep Ocean Fog / Purple-Blue Glow */
+        .ocean-depth-fog {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 40%, rgba(139, 92, 246, 0.1) 0%, rgba(15, 23, 42, 0) 70%),
+                        radial-gradient(circle at 20% 70%, rgba(192, 132, 252, 0.06) 0%, rgba(15, 23, 42, 0) 50%);
+            mix-blend-mode: screen;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Sunlight Caustics Overlay */
+        .ocean-caustics {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1000' height='1000' viewBox='0 0 1000 1000'%3E%3Cpath d='M0 100 Q 250 50, 500 100 T 1000 100 L 1000 0 L 0 0 Z' fill='rgba(192, 132, 252, 0.03)'/%3E%3Cpath d='M0 300 Q 250 250, 500 300 T 1000 300 L 1000 0 L 0 0 Z' fill='rgba(139, 92, 246, 0.02)'/%3E%3C/svg%3E");
+            background-size: cover;
+            filter: blur(15px);
+            mix-blend-mode: overlay;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: -1;
+            animation: causticsWobble 16s infinite alternate ease-in-out;
+            transform-origin: center top;
+        }
+
+        @keyframes causticsWobble {
+            0% { transform: scale(1.1) rotate(-3deg) translateY(0); opacity: 0.25; }
+            50% { transform: scale(1.2) rotate(2deg) translateY(-20px); opacity: 0.45; }
+            100% { transform: scale(1.1) rotate(-1deg) translateY(10px); opacity: 0.25; }
         }
 
         /* Master Spatial Viewport Wrapper */
@@ -108,7 +139,7 @@
             overflow: hidden;
             position: relative;
             overscroll-behavior-x: none;
-            transition: filter 0.45s cubic-bezier(0.25, 1, 0.2, 1);
+            transition: filter 0.5s cubic-bezier(0.25, 1, 0.2, 1);
         }
 
         /* Horizontal Axis Container */
@@ -156,14 +187,14 @@
             pointer-events: none;
         }
         .progress-bar-fill {
-            width: 33%; /* Khởi điểm trang bên trái chiếm 33% thanh */
+            width: 50%; /* Khởi điểm trang bên trái chiếm 50% thanh */
             height: 100%;
             background: linear-gradient(90deg, var(--accent-purple), #ec4899);
             box-shadow: 0 0 10px rgba(192, 132, 252, 0.6);
             transition: width 0.5s cubic-bezier(0.25, 1, 0.2, 1);
         }
 
-        /* Floating Edge Swipe Indicators (TO GẤP ĐÔI & CÓ VIỀN GLASS DÀY) */
+        /* Floating Edge Swipe Indicators (TO GẤP ĐÔI & CÓ VIỀSand GLASS DÀY) */
         .swipe-indicator {
             position: fixed;
             top: 50%;
@@ -230,28 +261,27 @@
             pointer-events: none;
         }
 
-        /* Decorative Floating Elements */
+        /* Decorative Floating Elements (Underwater Bioluminescent) */
         .decor-element {
             position: absolute;
             pointer-events: none;
             z-index: -1;
-            opacity: 0.4;
         }
 
         .decor-jellyfish {
             top: 35%;
             left: 4%;
             width: 90px;
-            animation: floatUpDown 8s infinite alternate ease-in-out;
-            filter: drop-shadow(0 0 10px rgba(192, 132, 252, 0.2));
+            animation: floatUpDown 12s infinite alternate ease-in-out, jellyBreathe 6s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px rgba(192, 132, 252, 0.4));
+            transform-origin: center top;
         }
 
         .decor-starfish {
             top: 15%;
             right: 8%;
             width: 80px;
-            animation: slowRotate 30s infinite linear;
-            filter: drop-shadow(0 0 10px rgba(192, 132, 252, 0.2));
+            animation: slowRotate 45s infinite linear, starfishGlow 8s infinite alternate ease-in-out;
         }
 
         .decor-ray-1 {
@@ -271,6 +301,24 @@
         @keyframes floatUpDown {
             0% { transform: translateY(0) rotate(0deg); }
             100% { transform: translateY(-25px) rotate(5deg); }
+        }
+
+        @keyframes jellyBreathe {
+            0%, 100% {
+                opacity: 0.35;
+                filter: drop-shadow(0 0 8px rgba(192, 132, 252, 0.35)) saturate(0.9);
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.75;
+                filter: drop-shadow(0 0 25px rgba(192, 132, 252, 0.8)) saturate(1.3);
+                transform: scale(1.08) skewX(2deg);
+            }
+        }
+
+        @keyframes starfishGlow {
+            0% { filter: drop-shadow(0 0 5px rgba(192, 132, 252, 0.2)); opacity: 0.3; }
+            100% { filter: drop-shadow(0 0 18px rgba(192, 132, 252, 0.6)); opacity: 0.6; }
         }
 
         @keyframes slowRotate {
@@ -594,6 +642,20 @@
             box-shadow: 0 15px 35px rgba(124, 58, 237, 0.25);
         }
 
+        /* Fluid Jellyfish Expand Styles for Intro Card & Conclusion Widgets */
+        .expandable-intro-card.expanded, .conclusion-widget.expanded {
+            animation: jellyPulsateExpand 1.2s cubic-bezier(0.25, 1, 0.2, 1);
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 35px rgba(192, 132, 252, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes jellyPulsateExpand {
+            0% { transform: scale(1); }
+            30% { transform: scale(0.96); box-shadow: 0 0 10px rgba(192, 132, 252, 0.2); } /* co lại */
+            60% { transform: scale(1.05); box-shadow: 0 0 45px rgba(192, 132, 252, 0.6); } /* phồng lên */
+            100% { transform: scale(1); } /* cân bằng */
+        }
+
         .expandable-intro-card.expanded {
             max-height: 250px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
         }
@@ -708,6 +770,22 @@
             transform: scale3d(1.05, 1.05, 1.05);
             box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
         }
+
+        /* Floating Drift Animations for Cards (Simulates floating in currents) */
+        .gallery-card:nth-child(3n+1) { animation: driftA 10s infinite ease-in-out; }
+        .gallery-card:nth-child(3n+2) { animation: driftB 12s infinite ease-in-out; }
+        .gallery-card:nth-child(3n) { animation: driftC 8s infinite ease-in-out; }
+
+        .conclusion-widget:nth-child(3n+1) { animation: driftA 11s infinite ease-in-out; }
+        .conclusion-widget:nth-child(3n+2) { animation: driftB 9s infinite ease-in-out; }
+        .conclusion-widget:nth-child(3n) { animation: driftC 13s infinite ease-in-out; }
+
+        .widget-card:nth-child(2n) { animation: driftA 10s infinite ease-in-out; }
+        .widget-card:nth-child(2n+1) { animation: driftB 11s infinite ease-in-out; }
+
+        @keyframes driftA { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+        @keyframes driftB { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+        @keyframes driftC { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
 
         /* Enlarged and Spaced Out Profile Widget Cards */
         .widget-card {
@@ -875,7 +953,7 @@
         .gallery-grid:hover .gallery-card:hover {
             opacity: 1;
             transform: scale3d(1.04, 1.04, 1.04); /* Base hover scale, JS will multiply on top of this */
-            box-shadow: 0 25px 50px rgba(0,0,0,0.6), 0 0 25px rgba(192, 132, 252, 0.25);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 25px rgba(192, 132, 252, 0.25);
         }
 
         /* Giao diện 6 bài tập (6 exercise cards / widgets) với hiệu ứng vệt sáng và 3D Parallax */
@@ -1331,7 +1409,7 @@
             color: var(--text-muted);
         } 
 
-        /* Hiệu ứng tương tác cho ô Bài tập chuyển hướng (DÁN VÀO ĐÂY) & Sibling Focus-Scale */
+        /* Hiệu ứng tương tác cho ô Bài tập chuyển hướng & Sibling Focus-Scale */
         .clickable-stat-box {
             cursor: pointer;
             position: relative;
@@ -1569,19 +1647,12 @@
             color: var(--accent-purple);
         }
 
-        .conclusion-widget:hover .widget-content-expand {
+        /* Thay đổi cơ chế để kích hoạt co giãn mượt mà khi thẻ .expanded */
+        .conclusion-widget.expanded .widget-content-expand {
             max-height: 800px; /* Đặt 800px đảm bảo show hết 100% chữ */
             opacity: 1;
         }
-        /* Phản hồi rung lắc Jiggle tự nhiên */
-        @keyframes elegantJiggle {
-            0% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
-            20% { transform: scale(1.02) translate(-1px, 1px) rotate(-0.25deg); }
-            40% { transform: scale(1.02) translate(1px, -1px) rotate(0.25deg); }
-            60% { transform: scale(1.02) translate(-1px, -1px) rotate(-0.1deg); }
-            80% { transform: scale(1.02) translate(1px, 1px) rotate(0.1deg); }
-            100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
-        }
+
         /* Thiết lập chữ in hoa và độ phát sáng mặc định nhẹ màu TRẮNG trùng màu chữ khi tĩnh */
         .conclusion-widget .widget-value {
             font-family: 'Lexend', sans-serif;
@@ -1607,17 +1678,29 @@
 </head>
 <body>
 
+    <!-- SVG Water Distortion Filter (Animate displacement subtly) -->
+    <svg style="display:none; position: absolute; width: 0; height: 0;">
+        <defs>
+            <filter id="water-distortion-filter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.01 0.015" numOctaves="3" result="noise" seed="1" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" />
+            </filter>
+        </defs>
+    </svg>
+
     <!-- Thin top progress bar to show swipe status -->
     <div class="progress-bar-container">
         <div class="progress-bar-fill"></div>
     </div>
 
-    <!-- Fullscreen Video Background (No Blur) -->
+    <!-- Fullscreen Video Background with Layers -->
     <div class="video-background-container">
         <video autoplay muted loop playsinline class="video-background">
             <source src="Video 1.mp4" type="video/mp4">
         </video>
         <div class="video-overlay"></div>
+        <div class="ocean-depth-fog"></div>
+        <div class="ocean-caustics"></div>
     </div>
 
     <!-- Diagonal Art Path Accent -->
@@ -1737,7 +1820,7 @@
                                     </div>
                                     <div class="widget-card">
                                         <span class="widget-label">Lớp học phần</span>
-                                        <span class="widget-value">NNA2504 (Công nghệ & AI)</span>
+                                        <span class="widget-value">VNU1001_E252057</span>
                                     </div>
                                 </div>
 
@@ -1760,7 +1843,7 @@
                                 
                                 <div class="conclusion-widgets-container">
                                     <!-- Widget 1: Thuận lợi -->
-                                    <div class="conclusion-widget">
+                                    <div class="conclusion-widget" onclick="toggleExpandConclusion(this)">
                                         <span class="widget-label">✨ Ưu thế học thuật</span>
                                         <span class="widget-value">THUẬN LỢI</span>
                                         <div class="widget-content-expand">
@@ -1769,7 +1852,7 @@
                                     </div>
 
                                     <!-- Widget 2: Khó khăn -->
-                                    <div class="conclusion-widget">
+                                    <div class="conclusion-widget" onclick="toggleExpandConclusion(this)">
                                         <span class="widget-label">⚠️ Rào cản công nghệ</span>
                                         <span class="widget-value">KHÓ KHĂN</span>
                                         <div class="widget-content-expand">
@@ -1778,7 +1861,7 @@
                                     </div>
 
                                     <!-- Widget 3: Bài học kinh nghiệm -->
-                                    <div class="conclusion-widget">
+                                    <div class="conclusion-widget" onclick="toggleExpandConclusion(this)">
                                         <span class="widget-label">💡 Đúc kết sư phạm</span>
                                         <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
                                         <div class="widget-content-expand">
@@ -1941,7 +2024,6 @@
     <script {nonce}>
         let currentPane = 'left'; // 'left' hoặc 'right'
         let currentPaneIndex = 0; // 0 = Left Pane, 1 = Right Pane
-        let currentLogicalState = 0; // 0 = Giới thiệu, 1 = Bài tập, 2 = Tổng kết
         let isSwiping = false;
         let isHorizontalSwipe = false;
         let startX = 0;
@@ -1955,16 +2037,18 @@
         const progressBarFill = document.querySelector('.progress-bar-fill');
         const viewportWrapper = document.querySelector('.viewport-wrapper');
 
-        // Slow down background video playback speed smoothly
-        window.addEventListener('DOMContentLoaded', () => {
-            const bgVideo = document.querySelector('.video-background');
-            if (bgVideo) {
-                bgVideo.playbackRate = 0.4; // Đặt về 40% tốc độ gốc để chuyển động mềm mại lững lờ
-            }
-            // Khởi tạo kích thước thanh Liquid Indicator lần đầu tiên
-            setTimeout(updateNavIndicator, 200);
-            setTimeout(updateNavIndicator, 600); // Kích hoạt dự phòng khi phông chữ đã render xong
-        });
+        // Slowly modify turbulence based on cursor displacement
+        const svgFilter = document.querySelector('#water-distortion-filter feDisplacementMap');
+        const svgTurbulence = document.querySelector('#water-distortion-filter feTurbulence');
+        if (svgFilter && svgTurbulence) {
+            window.addEventListener('mousemove', (e) => {
+                const normalizedX = e.clientX / window.innerWidth;
+                const normalizedY = e.clientY / window.innerHeight;
+                // Shift displacement map dynamically to look like water distortion
+                svgFilter.setAttribute('scale', (8 + Math.abs(normalizedX - 0.5) * 12).toFixed(1));
+                svgTurbulence.setAttribute('baseFrequency', `${(0.01 + normalizedX * 0.004).toFixed(4)} ${(0.015 + normalizedY * 0.004).toFixed(4)}`);
+            });
+        }
 
         // Dynamic Active Tab Sliding Liquid Indicator Logic
         function updateNavIndicator() {
@@ -2065,106 +2149,65 @@
             });
         });
 
-        // Determine current logical page view state (0, 1, or 2)
-        function determineLogicalState() {
-            if (currentPane === 'right') {
-                currentLogicalState = 1; // Bài tập
-            } else {
-                const conclusion = document.getElementById('conclusion');
-                const scrollPos = leftPane.scrollTop;
-                // Nếu cột trái đang được cuộn tới mốc của section Reflection
-                if (scrollPos >= (conclusion.offsetTop - leftPane.clientHeight / 2)) {
-                    currentLogicalState = 2; // Tổng kết
-                } else {
-                    currentLogicalState = 0; // Giới thiệu
-                }
-            }
-        }
-
-        // Core Gesture Controller: Live Stylings & Scales on Swiping
+        // Core Gesture Controller: Live Stylings & Scales on Swiping (Physical 2-Pane Mapping)
         function handleDragMove(deltaX) {
             const viewportWidth = window.innerWidth;
-            let targetTranslate = 0;
+            let baseTranslate = -currentPaneIndex * viewportWidth;
+            let targetTranslate = baseTranslate + deltaX;
 
             let ratio = Math.abs(deltaX) / viewportWidth;
             if (ratio > 1) ratio = 1;
 
-            if (currentLogicalState === 0) {
-                // Đang ở "Giới thiệu"
-                if (deltaX > 0) {
-                    // Kéo sang phải -> Lò xo nảy đàn hồi (Giới hạn biên trái)
-                    targetTranslate = deltaX * 0.25;
-                    leftPane.style.transform = `scale(${1 - (deltaX / viewportWidth) * 0.05})`;
-                    leftPane.style.opacity = '1';
-                    return;
-                } else {
-                    // Kéo sang trái -> Chuyển hướng sang "Bài tập" (Pane 1)
-                    targetTranslate = deltaX;
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    // Thiết lập Scale & Opacity đồng bộ
-                    leftPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    leftPane.style.opacity = 1 - ratio;
-                    rightPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    rightPane.style.opacity = 0.6 + 0.4 * ratio;
-                }
-            } 
-            else if (currentLogicalState === 1) {
-                // Đang ở "Bài tập"
-                if (deltaX > 0) {
-                    // Kéo sang phải -> Chuyển hướng về "Giới thiệu" (Pane 0, top)
-                    targetTranslate = -viewportWidth + deltaX;
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    rightPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    rightPane.style.opacity = 1 - ratio;
-                    leftPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    leftPane.style.opacity = 0.6 + 0.4 * ratio;
-                } else {
-                    // Kéo sang trái -> Chuyển hướng sang "Tổng kết" (Pane 0, bottom)
-                    // Thiết lập mô phỏng trượt đều đặn slider về 0
-                    targetTranslate = -viewportWidth + Math.abs(deltaX);
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    rightPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    rightPane.style.opacity = 1 - ratio;
-                    leftPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    leftPane.style.opacity = 0.6 + 0.4 * ratio;
-                }
-            } 
-            else if (currentLogicalState === 2) {
-                // Đang ở "Tổng kết"
-                if (deltaX < 0) {
-                    // Kéo sang trái -> Lò xo nảy đàn hồi (Giới hạn biên phải)
-                    targetTranslate = deltaX * 0.25;
-                    leftPane.style.transform = `scale(${1 - (Math.abs(deltaX) / viewportWidth) * 0.05})`;
-                    leftPane.style.opacity = '1';
-                    return;
-                } else {
-                    // Kéo sang phải -> Quay lại "Bài tập" (Pane 1)
-                    targetTranslate = -deltaX;
-                    horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
-
-                    leftPane.style.transform = `scale(${1 - 0.03 * ratio})`;
-                    leftPane.style.opacity = 1 - ratio;
-                    rightPane.style.transform = `scale(${0.98 + 0.02 * ratio})`;
-                    rightPane.style.opacity = 0.6 + 0.4 * ratio;
-                }
+            // Boundary Bounce (rubber-band effect) at the edges
+            if (currentPaneIndex === 0 && deltaX > 0) {
+                // Swiping right on Left Pane (outer boundary)
+                let elasticFactor = 0.25;
+                targetTranslate = deltaX * elasticFactor;
+                leftPane.style.transform = `scale(${1 - (deltaX / viewportWidth) * 0.05})`;
+                leftPane.style.opacity = '1';
+                return;
+            }
+            if (currentPaneIndex === 1 && deltaX < 0) {
+                // Swiping left on Right Pane (outer boundary)
+                let elasticFactor = 0.25;
+                targetTranslate = baseTranslate + (deltaX * elasticFactor);
+                rightPane.style.transform = `scale(${1 - (Math.abs(deltaX) / viewportWidth) * 0.05})`;
+                rightPane.style.opacity = '1';
+                return;
             }
 
-            // Đồng bộ hiệu ứng Mid-swipe Background Blur
-            let midSwipeBlur = Math.sin(ratio * Math.PI) * 8;
-            viewportWrapper.style.filter = `blur(${midSwipeBlur}px)`;
+            // Gỡ bỏ transition tạm thời khi kéo để đạt độ bám ngón tay hoàn hảo nhất
+            horizontalAxis.style.transition = 'none';
+            leftPane.style.transition = 'none';
+            rightPane.style.transition = 'none';
+            viewportWrapper.style.transition = 'none';
 
-            // Đồng bộ live progress bar
-            let livePercentage = 33;
-            if (currentLogicalState === 0) {
-                livePercentage = 33 + (ratio * 33);
-            } else if (currentLogicalState === 1) {
-                livePercentage = deltaX > 0 ? (66 - ratio * 33) : (66 + ratio * 34);
-            } else if (currentLogicalState === 2) {
-                livePercentage = 100 - (ratio * 34);
-            }
+            // Tịnh tiến ngang container chính
+            horizontalAxis.style.transform = `translateX(${targetTranslate}px)`;
+
+            let activePane = currentPaneIndex === 0 ? leftPane : rightPane;
+            let incomingPane = currentPaneIndex === 0 ? rightPane : leftPane;
+
+            // Scale & Opacity Transitions mượt mà
+            let activeScale = 1 - (0.03 * ratio); // 100% -> 97%
+            let activeOpacity = 1 - ratio;        // 100% -> 0%
+            let incomingScale = 0.98 + (0.02 * ratio); // 98% -> 100%
+            let incomingOpacity = 0.6 + (0.4 * ratio);  // 60% -> 100%
+
+            activePane.style.transform = `scale(${activeScale})`;
+            activePane.style.opacity = activeOpacity;
+
+            incomingPane.style.transform = `scale(${incomingScale})`;
+            incomingPane.style.opacity = incomingOpacity;
+
+            // Mid-swipe Background Blur Transition (Max 12px blur at 50% midpoint mimicking diving through mist)
+            let midSwipeBlur = Math.sin(ratio * Math.PI) * 12;
+            let midSwipeBrightness = 1 - Math.sin(ratio * Math.PI) * 0.15; // slightly dims midpoint
+            viewportWrapper.style.filter = `blur(${midSwipeBlur}px) brightness(${midSwipeBrightness})`;
+
+            // Đồng bộ live progress bar (Trang trái = 50% -> Trang phải = 100%)
+            let livePercentage = 50 + (currentPaneIndex === 0 ? (ratio * 50) : (-ratio * 50));
+            progressBarFill.style.transition = 'none';
             progressBarFill.style.width = `${livePercentage}%`;
         }
 
@@ -2174,30 +2217,24 @@
             const viewportWidth = window.innerWidth;
             const threshold = viewportWidth * 0.3; // Ngưỡng lực kéo 30%
 
-            // Trả lại các transition spring mượt mà
+            // Khôi phục thuộc tính transition spring đàn hồi mượt kiểu Apple
             horizontalAxis.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             leftPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             rightPane.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.2, 1), opacity 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             viewportWrapper.style.transition = 'filter 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
             progressBarFill.style.transition = 'width 0.5s cubic-bezier(0.25, 1, 0.2, 1)';
 
+            // Khử hoàn toàn filter mờ của viewport
             viewportWrapper.style.filter = 'none';
 
             if (Math.abs(deltaX) >= threshold) {
-                if (currentLogicalState === 0 && deltaX < 0) {
-                    completeTransition(1); // Từ Giới thiệu, kéo trái -> Chuyển sang Bài tập
-                } 
-                else if (currentLogicalState === 1) {
-                    if (deltaX > 0) {
-                        completeTransition(0); // Từ Bài tập, kéo phải -> Về Giới thiệu
-                    } else {
-                        completeTransition(2); // Từ Bài tập, kéo trái -> Chuyển sang Tổng kết
-                    }
-                } 
-                else if (currentLogicalState === 2 && deltaX > 0) {
-                    completeTransition(1); // Từ Tổng kết, kéo phải -> Chuyển sang Bài tập
-                } 
-                else {
+                if (deltaX < 0 && currentPaneIndex === 0) {
+                    // Vuốt sang trái -> Sang cột Bài tập bên phải (Pane 1)
+                    completeTransition(1);
+                } else if (deltaX > 0 && currentPaneIndex === 1) {
+                    // Vuốt sang phải -> Quay lại cột Giới thiệu/Tổng kết bên trái (Pane 0)
+                    completeTransition(0);
+                } else {
                     recoilTransition();
                 }
             } else {
@@ -2205,57 +2242,34 @@
             }
         }
 
-        function completeTransition(targetState) {
-            currentLogicalState = targetState;
+        function completeTransition(targetIndex) {
+            currentPaneIndex = targetIndex;
+            currentPane = currentPaneIndex === 0 ? 'left' : 'right';
 
-            if (currentLogicalState === 0) {
-                // Giới thiệu: Slide về Pane 0, cuộn dọc lên đầu trang
-                horizontalAxis.style.transform = 'translateX(0)';
-                leftScrollTo('hero');
-                
-                leftPane.style.transform = 'scale(1)';
-                rightPane.style.transform = 'scale(1)';
-                leftPane.style.opacity = '1';
-                rightPane.style.opacity = '0.6';
-                
-                slidePane('left');
-                progressBarFill.style.width = '33%';
-            } 
-            else if (currentLogicalState === 1) {
-                // Bài tập: Slide sang Pane 1
-                horizontalAxis.style.transform = 'translateX(-100vw)';
-                
-                leftPane.style.transform = 'scale(1)';
-                rightPane.style.transform = 'scale(1)';
-                leftPane.style.opacity = '0.6';
-                rightPane.style.opacity = '1';
-                
-                slidePane('right');
-                progressBarFill.style.width = '66%';
-            } 
-            else if (currentLogicalState === 2) {
-                // Tổng kết: Slide về Pane 0, cuộn dọc xuống phần kết luận
-                horizontalAxis.style.transform = 'translateX(0)';
-                leftScrollTo('conclusion');
-                
-                leftPane.style.transform = 'scale(1)';
-                rightPane.style.transform = 'scale(1)';
-                leftPane.style.opacity = '1';
-                rightPane.style.opacity = '0.6';
-                
-                slidePane('left');
-                progressBarFill.style.width = '100%';
-            }
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
+
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+
+            // Đồng bộ trạng thái dynamic island và indicators
+            slidePane(currentPane);
         }
 
         function recoilTransition() {
-            completeTransition(currentLogicalState);
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+            
+            progressBarFill.style.width = currentPaneIndex === 0 ? '50%' : '100%';
         }
 
         // Touch Gesture Listeners (Thiết bị di động)
         document.addEventListener('touchstart', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
-            determineLogicalState(); // Xác định chính xác vị trí scroll trước khi bắt đầu cử chỉ vuốt
             startX = e.touches[0].clientX;
             startY = e.touches[0].clientY;
             currentX = startX;
@@ -2272,6 +2286,7 @@
             let diffX = currentX - startX;
             let diffY = currentY - startY;
 
+            // Xác định xem có phải vuốt ngang không
             if (!isHorizontalSwipe && Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
                 isHorizontalSwipe = true;
             }
@@ -2296,7 +2311,6 @@
         document.addEventListener('mousedown', e => {
             if (document.getElementById('modalOverlay').classList.contains('active')) return;
             if (e.target.closest('button, a, .card-action, .card-action-link, .btn-drive-glass, .swipe-indicator')) return;
-            determineLogicalState();
             startX = e.clientX;
             startY = e.clientY;
             currentX = startX;
@@ -2369,7 +2383,7 @@
                 rightIndicator.style.pointerEvents = 'none';
                 rightIndicator.style.transform = 'translateY(-50%) translateX(40px)';
 
-                if (progressBarFill) progressBarFill.style.width = '66%';
+                if (progressBarFill) progressBarFill.style.width = '100%';
             } else {
                 slider.style.transform = 'translateX(0)';
                 currentPane = 'left';
@@ -2472,6 +2486,11 @@
             card.classList.toggle('expanded');
         }
 
+        // Expandable function for the conclusion widgets
+        function toggleExpandConclusion(card) {
+            card.classList.toggle('expanded');
+        }
+
         // Scroll helpers inside the panes
         function leftScrollTo(elementId) {
             const pane = document.querySelector('.vertical-axis-pane');
@@ -2515,13 +2534,6 @@
                     link.classList.add('active');
                 }
             });
-            
-            // Đồng bộ trực tiếp thanh tiến trình progress bar và liquid kén
-            if (activeId === 'hero') {
-                progressBarFill.style.width = '33%';
-            } else if (activeId === 'conclusion') {
-                progressBarFill.style.width = '100%';
-            }
             updateNavIndicator();
         }
 
@@ -2683,7 +2695,7 @@
                 p.y += p.vy;
                 p.alpha -= p.decay; 
 
-                // Tăng nhanh bán kính nếu là hạt sóng kích nổ [1]
+                // Tăng nhanh bán kính nếu là hạt sóng kích nổ
                 if (p.type === 'shockwave') {
                     p.radius += 6.5; 
                 }
@@ -2782,16 +2794,16 @@
                 <ol style="margin-left: 1.5rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 1.5rem;">
                     <li><strong>Bước 1:</strong> Nhấn tổ hợp phím <code>Windows + E</code> để mở nhanh cửa sổ File Explorer hệ thống.</li>
                     <li><strong>Bước 2:</strong> Tại khung điều hướng bên trái, nhấp chọn <code>This PC</code> và truy cập trực tiếp vào ổ đĩa <code>D:</code>.</li>
-                    <li><strong>Bước 3:</strong> Click chuột phải vào khoảng trống, chọn <code>New → Folder</code>, đặt tên thư mục gốc là <code>ThucHanh_NguyenMaiThanhThao</code> rồi nhấn Enter.</li>
+                    <li><strong>Bước 3:</strong> Click chuột right vào khoảng trống, chọn <code>New → Folder</code>, đặt tên thư mục gốc là <code>ThucHanh_NguyenMaiThanhThao</code> rồi nhấn Enter.</li>
                     <li><strong>Bước 4:</strong> Nhấp đúp chuột để truy cập trực tiếp vào thư mục gốc vừa khởi tạo.</li>
-                    <li><strong>Bước 5:</strong> Click chuột phải vào khoảng trống, chọn <code>New → Text Document</code>, đặt tên tệp văn bản thô mới là <code>GhiChu.txt</code>.</li>
-                    <li><strong>Bước 6:</strong> Nhấp chuột phải vào tệp <code>GhiChu.txt</code>, chọn <code>Rename</code> và đổi tên tệp thành <code>GhiChuQuanTrong.txt</code>.</li>
-                    <li><strong>Bước 7:</strong> Click chuột phải vào khoảng trống, chọn <code>New → Folder</code> để tạo thư mục con đặt tên là <code>TaiLieu</code>.</li>
-                    <li><strong>Bước 8:</strong> Click chuột phải vào tệp <code>GhiChuQuanTrong.txt</code>, chọn <code>Copy</code>, sau đó mở thư mục <code>TaiLieu</code> và chọn <code>Paste</code> để sao chép.</li>
-                    <li><strong>Bước 9:</strong> Quay lại thư mục gốc, click chuột phải tạo tệp mới tên <code>DiChuyen.txt</code>. Click chuột phải chọn <code>Cut</code>, sau đó mở thư mục <code>TaiLieu</code> và chọn <code>Paste</code> để di dời tệp.</li>
-                    <li><strong>Bước 10:</strong> Tại thư mục con <code>TaiLieu</code>, click chuột phải vào tệp <code>GhiChuQuanTrong.txt</code> chọn <code>Delete</code> để đưa tệp vào Thùng rác (Recycle Bin).</li>
+                    <li><strong>Bước 5:</strong> Click chuột right vào khoảng trống, chọn <code>New → Text Document</code>, đặt tên tệp văn bản thô mới là <code>GhiChu.txt</code>.</li>
+                    <li><strong>Bước 6:</strong> Nhấp chuột right vào tệp <code>GhiChu.txt</code>, chọn <code>Rename</code> và đổi tên tệp thành <code>GhiChuQuanTrong.txt</code>.</li>
+                    <li><strong>Bước 7:</strong> Click chuột right vào khoảng trống, chọn <code>New → Folder</code> để tạo thư mục con đặt tên là <code>TaiLieu</code>.</li>
+                    <li><strong>Bước 8:</strong> Click chuột right vào tệp <code>GhiChuQuanTrong.txt</code>, chọn <code>Copy</code>, sau đó mở thư mục <code>TaiLieu</code> và chọn <code>Paste</code> để sao chép.</li>
+                    <li><strong>Bước 9:</strong> Quay lại thư mục gốc, click chuột right tạo tệp mới tên <code>DiChuyen.txt</code>. Click chuột right chọn <code>Cut</code>, sau đó mở thư mục <code>TaiLieu</code> và chọn <code>Paste</code> để di dời tệp.</li>
+                    <li><strong>Bước 10:</strong> Tại thư mục con <code>TaiLieu</code>, click chuột right vào tệp <code>GhiChuQuanTrong.txt</code> chọn <code>Delete</code> để đưa tệp vào Thùng rác (Recycle Bin).</li>
                     <li><strong>Bước 11:</strong> Chọn tệp <code>DiChuyen.txt</code>, nhấn tổ hợp phím <code>Shift + Delete</code> và chọn <code>Yes</code> trên hộp thoại cảnh báo để xóa vĩnh viễn tệp.</li>
-                    <li><strong>Bước 12:</strong> Ra màn hình Desktop, mở biểu tượng <code>Recycle Bin</code>, click chuột phải vào tệp <code>GhiChuQuanTrong.txt</code> và chọn <code>Restore</code> để khôi phục về vị trí ban đầu.</li>
+                    <li><strong>Bước 12:</strong> Ra màn hình Desktop, mở biểu tượng <code>Recycle Bin</code>, click chuột right vào tệp <code>GhiChuQuanTrong.txt</code> và chọn <code>Restore</code> để khôi phục về vị trí ban đầu.</li>
                 </ol>
 
                 <h4>Sơ Đồ Minh Họa Tương Tác: Khám Phá Cây Thư Mục Thực Tế</h4>
@@ -2998,321 +3010,37 @@
                 </div>
 
                 <h4>Nhận Định Cá Nhân Về Chính Sách AI Của Đại Học Ngoại Ngữ</h4>
-                <p>Em hoàn toàn ủng hộ triết lý quản lý AI của nhà trường: coi AI là công cụ bổ trợ nâng cao hiệu suất học tập nhưng nghiêm cấm đạo văn số (AI-Plagiarism). AI giống như kính hiển vi giúp phóng đại các lỗi sai ngữ pháp, mở rộng trường từ vựng nhưng không thể thay thế bộ não con người trong việc kiến tạo tư duy phản biện độc lập. Quy chuẩn nộp Tờ khai báo sử dụng AI (AI Disclosure Statement) giúp tụi em tự tin nghiên cứu trong ranh giới đạo đức cho phép.</p>
+                <p>Em hoàn toàn ủng hộ triết lý quản lý AI của nhà trường: coi AI là công cụ bổ trợ nâng cao hiệu suất học tập nhưng nghiên cấm đạo văn số (AI-Plagiarism). AI giống như kính hiển vi giúp phóng đại các lỗi sai ngữ pháp, mở rộng trường từ vựng nhưng không thể thay thế bộ não con người trong việc kiến tạo tư duy phản biện độc lập. Quy chuẩn nộp Tờ khai báo sử dụng AI (AI Disclosure Statement) giúp tụi em tự tin nghiên cứu trong ranh giới đạo đức cho phép.</p>
 
                 <h4>Bài học rút ra</h4>
                 <p>Bản lĩnh ứng dụng công nghệ nằm ở khả năng kiểm soát đạo đức tự thân của người học. Đạo đức học thuật vững vàng giúp nhà giáo tương lai làm chủ tiến trình giảng dạy sáng tạo, liêm chính số.</p>
             `
         };
 
-        // Simulated dynamic widgets controller
-        let currentExplorerDir = 'root';
-        let currentPaperFilter = 'all';
-        let currentPromptTask = 1;
-        let currentPromptLevel = 'basic';
-        let currentKanbanIndex = 1; // 1: todo, 2: progress, 3: done
-        let currentDesignTimelineStep = 1;
-        let currentEthicalRuleIndex = 1;
+        // Complete transition on Swipe
+        function completeTransition(targetIndex) {
+            currentPaneIndex = targetIndex;
+            currentPane = currentPaneIndex === 0 ? 'left' : 'right';
 
-        const widgetContents = {
-            1: {
-                root: `
-                    <div>📄 GhiChuQuanTrong.txt (Tệp tin gốc)</div>
-                    <div style="color: #60a5fa;">📁 TaiLieu (Thư mục con)</div>
-                `,
-                child: `
-                    <div>📄 GhiChuQuanTrong.txt (Bản sao sao chép)</div>
-                    <div style="color: #94a3b8; font-style: italic;">[Trống - tệp DiChuyen.txt đã xóa vĩnh viễn]</div>
-                `
-            },
-            2: [
-                { id: 1, title: "Hyland, K. (2024) - Academic writing in the age of AI...", type: "article", desc: "Tác giả: Chuyên gia đầu ngành viết luận. Tạp chí Scopus Q1 uy tín.", rank: "Rất tốt" },
-                { id: 2, title: "Nguyen, T. H. (2024) - Generative AI in English language...", type: "article", desc: "Bám sát ĐH VN. Tạp chí chuẩn quốc gia ULIS-VNU.", rank: "Rất tốt" },
-                { id: 3, title: "UNESCO (2024) - Guidance for generative AI...", type: "report", desc: "Tổ chức giáo dục toàn cầu. Khung năng lực chiến lược vĩ mô.", rank: "Rất tốt" },
-                { id: 4, title: "Warschauer, M. (2023) - Automated writing evaluation...", type: "article", desc: "Phương pháp tổng quan hệ thống. Tính học thuật và độ tin cậy cao.", rank: "Tốt" },
-                { id: 5, title: "Zhang, D. & Cui, Y. (2024) - The impact of AI-assisted...", type: "article", desc: "Thực nghiệm định lượng tâm lý và kết quả viết luận.", rank: "Rất tốt" },
-                { id: 6, title: "Bailey, S. (2021) - Academic Writing: A Handbook...", type: "book", desc: "NXB Routledge. Cẩm nang cấu trúc chuẩn quốc tế kinh điển.", rank: "Rất tốt" },
-                { id: 7, title: "Belcher, D. (2023) - Writing in the disciplines...", type: "article", desc: "Đánh giá trực diện rủi ro suy giảm kỹ năng. Scopus Q1.", rank: "Tốt" },
-                { id: 8, title: "Tran, Q. M. (2025) - Ứng dụng mô hình ngôn ngữ lớn...", type: "article", desc: "Phù hợp bối cảnh tự học thực tiễn của sinh viên ngoại ngữ.", rank: "Tốt" },
-                { id: 9, title: "Swales, J. M. & Feak, C. B. (2020) - Academic Writing...", type: "book", desc: "NXB Đại học Michigan. Phân tích thể loại chuẩn mực.", rank: "Rất tốt" },
-                { id: 10, title: "British Council (2023) - Artificial Intelligence...", type: "report", desc: "Hội đồng Anh. Khảo sát diện rộng, gợi mở định hướng số.", rank: "Tốt" },
-                { id: 11, title: "Stanford Human-AI (2025) - AI and the Future of...", type: "report", desc: "Stanford University. Phân tích đa diện, phản biện tương lai.", rank: "Tốt" }
-            ],
-            3: {
-                1: {
-                    name: "Tác vụ 1: Tóm tắt bài đọc học thuật",
-                    basic: {
-                        prompt: "Tóm tắt bài nghiên cứu về phương pháp học tiếng Anh này cho tôi.",
-                        response: "Bài nghiên cứu này nói về cách sinh viên Việt Nam sử dụng các công cụ công nghệ để học tiếng Anh hiệu quả hơn. Bài viết khuyên sinh viên nên tương tác nhiều hơn và sử dụng tài nguyên số."
-                    },
-                    improved: {
-                        prompt: "Hãy tóm tắt bài nghiên cứu học thuật dưới đây thành 3 đoạn văn. Đoạn 1 về mục tiêu, đoạn 2 về phương pháp luận, đoạn 3 về kết quả thực chứng. Yêu cầu giữ nguyên các thuật ngữ tiếng Anh chuyên ngành.",
-                        response: "Đoạn 1: Nghiên cứu nhằm khảo sát thực trạng sinh viên ULIS ứng dụng Generative AI trong nâng cao kỹ năng viết.\nĐoạn 2: Phương pháp nghiên cứu khảo sát định lượng thu thập dữ liệu từ 200 sinh viên.\nĐoạn 3: Kết quả thực chứng chứng minh tỷ lệ 85% cải thiện tốc độ xây dựng ý tưởng học thuật."
-                    },
-                    advanced: {
-                        prompt: "Bạn là một chuyên gia nghiên cứu Ngôn ngữ học ứng dụng (Applied Linguistics). Hãy đọc tài liệu dưới đây và thực hiện tóm tắt theo các bước logic sau: Bước 1: Trích xuất câu hỏi nghiên cứu cốt lõi. Bước 2: Tóm tắt phương pháp thực nghiệm (mẫu khảo sát, công cụ). Bước 3: Chỉ ra ý nghĩa thực tiễn đối với sinh viên ULIS. Định dạng kết quả dưới dạng bảng so sánh và các bullet points mạch lạc.",
-                        response: "• CÂU HỎI NGHIÊN CỨU CỐT LÕI: Làm cách nào mô hình AI hỗ trợ rèn luyện tư duy lập luận phản biện cho sinh viên ngoại ngữ?\n• PHƯƠNG PHÁP THỰC NGHIỆM: Nghiên cứu thực nghiệm đối chứng (mẫu n=80) kết hợp khảo sát bảng hỏi.\n• Ý NGHĨA THỰC TIỄN ULIS: Giúp sinh viên ULIS chủ động xây dựng lộ trình học tập tự chủ, hạn chế đạo văn số."
-                    }
-                },
-                2: {
-                    name: "Tác vụ 2: Giải thích khái niệm Syntactic Ambiguity",
-                    basic: {
-                        prompt: "Syntactic Ambiguity là gì? Giải thích đi.",
-                        response: "Syntactic Ambiguity (mơ hồ cú pháp) là khi một câu tiếng Anh có thể được hiểu theo nhiều nghĩa khác nhau tùy thuộc vào cách bạn phân tích cấu trúc ngữ pháp của nó."
-                    },
-                    improved: {
-                        prompt: "Giải thích khái niệm Syntactic Ambiguity (Mơ hồ cú pháp) trong tiếng Anh. Cho 2 ví dụ minh họa rõ ràng và phân tích cấu trúc của các ví dụ đó.",
-                        response: "Syntactic Ambiguity xảy ra khi cấu trúc ngữ pháp của một câu tạo ra nhiều cách hiểu.\nVí dụ 1: 'The chicken is ready to eat' (Con gà đã sẵn sàng để được ăn hoặc con gà sẵn sàng ăn cái gì đó).\nVí dụ 2: 'I saw the man with the telescope' (Tôi nhìn thấy người đàn ông bằng kính viễn vọng của tôi, hoặc người đàn ông đó cầm kính viễn vọng)."
-                    },
-                    advanced: {
-                        prompt: "Bạn là một giảng viên ngữ pháp tiếng Anh kỳ cựu. Hãy giải thích khái niệm ’Syntactic Ambiguity’ cho sinh viên năm nhất theo 2 cấp độ: (1) Định nghĩa bình dân kèm ví dụ hài hước; (2) Phân tích sơ đồ cây cú pháp sâu sắc. Hãy học theo cách giải thích mẫu sau: [Ví dụ mẫu về Lexical Ambiguity: ’Bank’ có thể là bờ sông hoặc ngân hàng]. Hãy thực hiện tương tự cho Syntactic Ambiguity.",
-                        response: "• CẤP ĐỘ 1 (BÌNH DÂN): Chào các tân sinh viên! Hãy tưởng tượng câu: 'Visiting relatives can be boring'. Việc đi thăm họ hàng chán, hay những người họ hàng đến thăm ta chán? Ngữ pháp chơi khăm chúng ta đấy!\n• CẤP ĐỘ 2 (SƠ ĐỒ CÂY CÚ PHÁP): Để giải quyết hiện tượng mơ hồ này, chúng ta cần vẽ sơ đồ phân rã cụm danh từ (NP) và cụm động từ (VP). Ví dụ trong câu 'I saw the man with the telescope', giới từ 'with' có thể gắn trực tiếp vào VP (hành động nhìn) hoặc gắn vào NP (nguyên nhân là người đàn ông có kính viễn vọng)."
-                    }
-                },
-                3: {
-                    name: "Tác vụ 3: Tạo bộ câu hỏi ôn tập học phần Văn hóa Anh - Mỹ",
-                    basic: {
-                        prompt: "Tạo cho tôi bài tập trắc nghiệm về văn hóa nước Anh.",
-                        response: "Câu 1: Thủ đô nước Anh là gì? A. London, B. Paris, C. New York. Đáp án đúng: A."
-                    },
-                    improved: {
-                        prompt: "Tạo bộ 5 câu hỏi trắc nghiệm kèm đáp án về chủ đề Hệ thống giáo dục Vương quốc Anh dành cho sinh viên đại học ngoại ngữ.",
-                        response: "Câu 1: Kỳ thi chuẩn quốc gia ở độ tuổi 16 tại Anh được gọi và gì? A. GCSE, B. A-Level, C. SAT. Đáp án đúng: A.\n(Hệ thống tự động hiển thị 5 câu hỏi chuẩn học thuật ngoại ngữ)."
-                    },
-                    advanced: {
-                        prompt: "Bạn là chuyên gia khảo thí và kiểm định giáo dục. Dựa trên tài liệu văn hóa Anh đính kèm, hãy tạo một bộ đề ôn tập gồm: 3 câu hỏi trắc nghiệm ở cấp độ ’Hiểu’ (Comprehension) và 2 câu hỏi tự luận ở cấp độ ’Phân tích phản biện’ (Critical Analysis). Đối với mỗi câu trắc nghiệm, cung cấp 4 đáp án gây nhiễu chất lượng và giải thích chi tiết lý do chọn đáp án đúng theo chuẩn tài liệu.",
-                        response: "• PHẦN TRẮC NGHIỆM (HIỂU):\nCâu 1: Sự phân cấp giữa 'State school' và 'Public school' phản ánh yếu tố nào trong xã hội Anh?\nA. Sự phân tầng giai cấp (Đáp án đúng)\nB. Sự khác biệt địa lý\nC. Quy mô phòng học\nD. Chính sách tài khóa công\nGiải thích: 'Public school' tại Anh thực chất là trường tư thục ưu tú, phản ánh ranh giới giai cấp sâu sắc.\n\n• PHẦN TỰ LUẬN (PHẢN BIỆN):\nCâu 4: Hãy phân tích ưu và nhược điểm của hệ thống kiểm thí quốc gia GCSE đối với cơ hội phát triển công bằng của học sinh nhập cư."
-                    }
-                }
-            },
-            4: {
-                todo: "Nhiệm vụ: Nghiên cứu tài liệu kỹ năng Đọc - Viết ULIS (Người phụ trách: Thảo)",
-                progress: "Nhiệm vụ: Xây dựng bộ câu hỏi khảo sát sinh viên K58 (Người phụ trách: Nam)",
-                done: "Nhiệm vụ: Tổng hợp kết quả dự án cẩm nang (Người phụ trách: Linh)"
-            },
-            5: {
-                1: "• Giai đoạn 1 (ChatGPT): Sử dụng Prompt phân cấp 3 lượt để định hình nội dung, bản địa hóa đoạn hội thoại nộp bài muộn chuẩn văn phong lịch sự, tinh tế của giảng đường ULIS.",
-                2: "• Giai đoạn 2 (Canva AI): Đưa văn bản vào mẫu infographic Edtech màu xanh dương, chuẩn hóa định dạng văn phạm APA và sinh các icon line-art cuốn sách, cây bút đồng bộ.",
-                3: "• Giai đoạn 3 (DALL-E 3): Ứng dụng Prompt mô tả nâng cao tích hợp logo ULIS sinh ra tranh biểu diện sinh viên học tập vui vẻ trong thư viện đại học ảo vô cùng hài hòa (Sản phẩm xuất bản b5.jpg)."
-            },
-            6: {
-                1: "<strong>1. Tư duy độc lập:</strong> Luôn chủ động tự suy nghĩ và tự thiết lập dàn ý bài luận sư phạm thô trước khi mở bất kỳ công cụ AI nào để không bị thiên kiến công nghệ dẫn dắt.",
-                2: "<strong>2. Minh bạch tuyệt đối:</strong> Công khai trung thực mức độ can thiệp và hỗ trợ của AI trong mọi sản phẩm nộp cho nhà trường thông qua tờ tuyên bố sử dụng AI Disclosure.",
-                3: "<strong>3. Màng lọc phản biện:</strong> Coi mọi dữ liệu AI trả về là nguồn tin có nguy cơ ảo tưởng cao. Luôn chủ động đối chiếu, kiểm chứng chéo với các tài liệu sách giáo khoa, thư viện chính thống.",
-                4: "<strong>4. Bảo mật dữ liệu:</strong> Tuyệt đối không đăng tải thông tin cá nhân của bản thân, thông tin học sinh, tài liệu nội bộ nhà trường hoặc bài làm của bạn bè lên mô hình AI công cộng.",
-                5: "<strong>5. Làm chủ ngôn ngữ:</strong> Giữ vững bản sắc cá nhân (authorial voice). AI chỉ được sửa lỗi ngữ pháp, không được phép thay thế giọng văn biểu đạt cảm xúc sư phạm của chính mình.",
-                6: "<strong>6. Phát triển bền vững:</strong> Chỉ sử dụng AI với mục đích nâng cao hiệu suất học tập, tuyệt đối không dùng AI để đối phó với các kỳ thi hoặc bài đánh giá năng lực cốt lõi."
-            }
-        };
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
 
-        // Render Widget Content dynamically
-        function initInteractiveWidget(id) {
-            if (id === 1) {
-                toggleFileExplorer('root');
-            } else if (id === 2) {
-                filterPapers('all');
-            } else if (id === 3) {
-                currentPromptTask = 1;
-                currentPromptLevel = 'basic';
-                renderPromptSimulator();
-            } else if (id === 4) {
-                currentKanbanIndex = 1;
-                renderKanbanBoard();
-            } else if (id === 5) {
-                selectDesignTimeline(1);
-            } else if (id === 6) {
-                selectEthicalRule(1);
-            }
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+
+            // Synchronize dynamic nav links, indicators, progress bar
+            slidePane(currentPane);
         }
 
-        // Widget 1: File Explorer Controller
-        function toggleFileExplorer(dir) {
-            const display = document.getElementById('file-list-display');
-            const btnRoot = document.getElementById('btn-root-dir');
-            const btnChild = document.getElementById('btn-child-dir');
-
-            if (dir === 'root') {
-                btnRoot.classList.add('active');
-                btnChild.classList.remove('active');
-                display.innerHTML = widgetContents[1].root;
-            } else {
-                btnRoot.classList.remove('active');
-                btnChild.classList.add('active');
-                display.innerHTML = widgetContents[1].child;
-            }
-        }
-
-        // Widget 2: Paper Filter Controller
-        function filterPapers(category) {
-            const body = document.getElementById('papers-table-body');
-            const btnAll = document.getElementById('filter-all');
-            const btnArt = document.getElementById('filter-articles');
-            const btnBook = document.getElementById('filter-books');
-            const btnRep = document.getElementById('filter-reports');
-
-            // Reset buttons
-            [btnAll, btnArt, btnBook, btnRep].forEach(btn => btn.classList.remove('active'));
-
-            if (category === 'all') btnAll.classList.add('active');
-            else if (category === 'article') btnArt.classList.add('active');
-            else if (category === 'book') btnBook.classList.add('active');
-            else if (category === 'report') btnRep.classList.add('active');
-
-            let filtered = widgetContents[2];
-            if (category !== 'all') {
-                filtered = widgetContents[2].filter(p => p.type === category);
-            }
-
-            body.innerHTML = filtered.map((p, idx) => `
-                <tr>
-                    <td>${idx + 1}</td>
-                    <td>${p.title}</td>
-                    <td style="text-transform: capitalize;">${p.type === 'article' ? 'Bài báo' : p.type === 'book' ? 'Sách' : 'Báo cáo'}</td>
-                    <td>${p.desc}</td>
-                    <td style="color: var(--accent-purple); font-weight: bold;">${p.rank}</td>
-                </tr>
-            `).join('');
-        }
-
-        // Widget 3: Prompt Simulator Controller
-        function selectPromptTask(taskIdx) {
-            currentPromptTask = taskIdx;
-            // Update active buttons
-            for (let i = 1; i <= 3; i++) {
-                document.getElementById('p-task-' + i).classList.remove('active');
-            }
-            document.getElementById('p-task-' + taskIdx).classList.add('active');
-            renderPromptSimulator();
-        }
-
-        function selectPromptLevel(level) {
-            currentPromptLevel = level;
-            // Update active buttons
-            ['basic', 'improved', 'advanced'].forEach(lvl => {
-                document.getElementById('p-level-' + lvl).classList.remove('active');
-            });
-            document.getElementById('p-level-' + level).classList.add('active');
-            renderPromptSimulator();
-        }
-
-        function renderPromptSimulator() {
-            const promptBox = document.getElementById('prompt-sender-box');
-            const responseBox = document.getElementById('prompt-receiver-box');
-            const data = widgetContents[3][currentPromptTask][currentPromptLevel];
-
-            promptBox.textContent = data.prompt;
-            responseBox.textContent = "";
-
-            // Simple typewriting emulation effect
-            let i = 0;
-            const text = data.response;
-            function typeWriter() {
-                if (i < text.length) {
-                    responseBox.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(typeWriter, 4);
-                }
-            }
-            typeWriter();
-        }
-
-        // Widget 4: Kanban Board Controller
-        function moveKanbanTask(direction) {
-            if (direction === 'next' && currentKanbanIndex < 3) currentKanbanIndex++;
-            else if (direction === 'prev' && currentKanbanIndex > 1) currentKanbanIndex--;
-            renderKanbanBoard();
-        }
-
-        function renderKanbanBoard() {
-            const colTodo = document.getElementById('kanban-col-todo');
-            const colProgress = document.getElementById('kanban-col-progress');
-            const colDone = document.getElementById('kanban-col-done');
-
-            // Clear existing tasks
-            const titleTodo = ` <strong style="color: #ef4444; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">📋 CẦN LÀM (TO DO)</strong> `;
-            const titleProgress = ` <strong style="color: #3b82f6; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">⏳ ĐANG LÀM (IN PROGRESS)</strong> `;
-            const titleDone = ` <strong style="color: #10b981; font-size: 0.85rem; display: block; margin-bottom: 0.8rem;">✅ HOÀN TẤT (DONE)</strong> `;
-
-            colTodo.innerHTML = titleTodo;
-            colProgress.innerHTML = titleProgress;
-            colDone.innerHTML = titleDone;
-
-            const cardHTML = `
-                <div class="modal-kanban-card">
-                    <strong>${widgetContents[4].todo}</strong>
-                </div>
-                <div class="modal-kanban-card">
-                    <strong>${widgetContents[4].progress}</strong>
-                </div>
-                <div class="modal-kanban-card">
-                    <strong>${widgetContents[4].done}</strong>
-                </div>
-            `;
-
-            if (currentKanbanIndex === 1) colTodo.innerHTML += cardHTML;
-            else if (currentKanbanIndex === 2) colProgress.innerHTML += cardHTML;
-            else if (currentKanbanIndex === 3) colDone.innerHTML += cardHTML;
-        }
-
-        // Widget 5: Timeline Controller
-        function selectDesignTimeline(step) {
-            currentDesignTimelineStep = step;
-            for (let i = 1; i <= 3; i++) {
-                document.getElementById('btn-timeline-' + i).classList.remove('active');
-            }
-            document.getElementById('btn-timeline-' + step).classList.add('active');
-
-            const desc = document.getElementById('design-timeline-description');
-            desc.textContent = widgetContents[5][step];
-        }
-
-        // Widget 6: Ethical Radar Controller
-        function selectEthicalRule(idx) {
-            currentEthicalRuleIndex = idx;
-            for (let i = 1; i <= 6; i++) {
-                document.getElementById('btn-rule-' + i).classList.remove('active');
-            }
-            document.getElementById('btn-rule-' + idx).classList.add('active');
-
-            const display = document.getElementById('ethical-rule-display');
-            display.innerHTML = widgetContents[6][idx];
-        }
-
-        // Modal triggers (with dynamically adjusted responsive width)
-        function openModal(id) {
-            const overlay = document.getElementById('modalOverlay');
-            const content = document.getElementById('modalContent');
-            const modalWindow = document.querySelector('.modal-window');
-
-            // Inject content
-            content.innerHTML = modalData[id];
-
-            // Adjust width for Bài 2 and Bài 4 to display table nicely
-            if (id === 2 || id === 4) {
-                modalWindow.style.maxWidth = '1150px';
-            } else {
-                modalWindow.style.maxWidth = '850px';
-            }
-
-            // Activate modal view
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Lock background scrolling
-
-            // Initialize interactive widgets for the opened modal
-            initInteractiveWidget(id);
-        }
-
-        function closeModal() {
-            const overlay = document.getElementById('modalOverlay');
-            overlay.classList.remove('active');
-            document.body.style.overflow = ''; // Unlock scrolling
-        }
-
-        function closeModalOnOuterClick(event) {
-            const modalWindow = document.querySelector('.modal-window');
-            if (!modalWindow.contains(event.target)) {
-                closeModal();
-            }
+        function recoilTransition() {
+            horizontalAxis.style.transform = `translateX(${-currentPaneIndex * 100}vw)`;
+            leftPane.style.transform = 'scale(1)';
+            rightPane.style.transform = 'scale(1)';
+            leftPane.style.opacity = currentPaneIndex === 0 ? '1' : '0.6';
+            rightPane.style.opacity = currentPaneIndex === 1 ? '1' : '0.6';
+            
+            progressBarFill.style.width = currentPaneIndex === 0 ? '50%' : '100%';
         }
     </script>
 </body>
