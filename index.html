@@ -1624,13 +1624,13 @@
 
         // Sinh bong bóng liên tục khi rê chuột
         window.addEventListener('mousemove', (e) => {
-            if (Math.random() < 0.6) { // Điều tiết tần suất sinh để bảo toàn hiệu năng mượt mà nhất
+            if (Math.random() < 0.8) { // Điều tiết tần suất sinh để bảo toàn hiệu năng mượt mà nhất
                 cursorParticles.push({
                     x: e.clientX,
                     y: e.clientY,
                     vx: (Math.random() - 0.5) * 1.2,
                     vy: -Math.random() * 1.5 - 0.5, // Xu hướng trôi lờ lững lên trên
-                    radius: Math.random() * 5 + 2,
+                    radius: Math.random() * 7 + 2,
                     alpha: 0.95,
                     color: 'rgba(192, 132, 252, 0.55)'
                 });
