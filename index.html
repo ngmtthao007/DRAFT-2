@@ -1,4 +1,4 @@
-file HTML của
+thay thế vào file HTML của
 mình:
 
 <!DOCTYPE html>
@@ -464,7 +464,7 @@ mình:
         }
 
         .expandable-intro-card.expanded {
-            max-height: 350px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
+            max-height: 250px; /* Chiều cao mở rộng đủ chứa toàn bộ nội dung */
         }
         
         .glowing-intro-title {
@@ -1148,12 +1148,13 @@ mình:
         }
 
         #conclusion .hero-subtitle {
-            margin-bottom: 0.1rem !important; /* Đưa phụ đề nhỏ sát nút TỔNG KẾT HỌC PHẦN */
+            margin-bottom: 1.2rem !important; /* Đẩy khoảng cách dòng phụ đề xa ra một cách hợp lý */
+            display: block; /* Thiết lập block giúp tôn trọng khoảng cách margin dọc */
         }
 
         #conclusion h3 {
             margin-top: 0 !important;
-            margin-bottom: 0.6rem !important; /* Đưa sát cụm widget bên dưới */
+            margin-bottom: 1.5rem !important; /* Khoảng cách lề dưới hài hòa tới cụm widget */
             font-family: 'Lexend', sans-serif; /* Chuyển sang phông chữ Lexend */
             font-size: 2.8rem; /* Điều chỉnh lại kích thước cho cân đối với phông Lexend */
             font-weight: 800; /* Thiết lập Lexend Extra Bold cực kỳ sắc nét */
@@ -1451,6 +1452,25 @@ mình:
             80% { transform: scale(1.02) translate(1px, 1px) rotate(0.1deg); }
             100% { transform: scale(1.02) translate(0, 0) rotate(0deg); }
         }
+        /* Thiết lập chữ in hoa và độ phát sáng mặc định cho widgets tổng kết */
+        .conclusion-widget .widget-value {
+            font-family: 'Lexend', sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase; /* Chuyển chữ in hoa */
+            transition: color 0.4s ease, text-shadow 0.4s ease;
+            letter-spacing: 1px;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.15); 
+        }
+
+        /* Hiệu ứng phát sáng tím oải hương rực rỡ khi di chuột vào */
+        .conclusion-widget:hover .widget-value {
+            color: var(--accent-purple);
+            text-shadow: 0 0 10px rgba(192, 132, 252, 1), 
+                         0 0 20px rgba(192, 132, 252, 0.6), 
+                         0 0 30px rgba(192, 132, 252, 0.3);
+        }
     </style>
 </head>
 <body>
@@ -1623,7 +1643,7 @@ mình:
                                         <span class="widget-label">💡 Đúc kết sư phạm</span>
                                         <span class="widget-value">BÀI HỌC KINH NGHIỆM</span>
                                         <div class="widget-content-expand">
-                                            <p>Học phần đã giúp em nhận ra rằng công nghệ chỉ thực sự phát huy giá trị khi được dẫn dắt bởi tư duy của con người và được sử dụng với trách nhiệm. AI hay các công cụ EdTech có thể hỗ trợ việc dạy và học hiệu quả hơn, nhưng không thể thay thế sự sáng tạo, khả năng thấu hiểu và tinh thần nhân văn trong giáo dục. Qua từng bài học và dự án, em không chỉ rèn luyện kỹ năng số mà còn hình thành tư duy làm việc khoa học, chủ động và sẵn sàng ứng dụng công nghệ để tạo nên những trải nghiệm học tập tích cực cho học sinh trong tương lai.</p>
+                                            <p>Học phần đã giúp em nhận ra rằng công nghệ chỉ thực sự phát huy giá trị khi được dẫn dắt bởi tư duy của con người và được sử dụng with trách nhiệm. AI hay các công cụ EdTech có thể hỗ trợ việc dạy và học hiệu quả hơn, nhưng không thể thay thế sự sáng tạo, khả năng thấu hiểu và tinh thần nhân văn trong giáo dục. Qua từng bài học và dự án, em không chỉ rèn luyện kỹ năng số mà còn hình thành tư duy làm việc khoa học, chủ động và sẵn sàng ứng dụng công nghệ để tạo nên những trải nghiệm học tập tích cực cho học sinh trong tương lai.</p>
                                         </div>
                                     </div>
                                 </div>
@@ -2175,7 +2195,7 @@ mình:
                         vx: (Math.random() - 0.5) * 0.35,  
                         vy: -Math.random() * 0.4 - 0.1,    
                         radius: Math.random() * 10 + 2,
-                        alpha: Math.random() * 0.7 + 0.25,
+                        opacity: Math.random() * 0.7 + 0.25,
                         color: color,
                         type: type,
                         decay: 0.0035,   
@@ -2624,7 +2644,7 @@ mình:
                     },
                     advanced: {
                         prompt: "Bạn là một giảng viên ngữ pháp tiếng Anh kỳ cựu. Hãy giải thích khái niệm ’Syntactic Ambiguity’ cho sinh viên năm nhất theo 2 cấp độ: (1) Định nghĩa bình dân kèm ví dụ hài hước; (2) Phân tích sơ đồ cây cú pháp sâu sắc. Hãy học theo cách giải thích mẫu sau: [Ví dụ mẫu về Lexical Ambiguity: ’Bank’ có thể là bờ sông hoặc ngân hàng]. Hãy thực hiện tương tự cho Syntactic Ambiguity.",
-                        response: "• CÂU HỎI NGHIÊN CỨU CỐT LÕI: Làm cách nào mô hình AI hỗ trợ rèn luyện tư duy lập luận phản biện cho sinh viên ngoại ngữ?\n• PHƯƠNG PHÁP THỰC NGHIỆM: Nghiên cứu thực nghiệm đối chứng (mẫu n=80) kết hợp khảo sát bảng hỏi.\n• Ý NGHĨA THỰC TIỄN ULIS: Giúp sinh viên ULIS chủ động xây dựng lộ trình học tập tự chủ, hạn chế đạo văn số."
+                        response: "• CẤP ĐỘ 1 (BÌNH DÂN): Chào các tân sinh viên! Hãy tưởng tượng câu: 'Visiting relatives can be boring'. Việc đi thăm họ hàng chán, hay những người họ hàng đến thăm ta chán? Ngữ pháp chơi khăm chúng ta đấy!\n• CẤP ĐỘ 2 (SƠ ĐỒ CÂY CÚ PHÁP): Để giải quyết hiện tượng mơ hồ này, chúng ta cần vẽ sơ đồ phân rã cụm danh từ (NP) và cụm động từ (VP). Ví dụ trong câu 'I saw the man with the telescope', giới từ 'with' có thể gắn trực tiếp vào VP (hành động nhìn) hoặc gắn vào NP (nguyên nhân là người đàn ông có kính viễn vọng)."
                     }
                 },
                 3: {
